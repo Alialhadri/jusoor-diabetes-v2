@@ -196,6 +196,7 @@ button{font-family:inherit;}
   <div class="sb-scroll">
     <div class="sb-sec">Clinical</div>
     <div class="nav on" data-v="dash"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg></span>Dashboard<span class="bdg bg-r" id="bDash">0</span></div>
+    <div class="nav" data-v="clinicday"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg></span>Today's Clinic<span class="bdg bg-b" id="bCD">0</span></div>
     <div class="nav" data-v="worklist"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 5h16M4 12h16M4 19h10"/></svg></span>Morning Worklist<span class="bdg bg-a" id="bWork">0</span></div>
     <div class="nav" data-v="registry"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/></svg></span>Patient Registry<span class="bdg bg-b" id="bReg">0</span></div>
     <div class="nav" data-v="orders"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 11l3 3L22 4M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg></span>Orders &amp; Results<span class="bdg bg-r" id="bOrd">0</span></div>
@@ -228,6 +229,16 @@ button{font-family:inherit;}
     </div>
   </div>
   <div class="content">
+
+  <!-- TODAY'S CLINIC -->
+  <div class="view" id="v-clinicday">
+    <div class="trow" style="margin-bottom:14px">
+      <div class="kpi" style="--c:var(--bl)"><div class="kv" id="cdBooked">0</div><div class="kl">Booked today</div><div class="ks">this clinic session</div></div>
+      <div class="kpi" style="--c:var(--gr)"><div class="kv" id="cdSeen" style="color:var(--gr)">0</div><div class="kl">Seen</div><div class="ks">completed visits</div></div>
+      <div class="kpi" style="--c:var(--am)"><div class="kv" id="cdWait" style="color:var(--am)">0</div><div class="kl">Waiting</div><div class="ks">in queue</div></div>
+    </div>
+    <div class="card cp"><div class="ch"><div><div class="ct">Today's clinic - visit queue</div><div class="cs">Prioritised by clinical need - one click starts the visit with the full record, decision support and order sets</div></div></div><div id="cdList"></div></div>
+  </div>
 
   <!-- DASHBOARD -->
   <div class="view on" id="v-dash">
@@ -579,13 +590,13 @@ function alerts(p){var a=[];
   return a;}
 
 /* ---------- nav ---------- */
-var TITLES={dash:["Population Overview","Riyadh PHC Cluster · Diabetes Care Programme · 50 patients"],worklist:["Morning Worklist","Highest clinical need first · rule-prioritised"],registry:["Patient Registry","Diabetes cohort · risk scored locally"],orders:["Orders &amp; Results","Order-to-completion loop · close the gap after the order"],recall:["Recall Engine","Pull-based cadence · the clinical clock schedules the work"],coverage:["Care Gaps &amp; Coverage","Complication-screening coverage drive"],pathway:["Standard Work","Diabetes pathway adherence · deviations visible"],enrol:["Enrol Patient","Dual intake · manual or hospital feed"],messages:["Patient Messages","Arabic-first engagement"],tasks:["Care Tasks","Coordinator &amp; nurse queue"],physician:["Physician Review","Flagged for medical action"],analytics:["Analytics &amp; RWE","Outcomes · generated on-device"],naphies:["NAPHIES · Raqeem","Integrations &amp; data residency"],settings:["Settings","AI engine · safety · programme"]};
+var TITLES={dash:["Population Overview","Riyadh PHC Cluster · Diabetes Care Programme · 50 patients"],clinicday:["Today's Clinic","Visit queue · throughput at a glance"],worklist:["Morning Worklist","Highest clinical need first · rule-prioritised"],registry:["Patient Registry","Diabetes cohort · risk scored locally"],orders:["Orders &amp; Results","Order-to-completion loop · close the gap after the order"],recall:["Recall Engine","Pull-based cadence · the clinical clock schedules the work"],coverage:["Care Gaps &amp; Coverage","Complication-screening coverage drive"],pathway:["Standard Work","Diabetes pathway adherence · deviations visible"],enrol:["Enrol Patient","Dual intake · manual or hospital feed"],messages:["Patient Messages","Arabic-first engagement"],tasks:["Care Tasks","Coordinator &amp; nurse queue"],physician:["Physician Review","Flagged for medical action"],analytics:["Analytics &amp; RWE","Outcomes · generated on-device"],naphies:["NAPHIES · Raqeem","Integrations &amp; data residency"],settings:["Settings","AI engine · safety · programme"]};
 function show(v){var el=document.getElementById("v-"+v);if(!el)return;
   document.querySelectorAll(".view").forEach(function(x){x.classList.remove("on");});el.classList.add("on");
   document.querySelectorAll(".nav").forEach(function(n){n.classList.toggle("on",n.getAttribute("data-v")===v);});
   document.getElementById("topT").innerHTML=TITLES[v][0];document.getElementById("topS").innerHTML=TITLES[v][1];
   document.querySelector(".content").scrollTop=0;
-  if(v==="registry")renderReg();if(v==="worklist")renderWork();if(v==="orders")renderOrders();if(v==="recall")renderRecall();if(v==="coverage")renderCoverage();if(v==="pathway")renderPathway();if(v==="tasks")renderTasks();if(v==="physician")renderPhys();if(v==="analytics")renderAnalytics();if(v==="messages")renderMsg();}
+  if(v==="clinicday")renderClinicDay();if(v==="registry")renderReg();if(v==="worklist")renderWork();if(v==="orders")renderOrders();if(v==="recall")renderRecall();if(v==="coverage")renderCoverage();if(v==="pathway")renderPathway();if(v==="tasks")renderTasks();if(v==="physician")renderPhys();if(v==="analytics")renderAnalytics();if(v==="messages")renderMsg();}
 document.querySelectorAll(".nav").forEach(function(n){n.onclick=function(){show(n.getAttribute("data-v"));};});
 
 /* ---------- registry ---------- */
@@ -674,6 +685,7 @@ function openPat(id){var p=patients[id],c=control(p),rk=riskScore(p),dr=dropoutS
     "<div class='card cp'><div class='ct' style='margin-bottom:9px'>Medications ("+p.meds.length+")</div>"+(p.meds.length?p.meds.map(function(m){return "<div style='padding:8px 0;border-bottom:1px solid var(--bdr)'><div style='font-weight:700;font-size:12px'>"+m.drug+" "+m.dose+(m.high?" <span class='halert'>HIGH-ALERT</span>":"")+"</div><div style='font-size:10.5px;color:var(--mu);margin-top:2px'>"+m.cls+" · "+m.freq+" ("+m.tpd+"×/day) · "+m.timing+" · "+m.days+" days</div></div>";}).join(""):"<div class='note'>No medications recorded.</div>")+"<button class='btn btn-o btn-xs' style='margin-top:10px' onclick='addMedForm("+p.id+")'>+ Order medication</button><div id='medForm'></div></div>"+
     "<div class='card cp'><div class='ct' style='margin-bottom:9px'>Complication screening</div>"+scrItems.map(function(s){var ov=s[1]>=12;return "<div class='scr-row'><span><span class='d' style='background:"+(ov?"var(--rd)":"var(--gr)")+"'></span>"+s[0]+"</span><span style='color:"+(ov?"var(--rd)":"var(--mu)")+"'>"+(ov?"Overdue · "+s[1]+" mo":s[1]+" mo ago")+"</span></div>";}).join("")+(g.length?"<button class='btn btn-g btn-xs' style='margin-top:10px' onclick='recallPat("+p.id+")'>Recall to close "+g.length+" gap(s)</button>":"<div class='chip c-g' style='margin-top:9px'>All screening up to date</div>")+"</div>"+
   "</div>"+
+  "<div class='card cp' style='margin-bottom:14px'><div class='ct' style='margin-bottom:4px'>Quick orders — standard order sets</div><div class='cs' style='margin-bottom:11px'>One click places the full evidence-based bundle — built for high-volume clinics.</div><div style='display:flex;gap:8px;flex-wrap:wrap'><button class='btn btn-b btn-sm' onclick='orderSet("+p.id+",\"annual\")'>Diabetes annual review</button><button class='btn btn-r btn-sm' onclick='orderSet("+p.id+",\"intensify\")'>Intensify (uncontrolled)</button><button class='btn btn-o btn-sm' onclick='orderSet("+p.id+",\"workup\")'>New patient workup</button></div></div>"+
   "<div class='card cp' style='margin-bottom:14px'><div class='ct' style='margin-bottom:9px'>Orders — completion loop</div>"+(p.orders.length?"<div class='tw'><table class='tbl'><thead><tr><th>Order</th><th>Code</th><th>Placed</th><th>Status</th><th></th></tr></thead><tbody>"+p.orders.map(function(o,oi){var open=ordOpen(o),res=ordResult(o);var stcol=res?"c-b":open?"c-a":"c-g";return "<tr><td>"+o.t+(o.high?" <span class='halert'>HIGH-ALERT</span>":"")+"</td><td class='code'>"+o.code+"</td><td style='color:var(--mu)'>"+o.d+"</td><td><span class='chip "+stcol+"'>"+o.status+"</span></td><td>"+((open||res)?"<button class='btn btn-"+(res?"b":"g")+" btn-xs' onclick='advanceOrder("+p.id+","+oi+")'>"+(res?"Action":"Advance")+"</button>":"")+"</td></tr>";}).join("")+"</tbody></table></div>":"<div class='note'>No active orders.</div>")+"</div>"+
   "<div class='g2' style='margin-bottom:14px'>"+
     "<div class='card cp' style='border:1px solid var(--rdl)'><div class='ct' style='margin-bottom:4px'>Clinical decision support — rule engine</div><div class='cs' style='margin-bottom:11px'>deterministic · explainable · on-device</div>"+al.map(function(x){return "<div class='alert "+(x.s==="r"?"al-r":x.s==="a"?"al-a":"al-g")+"'>"+x.t+"</div>";}).join("")+"</div>"+
@@ -765,6 +777,7 @@ function refreshMetrics(){
   document.getElementById("bDash").textContent=tiers.filter(function(t){return t==="High";}).length;
   document.getElementById("bWork").textContent=priQueue().length;
   document.getElementById("bReg").textContent=patients.length;
+  var bcd=document.getElementById("bCD");if(bcd)bcd.textContent=todayList().length;
   document.getElementById("bOrd").textContent=lab+med+res;
   document.getElementById("bRec").textContent=rec;
   document.getElementById("bCov").textContent=patients.filter(function(p){return gaps(p).length;}).length;
@@ -808,10 +821,10 @@ function refreshAll(){refreshMetrics();if(document.getElementById("v-registry").
 function openReg(tf,rf){regFilter=tf||"all";var sel=document.getElementById("regRisk");if(sel)sel.value=rf||"";var pills=document.querySelectorAll("#v-registry .fp");pills.forEach(function(b,i){b.classList.toggle("on",(regFilter==="all"&&i===0)||(regFilter==="T2"&&i===1)||(regFilter==="T1"&&i===2)||(regFilter==="GDM"&&i===3));});show("registry");}
 function openOrders(f){ordF=f;show("orders");}
 var ROLES={
- "Diabetes Nurse":{pw:"nurse",name:"Nurse Mona Al-Zahrani",title:"Diabetes Nurse",av:"MZ",nav:["dash","worklist","registry","orders","recall","coverage","tasks","messages","enrol","settings"],land:"dash"},
- "Physician":{pw:"physician",name:"Dr. Khalid Al-Otaibi",title:"Endocrinologist",av:"KA",nav:["dash","registry","orders","physician","pathway","coverage","recall","settings"],land:"physician"},
+ "Diabetes Nurse":{pw:"nurse",name:"Nurse Mona Al-Zahrani",title:"Diabetes Nurse",av:"MZ",nav:["dash","clinicday","worklist","registry","orders","recall","coverage","tasks","messages","enrol","settings"],land:"clinicday"},
+ "Physician":{pw:"physician",name:"Dr. Khalid Al-Otaibi",title:"Endocrinologist",av:"KA",nav:["dash","clinicday","registry","orders","physician","pathway","coverage","recall","settings"],land:"clinicday"},
  "Diabetes Educator":{pw:"educator",name:"Reem Al-Dosari",title:"Diabetes Educator",av:"RD",nav:["dash","registry","messages","coverage","recall","enrol","settings"],land:"messages"},
- "Care Coordinator":{pw:"coordinator",name:"Sarah Al-Ghamdi",title:"Care Coordinator",av:"SG",nav:["dash","worklist","registry","orders","recall","coverage","tasks","messages","enrol","naphies","analytics","settings"],land:"worklist"}
+ "Care Coordinator":{pw:"coordinator",name:"Sarah Al-Ghamdi",title:"Care Coordinator",av:"SG",nav:["dash","clinicday","worklist","registry","orders","recall","coverage","tasks","messages","enrol","naphies","analytics","settings"],land:"worklist"}
 };
 function lgHint(){var r=document.getElementById("lgRole").value,c=ROLES[r];document.getElementById("lgPass").value=c.pw;document.getElementById("lgHint").textContent="Pilot credentials — "+r+" / "+c.pw+" · processing on-device, Riyadh";}
 function doLogin(){var r=document.getElementById("lgRole").value,pw=document.getElementById("lgPass").value;if(pw!==ROLES[r].pw){toast("Incorrect password","Use the pilot password shown for the role");return;}applyRole(r,document.getElementById("lgName").value);}
@@ -821,6 +834,21 @@ function applyRole(r,nm){var c=ROLES[r];var named=nm&&nm.trim();document.getElem
 function logout(){document.getElementById("login").style.display="flex";}
 function readImpFile(inp){var f=inp.files&&inp.files[0];if(!f)return;var rd=new FileReader();rd.onload=function(){var t=String(rd.result).split(/\r?\n/);if(t[0]&&/mrn/i.test(t[0])&&/name/i.test(t[0]))t.shift();document.getElementById("impBox").value=t.join("\n");processImport();toast("Imported "+f.name,"Read once · no re-keying");};rd.readAsText(f);}
 function addAttach(id,inp){var f=inp.files&&inp.files[0];if(!f)return;var p=patients[id];p.attachments=p.attachments||[];p.attachments.push({name:f.name,url:URL.createObjectURL(f)});toast("Attached",f.name);openPat(id);}
+
+/* ---------- order sets & today's clinic (high-volume PCP) ---------- */
+var ORDERSETS={
+ annual:{label:"Diabetes annual review",orders:[{t:"HbA1c",code:"LOINC 4548-4",cat:"lab"},{t:"Lipid panel",code:"LOINC 24331-1",cat:"lab"},{t:"Urine ACR",code:"LOINC 9318-7",cat:"lab"}],tasks:["Book retinal screen","Book foot exam"]},
+ intensify:{label:"Intensify (uncontrolled)",orders:[{t:"HbA1c",code:"LOINC 4548-4",cat:"lab"},{t:"Endocrinology review",code:"Referral",cat:"ref"}],tasks:["Intensify therapy - review in 2 weeks"]},
+ workup:{label:"New patient workup",orders:[{t:"HbA1c",code:"LOINC 4548-4",cat:"lab"},{t:"Lipid panel",code:"LOINC 24331-1",cat:"lab"},{t:"Urine ACR",code:"LOINC 9318-7",cat:"lab"},{t:"Renal function (eGFR)",code:"LOINC 33914-3",cat:"lab"}],tasks:["Baseline foot & retinal screen","Diabetes education referral"]}
+};
+function orderSet(id,kind){var p=patients[id],s=ORDERSETS[kind];if(!s)return;s.orders.forEach(function(o){p.orders.unshift({t:o.t,code:o.code,cat:o.cat,status:"ordered",d:daysAgo(0)});});s.tasks.forEach(function(t){addTask(id,t,"Coordinator");});saveState();refreshMetrics();toast(s.label+" placed",s.orders.length+" orders + "+s.tasks.length+" tasks in one click");openPat(id);}
+var seenToday={};
+function todayList(){return patients.filter(function(p){return p.id%3===0||p.a1c>=8;}).slice(0,16);}
+function markSeen(id){seenToday[id]=!seenToday[id];renderClinicDay();}
+function renderClinicDay(){var list=todayList();var seen=list.filter(function(p){return seenToday[p.id];}).length;
+ document.getElementById("cdBooked").textContent=list.length;document.getElementById("cdSeen").textContent=seen;document.getElementById("cdWait").textContent=list.length-seen;
+ document.getElementById("cdList").innerHTML=list.map(function(p,i){var c=control(p),rk=riskScore(p);var slot=(8+Math.floor(i/2))+":"+((i%2)?"30":"00");var sev=p.a1c>=9?"u":rk.tier==="High"?"m":"l";
+  return "<div class='wl "+sev+"' onclick='openPat("+p.id+")'><div style='width:48px;font-weight:700;font-size:12px;color:var(--mu)'>"+slot+"</div><div style='flex:1'><div class='nm'>"+p.name+" <span class='tag t"+p.type+"'>"+p.type+"</span></div><div class='dt'>"+p.age+"y · HbA1c "+p.a1c+"% · "+(gaps(p).length?gaps(p).length+" gap(s)":"routine review")+"</div></div><div class='ac'>"+(seenToday[p.id]?"<span class='chip c-g'>Seen</span>":"")+"<span class='chip "+c.cls+"'>"+c.label+"</span><button class='btn btn-p btn-xs' onclick='event.stopPropagation();openPat("+p.id+")'>Start visit</button><button class='btn btn-o btn-xs' onclick='event.stopPropagation();markSeen("+p.id+")'>"+(seenToday[p.id]?"Reopen":"Mark seen")+"</button></div></div>";}).join("");}
 
 /* ---------- persistence (on-device · in-Kingdom) ---------- */
 var DBKEY="jusoor_emr_v3";
