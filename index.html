@@ -175,9 +175,24 @@ button{font-family:inherit;}
 </head>
 <body>
 
+<div id="login" style="position:fixed;inset:0;z-index:9999;background:linear-gradient(135deg,#12233f,#1f3a66);display:flex;align-items:center;justify-content:center">
+  <div style="background:#fff;border-radius:15px;padding:30px 32px;width:390px;max-width:92vw;box-shadow:0 24px 60px rgba(0,0,0,.4)">
+    <div style="display:flex;align-items:center;gap:11px;justify-content:center;margin-bottom:5px">
+      <svg width="38" height="38" viewBox="0 0 64 64" fill="none"><circle cx="40" cy="26" r="3" fill="#2563a8"/><circle cx="50" cy="34" r="2.4" fill="#2563a8"/><circle cx="44" cy="44" r="2.4" fill="#2563a8"/><circle cx="30" cy="40" r="2" fill="#9bb6d6"/><circle cx="22" cy="32" r="1.7" fill="#9bb6d6"/><circle cx="33" cy="24" r="2.2" fill="#2563a8"/><path d="M40 26L50 34M40 26L44 44M40 26L33 24M30 40L44 44M30 40L22 32M33 24L22 32" stroke="#2563a8" stroke-width="1.1" opacity=".55"/><path d="M9 50c10-13 36-13 46 0" stroke="#15294d" stroke-width="3" stroke-linecap="round"/></svg>
+      <div><div style="font-size:22px;font-weight:800;color:#1a2b4a;letter-spacing:.3px">Jusoor</div><div style="font-size:8.5px;color:#8a94a3;letter-spacing:3px">DIABETES CARE</div></div>
+    </div>
+    <div style="font-size:12px;color:#5b6676;text-align:center;margin:10px 0 18px">Role-based access — each team member signs in to a platform configured for their role.</div>
+    <div class="fg"><label>Role</label><select id="lgRole" onchange="lgHint()"><option>Diabetes Nurse</option><option>Physician</option><option>Diabetes Educator</option><option>Care Coordinator</option></select></div>
+    <div class="fg"><label>Name (optional)</label><input id="lgName" placeholder="Your name"></div>
+    <div class="fg"><label>Password</label><input id="lgPass" type="password" value="nurse"></div>
+    <button class="btn btn-p" style="width:100%;justify-content:center;padding:11px" onclick="doLogin()">Sign in</button>
+    <div id="lgHint" style="font-size:9.5px;color:#9ca3af;text-align:center;margin-top:13px"></div>
+  </div>
+</div>
+
 <aside class="sb">
   <div class="sb-brand"><div class="sb-name">Jusoor</div><div class="sb-ar">جسور · DIABETES</div></div>
-  <div class="sb-role"><span class="dot"></span>PHC Coordinator · Riyadh</div>
+  <div class="sb-role"><span class="dot"></span><span id="sbRole">PHC Coordinator · Riyadh</span></div>
   <div class="sb-scroll">
     <div class="sb-sec">Clinical</div>
     <div class="nav on" data-v="dash"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg></span>Dashboard<span class="bdg bg-r" id="bDash">0</span></div>
@@ -199,7 +214,7 @@ button{font-family:inherit;}
     <div class="nav" data-v="settings"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="3.1"/><path d="M19.4 12c0-.4 0-.8-.1-1.2l2-1.5-2-3.4-2.3 1a7 7 0 0 0-2-1.2l-.3-2.5H8.3l-.3 2.5a7 7 0 0 0-2 1.2l-2.3-1-2 3.4 2 1.5a7.4 7.4 0 0 0 0 2.4l-2 1.5 2 3.4 2.3-1a7 7 0 0 0 2 1.2l.3 2.5h3.4l.3-2.5a7 7 0 0 0 2-1.2l2.3 1 2-3.4-2-1.5c.1-.4.1-.8.1-1.2z"/></svg></span>Settings</div>
   </div>
   <div class="sb-foot"><span class="d"></span>Demo Mode · Synthetic Data</div>
-  <div class="sb-user"><div class="sb-av">MZ</div><div><div class="sb-un">Nurse Mona Al-Zahrani</div><div class="sb-uc">Diabetes Nurse</div></div></div>
+  <div class="sb-user"><div class="sb-av" id="sbAv">MZ</div><div style="flex:1"><div class="sb-un" id="sbUn">Nurse Mona Al-Zahrani</div><div class="sb-uc" id="sbUc">Diabetes Nurse</div></div><div onclick="logout()" title="Sign out" style="cursor:pointer;opacity:.55"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"/></svg></div></div>
 </aside>
 
 <div class="main">
@@ -217,18 +232,18 @@ button{font-family:inherit;}
   <!-- DASHBOARD -->
   <div class="view on" id="v-dash">
     <div class="krow">
-      <div class="kpi" style="--c:var(--bl)" onclick="show('registry')"><div class="kv" id="kEnr">0</div><div class="kl">Total Enrolled</div><div class="ks">Riyadh PHC · Active</div></div>
-      <div class="kpi" style="--c:var(--rd)" onclick="show('worklist')"><div class="kv" id="kHigh">0</div><div class="kl">High Risk</div><div class="ks link">Action required today</div></div>
-      <div class="kpi" style="--c:var(--am)" onclick="show('worklist')"><div class="kv" id="kFu">0</div><div class="kl">Follow-up Needed</div><div class="ks">Within 7 days</div></div>
-      <div class="kpi" style="--c:var(--gr)"><div class="kv" id="kStable">0</div><div class="kl">Stable</div><div class="ks">On target</div></div>
+      <div class="kpi" style="--c:var(--bl)" onclick="openReg('all','')"><div class="kv" id="kEnr">0</div><div class="kl">Total Enrolled</div><div class="ks">Riyadh PHC · Active</div></div>
+      <div class="kpi" style="--c:var(--rd)" onclick="openReg('all','High')"><div class="kv" id="kHigh">0</div><div class="kl">High Risk</div><div class="ks link">Action required today</div></div>
+      <div class="kpi" style="--c:var(--am)" onclick="openReg('all','Moderate')"><div class="kv" id="kFu">0</div><div class="kl">Follow-up Needed</div><div class="ks">Within 7 days</div></div>
+      <div class="kpi" style="--c:var(--gr)" onclick="openReg('all','Low')"><div class="kv" id="kStable">0</div><div class="kl">Stable</div><div class="ks">On target</div></div>
       <div class="kpi" style="--c:var(--te)" onclick="show('coverage')"><div class="kv" id="kScr">0%</div><div class="kl">Screening Coverage</div><div class="ks">Annual protocol</div></div>
     </div>
     <div class="card cp" style="margin-bottom:14px">
       <div class="ch"><div><div class="ct">Order-to-completion — flow &amp; waste at a glance</div><div class="cs">where work is waiting between the clinical order and the outcome · click to recover</div></div><button class="btn btn-o btn-sm" onclick="show('orders')">Open order tracker</button></div>
       <div class="lean">
-        <div class="cell" style="--c:var(--am)" onclick="show('orders')"><div class="cv" id="lnLab">0</div><div class="cl">HbA1c ordered, not completed</div></div>
-        <div class="cell" style="--c:var(--rd)" onclick="show('orders')"><div class="cv" id="lnMed">0</div><div class="cl">Medication ordered, not collected</div></div>
-        <div class="cell" style="--c:var(--bl)" onclick="show('orders')"><div class="cv" id="lnRes">0</div><div class="cl">Result back, not actioned</div></div>
+        <div class="cell" style="--c:var(--am)" onclick="openOrders('hba1c')"><div class="cv" id="lnLab">0</div><div class="cl">HbA1c ordered, not completed</div></div>
+        <div class="cell" style="--c:var(--rd)" onclick="openOrders('med')"><div class="cv" id="lnMed">0</div><div class="cl">Medication ordered, not collected</div></div>
+        <div class="cell" style="--c:var(--bl)" onclick="openOrders('result')"><div class="cv" id="lnRes">0</div><div class="cl">Result back, not actioned</div></div>
         <div class="cell" style="--c:var(--te)" onclick="show('recall')"><div class="cv" id="lnRec">0</div><div class="cl">Due for recall this month</div></div>
       </div>
     </div>
@@ -320,6 +335,7 @@ button{font-family:inherit;}
         <div class="note" style="margin-bottom:11px">Dual intake: where the Raqeem / hospital feed is available it is <b>read once</b> into one source of truth (no re-keying); where it is not, manual and paste entry are always available. The platform never blocks on an integration it may not have.</div>
         <textarea id="impBox" style="width:100%;height:130px;font-family:ui-monospace,monospace;font-size:11.5px;border:1px solid var(--bdr);border-radius:8px;padding:11px" placeholder="Sara Al-Otaibi, SA-9001, 58, T2, 8.6, +9665 1122334"></textarea>
         <div style="display:flex;gap:8px;margin-top:11px"><button class="btn btn-o btn-sm" onclick="loadImpDemo()">Load sample batch</button><button class="btn btn-b btn-sm" onclick="processImport()">Process &amp; add</button></div>
+        <div class="fg" style="margin-top:13px"><label>Upload data file — export from HCC, MOH or hospital system (CSV)</label><input type="file" id="impFile" accept=".csv,.txt,.tsv" onchange="readImpFile(this)"></div>
         <div id="impResult" style="margin-top:12px"></div>
       </div>
     </div>
@@ -583,6 +599,7 @@ function ordFilter(f,btn){ordF=f;if(btn){btn.parentNode.querySelectorAll(".btn")
 function renderOrders(){var rows=[];
   patients.forEach(function(p){p.orders.forEach(function(o,oi){
     if(ordF==="open"&&!ordOpen(o))return;if(ordF==="result"&&!ordResult(o))return;
+    if(ordF==="hba1c"&&!(o.t==="HbA1c"&&ordOpen(o)))return;if(ordF==="med"&&!(o.cat==="med"&&o.status==="ordered"))return;
     var open=ordOpen(o),res=ordResult(o);var stcol=res?"c-b":open?"c-a":"c-g";
     var stage=ordStageList(o);var idx=stage.indexOf(o.status);var stageTxt=(idx+1)+" of "+stage.length;
     rows.push({sc:res?2:open?3:1,html:"<tr class='clk' onclick='openPat("+p.id+")'><td><div class='pname'>"+p.name+"</div><div class='pmeta'>"+p.mrn+" · "+p.type+"</div></td>"+
@@ -651,6 +668,7 @@ function openPat(id){var p=patients[id],c=control(p),rk=riskScore(p),dr=dropoutS
     "<div class='card cp'><div class='ct' style='margin-bottom:9px'>Standard-work pathway</div>"+pw.map(function(it){return "<div class='path-row'><span class='path-ic' style='background:"+(it.ok?"var(--gr)":"var(--rd)")+"'>"+(it.ok?"✓":"!")+"</span><span style='font-size:12px'>"+it.l+"</span></div>";}).join("")+"</div>"+
   "</div>"+
   "<div class='card cp'><div class='ct' style='margin-bottom:9px'>Care-team communication</div>"+(p.comms.length?p.comms.map(function(c){return "<div style='padding:9px 0;border-bottom:1px solid var(--bdr)'><div style='font-size:11px'><b>"+c.who+"</b> <span style='color:var(--mu)'>"+c.role+" · "+c.date+"</span></div><div style='font-size:12px;margin-top:3px'>"+c.txt+"</div></div>";}).join(""):"<div class='note'>No recent care-team notes.</div>")+(p.notes.map(function(n){return "<div class='note' style='margin-top:8px'>"+n+"</div>";}).join(""))+"</div>"+
+  "<div class='card cp' style='margin-top:14px'><div class='ct' style='margin-bottom:9px'>Documents &amp; images</div><div class='cs' style='margin-bottom:10px'>Lab reports, referral letters, retinal photos and HIS exports — attached to this record (on-device).</div>"+((p.attachments&&p.attachments.length)?p.attachments.map(function(at){return "<div style='display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid var(--bdr);font-size:12px'><span>"+at.name+"</span><a href='"+at.url+"' target='_blank' class='btn btn-o btn-xs'>Open</a></div>";}).join(""):"<div class='note'>No documents attached.</div>")+"<input type='file' accept='image/*,.pdf' style='margin-top:10px;font-size:11px' onchange='addAttach("+p.id+",this)'></div>"+
   "</div>";
   document.getElementById("mhB").innerHTML=html;document.getElementById("ov").classList.add("open");
 }
@@ -743,17 +761,17 @@ function drawCharts(){
   if(typeof Chart==="undefined")return;
   var bands=[0,0,0,0,0,0];patients.forEach(function(p){if(p.type==="Pre")return;var a=p.a1c;if(a<7)bands[0]++;else if(a<7.5)bands[1]++;else if(a<8)bands[2]++;else if(a<8.5)bands[3]++;else if(a<9)bands[4]++;else bands[5]++;});
   if(chDist)chDist.destroy();
-  chDist=new Chart(document.getElementById("chDist"),{type:"bar",data:{labels:["<7%","7-7.5%","7.5-8%","8-8.5%","8.5-9%","≥9%"],datasets:[{data:bands,backgroundColor:["#5aaa1e","#8cc63f","#ef9f27","#e0823a","#e24b4a","#7a1e1e"]}]},options:{maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{grid:{display:false}},y:{grid:{color:"#eef1f5"},ticks:{precision:0}}}}});
+  chDist=new Chart(document.getElementById("chDist"),{type:"bar",data:{labels:["<7%","7-7.5%","7.5-8%","8-8.5%","8.5-9%","≥9%"],datasets:[{data:bands,backgroundColor:["#5aaa1e","#8cc63f","#ef9f27","#e0823a","#e24b4a","#7a1e1e"]}]},options:{maintainAspectRatio:false,onClick:function(e,el){if(el&&el.length)openReg("all",el[0].index>=5?"High":el[0].index>=3?"Moderate":"");},plugins:{legend:{display:false}},scales:{x:{grid:{display:false}},y:{grid:{color:"#eef1f5"},ticks:{precision:0}}}}});
   var tc={};patients.forEach(function(p){var k=p.type==="T2"?"T2DM":p.type==="T1"?"T1DM":p.type==="GDM"?"GDM":p.type;tc[k]=(tc[k]||0)+1;});
   if(chType)chType.destroy();
-  chType=new Chart(document.getElementById("chType"),{type:"doughnut",data:{labels:Object.keys(tc),datasets:[{data:Object.values(tc),backgroundColor:["#378add","#7c4dff","#ef9f27","#1d9e75","#9ca3af"],borderColor:"#fff",borderWidth:3}]},options:{maintainAspectRatio:false,cutout:"62%",plugins:{legend:{position:"right",labels:{boxWidth:11,padding:11,font:{size:11}}}}}});
+  chType=new Chart(document.getElementById("chType"),{type:"doughnut",data:{labels:Object.keys(tc),datasets:[{data:Object.values(tc),backgroundColor:["#378add","#7c4dff","#ef9f27","#1d9e75","#9ca3af"],borderColor:"#fff",borderWidth:3}]},options:{maintainAspectRatio:false,cutout:"62%",onClick:function(e,el){if(el&&el.length){var lab=chType.data.labels[el[0].index];openReg(lab==="T2DM"?"T2":lab==="T1DM"?"T1":lab==="GDM"?"GDM":"all","");}},plugins:{legend:{position:"right",labels:{boxWidth:11,padding:11,font:{size:11}}}}}});
   var mean=patients.reduce(function(s,p){return s+p.a1c;},0)/patients.length;
   var trend=[mean+0.5,mean+0.32,mean+0.14,mean].map(function(x){return +x.toFixed(2);});
   if(chTrend)chTrend.destroy();
   chTrend=new Chart(document.getElementById("chTrend"),{type:"line",data:{labels:["Q2 2024","Q3 2024","Q4 2024","Q1 2025"],datasets:[{label:"Avg HbA1c",data:trend,borderColor:"#378add",backgroundColor:"rgba(55,138,221,.1)",fill:true,tension:.35,pointRadius:4,pointBackgroundColor:"#fff",pointBorderColor:"#378add",pointBorderWidth:2},{label:"Target 7%",data:[7,7,7,7],borderColor:"#5aaa1e",borderDash:[5,4],pointRadius:0,fill:false}]},options:{maintainAspectRatio:false,plugins:{legend:{position:"bottom",labels:{boxWidth:11,font:{size:10}}}},scales:{x:{grid:{display:false}},y:{grid:{color:"#eef1f5"},suggestedMin:6.5}}}});
   var types=["T1","T2","GDM"];var hi=[],mo=[],lo=[];types.forEach(function(t){var ps=patients.filter(function(p){return p.type===t;});hi.push(ps.filter(function(p){return riskScore(p).tier==="High";}).length);mo.push(ps.filter(function(p){return riskScore(p).tier==="Moderate";}).length);lo.push(ps.filter(function(p){return riskScore(p).tier==="Low";}).length);});
   if(chRisk)chRisk.destroy();
-  chRisk=new Chart(document.getElementById("chRisk"),{type:"bar",data:{labels:types,datasets:[{label:"High",data:hi,backgroundColor:"#e24b4a"},{label:"Moderate",data:mo,backgroundColor:"#ef9f27"},{label:"Low",data:lo,backgroundColor:"#5aaa1e"}]},options:{maintainAspectRatio:false,plugins:{legend:{position:"bottom",labels:{boxWidth:11,font:{size:10}}}},scales:{x:{stacked:true,grid:{display:false}},y:{stacked:true,grid:{color:"#eef1f5"},ticks:{precision:0}}}}});
+  chRisk=new Chart(document.getElementById("chRisk"),{type:"bar",data:{labels:types,datasets:[{label:"High",data:hi,backgroundColor:"#e24b4a"},{label:"Moderate",data:mo,backgroundColor:"#ef9f27"},{label:"Low",data:lo,backgroundColor:"#5aaa1e"}]},options:{maintainAspectRatio:false,onClick:function(e,el){if(el&&el.length)openReg(["T1","T2","GDM"][el[0].index],["High","Moderate","Low"][el[0].datasetIndex]);},plugins:{legend:{position:"bottom",labels:{boxWidth:11,font:{size:10}}}},scales:{x:{stacked:true,grid:{display:false}},y:{stacked:true,grid:{color:"#eef1f5"},ticks:{precision:0}}}}});
 }
 function renderAnalytics(){
   var mean=(patients.reduce(function(s,p){return s+p.a1c;},0)/patients.length).toFixed(1);
@@ -773,11 +791,29 @@ function toggleExt(on){var f=document.getElementById("airFields");f.style.opacit
   toast(on?"External adapter enabled":"External adapter off",on?"Only de-identified features sent":"All processing on-device");}
 function refreshAll(){refreshMetrics();if(document.getElementById("v-registry").classList.contains("on"))renderReg();if(document.getElementById("v-worklist").classList.contains("on"))renderWork();if(document.getElementById("v-orders").classList.contains("on"))renderOrders();if(document.getElementById("v-recall").classList.contains("on"))renderRecall();if(document.getElementById("v-coverage").classList.contains("on"))renderCoverage();if(document.getElementById("v-pathway").classList.contains("on"))renderPathway();renderTasks();}
 
+/* ---------- reactivity / roles / upload ---------- */
+function openReg(tf,rf){regFilter=tf||"all";var sel=document.getElementById("regRisk");if(sel)sel.value=rf||"";var pills=document.querySelectorAll("#v-registry .fp");pills.forEach(function(b,i){b.classList.toggle("on",(regFilter==="all"&&i===0)||(regFilter==="T2"&&i===1)||(regFilter==="T1"&&i===2)||(regFilter==="GDM"&&i===3));});show("registry");}
+function openOrders(f){ordF=f;show("orders");}
+var ROLES={
+ "Diabetes Nurse":{pw:"nurse",name:"Nurse Mona Al-Zahrani",title:"Diabetes Nurse",av:"MZ",nav:["dash","worklist","registry","orders","recall","coverage","tasks","messages","enrol","settings"],land:"dash"},
+ "Physician":{pw:"physician",name:"Dr. Khalid Al-Otaibi",title:"Endocrinologist",av:"KA",nav:["dash","registry","orders","physician","pathway","coverage","recall","settings"],land:"physician"},
+ "Diabetes Educator":{pw:"educator",name:"Reem Al-Dosari",title:"Diabetes Educator",av:"RD",nav:["dash","registry","messages","coverage","recall","enrol","settings"],land:"messages"},
+ "Care Coordinator":{pw:"coordinator",name:"Sarah Al-Ghamdi",title:"Care Coordinator",av:"SG",nav:["dash","worklist","registry","orders","recall","coverage","tasks","messages","enrol","naphies","analytics","settings"],land:"worklist"}
+};
+function lgHint(){var r=document.getElementById("lgRole").value,c=ROLES[r];document.getElementById("lgPass").value=c.pw;document.getElementById("lgHint").textContent="Pilot credentials — "+r+" / "+c.pw+" · processing on-device, Riyadh";}
+function doLogin(){var r=document.getElementById("lgRole").value,pw=document.getElementById("lgPass").value;if(pw!==ROLES[r].pw){toast("Incorrect password","Use the pilot password shown for the role");return;}applyRole(r,document.getElementById("lgName").value);}
+function applyRole(r,nm){var c=ROLES[r];var named=nm&&nm.trim();document.getElementById("sbUn").textContent=named?nm:c.name;document.getElementById("sbUc").textContent=c.title;document.getElementById("sbAv").textContent=named?nm.trim().split(" ").map(function(x){return x[0];}).join("").slice(0,2).toUpperCase():c.av;document.getElementById("sbRole").textContent=c.title+" · Riyadh";
+ document.querySelectorAll(".nav").forEach(function(n){n.style.display=c.nav.indexOf(n.getAttribute("data-v"))>-1?"":"none";});
+ document.getElementById("login").style.display="none";show(c.land);toast("Signed in — "+r,c.name);}
+function logout(){document.getElementById("login").style.display="flex";}
+function readImpFile(inp){var f=inp.files&&inp.files[0];if(!f)return;var rd=new FileReader();rd.onload=function(){var t=String(rd.result).split(/\r?\n/);if(t[0]&&/mrn/i.test(t[0])&&/name/i.test(t[0]))t.shift();document.getElementById("impBox").value=t.join("\n");processImport();toast("Imported "+f.name,"Read once · no re-keying");};rd.readAsText(f);}
+function addAttach(id,inp){var f=inp.files&&inp.files[0];if(!f)return;var p=patients[id];p.attachments=p.attachments||[];p.attachments.push({name:f.name,url:URL.createObjectURL(f)});toast("Attached",f.name);openPat(id);}
+
 /* ---------- init ---------- */
 document.getElementById("enAge").innerHTML=numOpts(18,95,1,55);
 document.getElementById("enA1c").innerHTML=numOpts(5.0,14.0,0.1,7.5);
 document.getElementById("enEgfr").innerHTML=numOpts(15,120,1,80);
-seedTasks();renderMsg();refreshMetrics();renderTasks();
+seedTasks();renderMsg();refreshMetrics();renderTasks();lgHint();
 </script>
 </body>
 </html>
