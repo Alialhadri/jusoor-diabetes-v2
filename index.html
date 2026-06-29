@@ -450,7 +450,8 @@ function makePatient(i){
   var meds=[];if(type!=="Pre"&&type!=="GDM"){meds.push(mkMed(ch(.5)?0:1));}
   if(ch(.5)&&type!=="GDM")meds.push(mkMed(2+Math.floor(rnd()*5)));
   if(a1c>=9&&ch(.6))meds.push(mkMed(8));if(ldl>2.6||age>55)meds.push(mkMed(9));
-  var scr={retinal:Math.floor(rnd()*20),foot:Math.floor(rnd()*18),kidney:Math.floor(rnd()*16),cardiac:Math.floor(rnd()*20),neuro:Math.floor(rnd()*22)};
+  function scrMo(){return ch(.64)?Math.floor(rnd()*11):12+Math.floor(rnd()*9);}
+  var scr={retinal:scrMo(),foot:scrMo(),kidney:scrMo(),cardiac:scrMo(),neuro:scrMo()};
   var resp=Math.round(35+rnd()*60),noShow=ch(.25)?1+Math.floor(rnd()*2):0,lastContact=2+Math.floor(rnd()*70);
   var adhScore=Math.max(0,Math.min(100,resp-(noShow*15)+(a1c<7?15:a1c>9?-15:0)));
   var adh=adhScore>=68?"Good":adhScore>=45?"Fair":"Poor";
@@ -473,7 +474,7 @@ function riskScore(p){var s=10,d=[];
   if(p.sbp>=140){s+=9;d.push("BP "+p.sbp+"/"+p.dbp);}
   if(p.ldl>2.6){s+=6;d.push("LDL "+p.ldl+" mmol/L");}
   if(gaps(p).length){s+=gaps(p).length*4;d.push(gaps(p).length+" screening gap(s)");}
-  s=Math.min(99,s);return{score:s,tier:s>=52?"High":s>=30?"Moderate":"Low",drivers:d.slice(0,3)};}
+  s=Math.min(99,s);return{score:s,tier:s>=46?"High":s>=26?"Moderate":"Low",drivers:d.slice(0,3)};}
 function dropoutScore(p){var s=8,d=[];
   if(p.a1c>=9){s+=14;d.push("Uncontrolled — high stakes if lost");}
   if(p.resp<45){s+=20;d.push("Low message response ("+p.resp+"%)");}else if(p.resp<65){s+=9;d.push("Moderate response ("+p.resp+"%)");}
@@ -571,7 +572,7 @@ function renderHuddle(){var unc=patients.filter(function(p){return p.a1c>=9;}),g
 /* ---------- tasks ---------- */
 var tasks=[];
 function addTask(pid,txt,role){if(tasks.some(function(t){return !t.done&&t.pid===pid&&t.txt===txt;}))return;tasks.unshift({pid:pid,txt:txt,role:role||"Coordinator",done:false});}
-function seedTasks(){patients.forEach(function(p){var g=gaps(p);if(p.a1c>=9)addTask(p.id,"Uncontrolled — intensify & recall","Physician");if(g.length)addTask(p.id,"Close "+g.length+" care gap(s)","Coordinator");});}
+function seedTasks(){patients.forEach(function(p){var g=gaps(p);if(p.a1c>=9)addTask(p.id,"Uncontrolled — intensify & recall","Physician");if(g.length>=2)addTask(p.id,"Close "+g.length+" care gap(s)","Coordinator");});}
 function renderTasks(){var open=tasks.filter(function(t){return !t.done;}),grp={};open.forEach(function(t){(grp[t.pid]=grp[t.pid]||[]).push(t);});
   document.getElementById("taskList").innerHTML=Object.keys(grp).map(function(pid){var p=patients[pid];
     return "<div style='border:1px solid var(--bdr);border-radius:10px;padding:11px 13px;margin-bottom:9px'><div style='display:flex;justify-content:space-between;align-items:center;margin-bottom:8px'><div><b>"+p.name+"</b> <span style='font-size:10.5px;color:var(--mu)'>"+p.mrn+" · "+p.type+"</span></div><button class='btn btn-o btn-xs' onclick='openPat("+p.id+")'>Open</button></div><div style='display:flex;flex-wrap:wrap;gap:6px'>"+grp[pid].map(function(t){return "<span class='chip c-b' style='padding:4px 9px'>"+t.txt+" <span style='cursor:pointer;font-weight:700;color:var(--gr)' onclick='completeTask("+tasks.indexOf(t)+")'>✓</span></span>";}).join("")+"</div></div>";}).join("")||"<div class='note'>No open tasks.</div>";
@@ -627,11 +628,10 @@ function processImport(){var lines=document.getElementById("impBox").value.split
 /* ---------- metrics / charts ---------- */
 var chDist,chType,chTrend,chRisk;
 function refreshMetrics(){
-  var dia=patients.filter(function(p){return p.type!=="Pre";});
-  var tgt=patients.filter(function(p){return p.type!=="Pre"&&p.a1c<7;}).length;
-  var high=patients.filter(function(p){return riskScore(p).tier==="High";}).length;
-  var fu=patients.filter(function(p){return p.a1c>=7.5||gaps(p).length;}).length;
-  var stable=patients.filter(function(p){return p.a1c<7&&!gaps(p).length;}).length;
+  var tiers=patients.map(function(p){return riskScore(p).tier;});
+  var high=tiers.filter(function(t){return t==="High";}).length;
+  var fu=tiers.filter(function(t){return t==="Moderate";}).length;
+  var stable=tiers.filter(function(t){return t==="Low";}).length;
   var scrPct=Math.round(patients.reduce(function(s,p){return s+scrDone(p);},0)/patients.length*100);
   document.getElementById("kEnr").textContent=patients.length;
   document.getElementById("kHigh").textContent=high;
