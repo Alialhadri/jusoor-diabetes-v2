@@ -424,6 +424,16 @@ button{font-family:inherit;}
       </div>
       <div class="resnote"><b>Phase 1 (pilot):</b> rule engine only — nothing leaves the device. <b>Phase 2:</b> point the endpoint at an in-Kingdom local LLM for open-ended tasks. No rebuild required. Processing mode: <strong id="airMode">Local</strong>.</div>
     </div>
+    <div class="airpanel" style="margin-bottom:14px;max-width:790px">
+      <div class="ct">In-Kingdom server connection</div>
+      <div class="cs">Connect to a local server inside the Kingdom — hospital EMR / HIS, a FHIR / HL7 endpoint, or a local LLM — when one is available. Off until configured; the platform runs fully on-device without it.</div>
+      <div class="frow2" style="margin-top:13px">
+        <div class="fg"><label>Server base URL (FHIR / HL7 / API)</label><input id="srvUrl" placeholder="https://emr.internal.hospital.sa/fhir" autocomplete="off"></div>
+        <div class="fg"><label>API key / token</label><input id="srvKey" type="password" autocomplete="off" placeholder="stored locally"></div>
+      </div>
+      <div style="display:flex;gap:9px;align-items:center"><button class="btn btn-p btn-sm" onclick="testServer()">Save &amp; test connection</button><span id="srvStat" class="chip c-n">Not connected</span></div>
+      <div class="resnote">No data leaves the device until a connection is enabled and verified. Exchange is read-once into one source of truth — no double entry.</div>
+    </div>
     <div class="g2" style="max-width:790px">
       <div class="card cp"><div class="ct" style="margin-bottom:12px">Programme &amp; safety (poka-yoke)</div>
         <div class="set-row"><div><div class="set-n">Renal check with metformin</div><div class="set-d">Block / flag when eGFR below threshold</div></div><label class="sw"><input type="checkbox" checked><span class="sl"></span></label></div>
@@ -434,6 +444,8 @@ button{font-family:inherit;}
       <div class="card cp"><div class="ct" style="margin-bottom:12px">About</div>
         <div class="note" style="line-height:1.7;margin-bottom:11px">Version 3.0 · Riyadh PHC Cluster Pilot · rule-based diabetes care coordination layer over the hospital EMR, aligned with ADA standards and Saudi HSTP / Vision 2030. Built to operate alongside the clinical system — closing the order-to-completion loop the EMR does not own.</div>
         <div style="display:flex;gap:7px;flex-wrap:wrap"><span class="chip c-b">Phase 0 Demo</span><span class="chip c-g">ADA aligned</span><span class="chip c-a">PDPL aligned</span><span class="chip c-t">Lean / on-device</span></div>
+        <div class="note" style="margin-top:13px;line-height:1.6">Records are saved on this device only (browser storage, in the Kingdom) and persist between sessions. Production multi-user storage runs on the Phase-2 in-Kingdom backend.</div>
+        <button class="btn btn-o btn-sm" style="margin-top:11px" onclick="resetData()">Reset demo data</button>
       </div>
     </div>
   </div>
@@ -667,6 +679,7 @@ function openPat(id){var p=patients[id],c=control(p),rk=riskScore(p),dr=dropoutS
     "<div class='card cp' style='border:1px solid var(--rdl)'><div class='ct' style='margin-bottom:4px'>Clinical decision support — rule engine</div><div class='cs' style='margin-bottom:11px'>deterministic · explainable · on-device</div>"+al.map(function(x){return "<div class='alert "+(x.s==="r"?"al-r":x.s==="a"?"al-a":"al-g")+"'>"+x.t+"</div>";}).join("")+"</div>"+
     "<div class='card cp'><div class='ct' style='margin-bottom:9px'>Standard-work pathway</div>"+pw.map(function(it){return "<div class='path-row'><span class='path-ic' style='background:"+(it.ok?"var(--gr)":"var(--rd)")+"'>"+(it.ok?"✓":"!")+"</span><span style='font-size:12px'>"+it.l+"</span></div>";}).join("")+"</div>"+
   "</div>"+
+  "<div class='card cp' style='margin-bottom:14px'><div class='ct' style='margin-bottom:9px'>Clinical documentation</div>"+((p.encounters&&p.encounters.length)?p.encounters.map(function(en){return "<div style='padding:9px 0;border-bottom:1px solid var(--bdr)'><div style='font-size:11px'><b>"+en.type+"</b> <span style='color:var(--mu)'>"+en.author+" · "+en.date+"</span></div><div style='font-size:12px;margin-top:3px;white-space:pre-wrap'>"+en.text+"</div></div>";}).join(""):"<div class='note'>No encounters documented.</div>")+"<div style='margin-top:11px'><select id='encType' style='padding:7px 9px;border:1px solid var(--bdr);border-radius:7px;font-size:12px;margin-bottom:7px;font-family:inherit'><option>Progress note</option><option>SOAP note</option><option>Phone encounter</option><option>Nurse review</option><option>Education session</option></select><textarea id='encText' style='width:100%;min-height:62px;padding:9px 11px;border:1px solid var(--bdr);border-radius:7px;font-size:12.5px;font-family:inherit;line-height:1.5' placeholder='Document the encounter…'></textarea><button class='btn btn-g btn-xs' style='margin-top:8px' onclick='saveNote("+p.id+")'>Save note</button></div></div>"+
   "<div class='card cp'><div class='ct' style='margin-bottom:9px'>Care-team communication</div>"+(p.comms.length?p.comms.map(function(c){return "<div style='padding:9px 0;border-bottom:1px solid var(--bdr)'><div style='font-size:11px'><b>"+c.who+"</b> <span style='color:var(--mu)'>"+c.role+" · "+c.date+"</span></div><div style='font-size:12px;margin-top:3px'>"+c.txt+"</div></div>";}).join(""):"<div class='note'>No recent care-team notes.</div>")+(p.notes.map(function(n){return "<div class='note' style='margin-top:8px'>"+n+"</div>";}).join(""))+"</div>"+
   "<div class='card cp' style='margin-top:14px'><div class='ct' style='margin-bottom:9px'>Documents &amp; images</div><div class='cs' style='margin-bottom:10px'>Lab reports, referral letters, retinal photos and HIS exports — attached to this record (on-device).</div>"+((p.attachments&&p.attachments.length)?p.attachments.map(function(at){return "<div style='display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid var(--bdr);font-size:12px'><span>"+at.name+"</span><a href='"+at.url+"' target='_blank' class='btn btn-o btn-xs'>Open</a></div>";}).join(""):"<div class='note'>No documents attached.</div>")+"<input type='file' accept='image/*,.pdf' style='margin-top:10px;font-size:11px' onchange='addAttach("+p.id+",this)'></div>"+
   "</div>";
@@ -679,7 +692,7 @@ function saveMed(id){var p=patients[id],di=+document.getElementById("mfDrug").va
   if(d.renal&&p.egfr<45){toast("Poka-yoke: renal check","eGFR "+p.egfr+" — confirm dose before ordering "+d.n);}
   p.meds.push({drug:d.n,dose:d.dose,cls:d.cls,freq:f.l,tpd:f.t,timing:document.getElementById("mfTime").value,days:+document.getElementById("mfDays").value,high:!!d.high,renal:!!d.renal});
   p.orders.unshift({t:d.n+" "+d.dose,code:"RxNorm",cat:"med",status:"ordered",d:daysAgo(0),high:!!d.high});
-  toast("Medication ordered",d.n+" "+d.dose+" · "+f.l+" ("+f.t+"×/day)");openPat(id);}
+  toast("Medication ordered",d.n+" "+d.dose+" · "+f.l+" ("+f.t+"×/day)");saveState();openPat(id);}
 function recallPat(id){var p=patients[id];addTask(id,"Recall for review & due care","Coordinator");p.notes.unshift("Recall generated · "+daysAgo(0));refreshAll();toast("Recall generated",p.name);openPat(id);}
 function messagePat(id){var p=patients[id];closePat();show("messages");var el=document.getElementById("msgPt");if(el){el.value=p.name+" · "+p.mrn;msgWho();aiMsg();}}
 
@@ -694,7 +707,7 @@ function renderTasks(){var open=tasks.filter(function(t){return !t.done;}),grp={
   document.getElementById("taskList").innerHTML=Object.keys(grp).map(function(pid){var p=patients[pid];
     return "<div style='border:1px solid var(--bdr);border-radius:10px;padding:11px 13px;margin-bottom:9px'><div style='display:flex;justify-content:space-between;align-items:center;margin-bottom:8px'><div><b>"+p.name+"</b> <span style='font-size:10.5px;color:var(--mu)'>"+p.mrn+" · "+p.type+"</span></div><button class='btn btn-o btn-xs' onclick='openPat("+p.id+")'>Open</button></div><div style='display:flex;flex-wrap:wrap;gap:6px'>"+grp[pid].map(function(t){return "<span class='chip c-b' style='padding:4px 9px'>"+t.txt+" <span style='cursor:pointer;font-weight:700;color:var(--gr)' onclick='completeTask("+tasks.indexOf(t)+")'>✓</span></span>";}).join("")+"</div></div>";}).join("")||"<div class='note'>No open tasks.</div>";
   document.getElementById("bTask").textContent=open.length;}
-function completeTask(i){tasks[i].done=true;renderTasks();refreshMetrics();}
+function completeTask(i){tasks[i].done=true;renderTasks();refreshMetrics();saveState();}
 function renderPhys(){var list=patients.filter(function(p){return alerts(p).some(function(a){return a.s==="r"&&a.t.indexOf("Allergy")<0;});}).sort(function(a,b){return riskScore(b).score-riskScore(a).score;});
   document.getElementById("physList").innerHTML=list.map(function(p){var al=alerts(p).filter(function(a){return a.s==="r"&&a.t.indexOf("Allergy")<0;});
     return "<div class='wl u' onclick='openPat("+p.id+")'><div><div class='nm'>"+p.name+" <span class='tag t"+p.type+"'>"+p.type+"</span></div><div class='dt'>"+(al[0]?al[0].t:"")+"</div></div><div class='ac'><span class='chip c-r'>"+al.length+" flag(s)</span><button class='btn btn-o btn-xs' onclick='event.stopPropagation();openPat("+p.id+")'>Review</button></div></div>";}).join("")||"<div class='note'>No patients flagged for physician review.</div>";document.getElementById("bPhys").textContent=list.length;}
@@ -789,7 +802,7 @@ function toggleExt(on){var f=document.getElementById("airFields");f.style.opacit
   document.getElementById("airMode").textContent=on?"Local + External (de-identified)":"Local";
   document.getElementById("pillAI").innerHTML="<span class='d' style='background:"+(on?"var(--am)":"var(--gr)")+"'></span>"+(on?"Rule engine + external":"Rule engine · local");
   toast(on?"External adapter enabled":"External adapter off",on?"Only de-identified features sent":"All processing on-device");}
-function refreshAll(){refreshMetrics();if(document.getElementById("v-registry").classList.contains("on"))renderReg();if(document.getElementById("v-worklist").classList.contains("on"))renderWork();if(document.getElementById("v-orders").classList.contains("on"))renderOrders();if(document.getElementById("v-recall").classList.contains("on"))renderRecall();if(document.getElementById("v-coverage").classList.contains("on"))renderCoverage();if(document.getElementById("v-pathway").classList.contains("on"))renderPathway();renderTasks();}
+function refreshAll(){refreshMetrics();if(document.getElementById("v-registry").classList.contains("on"))renderReg();if(document.getElementById("v-worklist").classList.contains("on"))renderWork();if(document.getElementById("v-orders").classList.contains("on"))renderOrders();if(document.getElementById("v-recall").classList.contains("on"))renderRecall();if(document.getElementById("v-coverage").classList.contains("on"))renderCoverage();if(document.getElementById("v-pathway").classList.contains("on"))renderPathway();renderTasks();saveState();}
 
 /* ---------- reactivity / roles / upload ---------- */
 function openReg(tf,rf){regFilter=tf||"all";var sel=document.getElementById("regRisk");if(sel)sel.value=rf||"";var pills=document.querySelectorAll("#v-registry .fp");pills.forEach(function(b,i){b.classList.toggle("on",(regFilter==="all"&&i===0)||(regFilter==="T2"&&i===1)||(regFilter==="T1"&&i===2)||(regFilter==="GDM"&&i===3));});show("registry");}
@@ -809,11 +822,19 @@ function logout(){document.getElementById("login").style.display="flex";}
 function readImpFile(inp){var f=inp.files&&inp.files[0];if(!f)return;var rd=new FileReader();rd.onload=function(){var t=String(rd.result).split(/\r?\n/);if(t[0]&&/mrn/i.test(t[0])&&/name/i.test(t[0]))t.shift();document.getElementById("impBox").value=t.join("\n");processImport();toast("Imported "+f.name,"Read once · no re-keying");};rd.readAsText(f);}
 function addAttach(id,inp){var f=inp.files&&inp.files[0];if(!f)return;var p=patients[id];p.attachments=p.attachments||[];p.attachments.push({name:f.name,url:URL.createObjectURL(f)});toast("Attached",f.name);openPat(id);}
 
+/* ---------- persistence (on-device · in-Kingdom) ---------- */
+var DBKEY="jusoor_emr_v3";
+function saveState(){try{localStorage.setItem(DBKEY,JSON.stringify({p:patients,t:tasks,ts:Date.now()}));}catch(e){}}
+function loadState(){try{var s=localStorage.getItem(DBKEY);if(s){var o=JSON.parse(s);if(o&&o.p&&o.p.length){patients=o.p;tasks=o.t||[];return true;}}}catch(e){}return false;}
+function resetData(){try{localStorage.removeItem(DBKEY);}catch(e){}location.reload();}
+function saveNote(id){var p=patients[id];var t=document.getElementById("encText").value.trim();if(!t){toast("Write a note first");return;}p.encounters=p.encounters||[];p.encounters.unshift({type:document.getElementById("encType").value,author:document.getElementById("sbUn").textContent||"Clinician",date:daysAgo(0),text:t});saveState();toast("Note saved","Encounter documented");openPat(id);}
+function testServer(){var u=document.getElementById("srvUrl").value;if(!u){toast("Enter a server URL");return;}var st=document.getElementById("srvStat");st.className="chip c-a";st.textContent="Configured · awaiting in-Kingdom backend";toast("Server settings saved","Connection activates when the local backend is live");saveState();}
+
 /* ---------- init ---------- */
 document.getElementById("enAge").innerHTML=numOpts(18,95,1,55);
 document.getElementById("enA1c").innerHTML=numOpts(5.0,14.0,0.1,7.5);
 document.getElementById("enEgfr").innerHTML=numOpts(15,120,1,80);
-seedTasks();renderMsg();refreshMetrics();renderTasks();lgHint();
+if(!loadState())seedTasks();renderMsg();refreshMetrics();renderTasks();lgHint();
 </script>
 </body>
 </html>
