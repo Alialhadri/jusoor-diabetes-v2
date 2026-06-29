@@ -16,14 +16,12 @@
   --te:#1d9e75;--tel:#e1f5ee;
   --bg:#f0f2f5;--sur:#fff;--bdr:#e2e6ed;
   --tx:#1a1e2e;--mu:#6b7280;--su:#9ca3af;
-  --sw:232px;
+  --sw:240px;
   font-family:system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;font-size:14px;color:var(--tx);
 }
 *{box-sizing:border-box;margin:0;padding:0;-webkit-font-smoothing:antialiased;}
 body{background:var(--bg);display:flex;height:100vh;overflow:hidden;}
 button{font-family:inherit;}
-
-/* sidebar */
 .sb{width:var(--sw);min-width:var(--sw);background:var(--nv);display:flex;flex-direction:column;height:100vh;overflow:hidden;}
 .sb-brand{padding:18px 18px 14px;}
 .sb-name{font-size:19px;font-weight:800;color:#fff;letter-spacing:-.3px;line-height:1;}
@@ -32,7 +30,7 @@ button{font-family:inherit;}
 .sb-role .dot{width:8px;height:8px;border-radius:50%;background:var(--bl);}
 .sb-scroll{flex:1;overflow-y:auto;padding:4px 0;}
 .sb-sec{padding:13px 18px 5px;font-size:9.5px;font-weight:700;color:rgba(255,255,255,.32);text-transform:uppercase;letter-spacing:.13em;}
-.nav{margin:1px 9px;padding:8px 11px;border-radius:8px;display:flex;align-items:center;gap:11px;cursor:pointer;color:rgba(255,255,255,.66);font-size:13px;font-weight:500;transition:background .12s,color .12s;}
+.nav{margin:1px 9px;padding:8px 11px;border-radius:8px;display:flex;align-items:center;gap:11px;cursor:pointer;color:rgba(255,255,255,.66);font-size:12.5px;font-weight:500;transition:background .12s,color .12s;}
 .nav:hover{background:rgba(255,255,255,.07);color:#fff;}
 .nav.on{background:rgba(255,255,255,.13);color:#fff;}
 .nav .ic{width:17px;height:17px;flex-shrink:0;opacity:.9;display:flex;align-items:center;justify-content:center;}
@@ -44,8 +42,6 @@ button{font-family:inherit;}
 .sb-user{padding:11px 14px;display:flex;align-items:center;gap:10px;border-top:1px solid rgba(255,255,255,.08);}
 .sb-av{width:32px;height:32px;border-radius:50%;background:var(--nv2);color:#fff;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;}
 .sb-un{font-size:12px;color:#fff;font-weight:600;}.sb-uc{font-size:10px;color:rgba(255,255,255,.5);}
-
-/* main */
 .main{flex:1;display:flex;flex-direction:column;overflow:hidden;}
 .top{height:58px;background:var(--sur);border-bottom:1px solid var(--bdr);display:flex;align-items:center;justify-content:space-between;padding:0 24px;flex-shrink:0;}
 .top-t{font-size:17px;font-weight:800;letter-spacing:-.3px;}
@@ -55,8 +51,6 @@ button{font-family:inherit;}
 .pill .d{width:7px;height:7px;border-radius:50%;}
 .content{flex:1;overflow-y:auto;padding:22px 24px;}
 .view{display:none;}.view.on{display:block;}
-
-/* cards / kpi */
 .card{background:var(--sur);border:1px solid var(--bdr);border-radius:11px;}
 .cp{padding:16px 18px;}
 .ch{display:flex;align-items:center;justify-content:space-between;margin-bottom:13px;}
@@ -68,60 +62,55 @@ button{font-family:inherit;}
 .kv{font-size:30px;font-weight:800;line-height:1;color:var(--c,var(--nv));}
 .kl{font-size:10.5px;font-weight:700;color:var(--tx);text-transform:uppercase;letter-spacing:.03em;margin-top:9px;}
 .ks{font-size:10.5px;color:var(--mu);margin-top:4px;}
-.ks.link{color:var(--rd);font-weight:600;cursor:pointer;}
+.ks.link{color:var(--rd);font-weight:600;}
 .trow{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:14px;}
 .tcard{background:var(--sur);border:1px solid var(--bdr);border-radius:11px;padding:15px 18px;border-top:3px solid var(--c);}
 .tcard .tl{font-size:10.5px;font-weight:700;color:var(--c);text-transform:uppercase;letter-spacing:.04em;}
 .tcard .tv{font-size:30px;font-weight:800;margin-top:6px;color:var(--nv);}
 .tcard .ts{font-size:11px;color:var(--mu);margin-top:3px;}
 .g2{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
-
-/* buttons */
+.lean{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;}
+.lean .cell{background:#fafbfc;border:1px solid var(--bdr);border-radius:9px;padding:13px 14px;border-left:3px solid var(--c,var(--bl));cursor:pointer;}
+.lean .cell:hover{background:var(--bll);}
+.lean .cv{font-size:24px;font-weight:800;color:var(--c,var(--nv));line-height:1;}
+.lean .cl{font-size:10.5px;color:var(--mu);margin-top:5px;line-height:1.35;}
 .btn{display:inline-flex;align-items:center;gap:6px;padding:8px 14px;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;border:none;white-space:nowrap;transition:opacity .12s,background .12s;}
 .btn-p{background:var(--nv);color:#fff;}.btn-p:hover{background:var(--nv2);}
 .btn-b{background:var(--bl);color:#fff;}.btn-g{background:var(--gr);color:#fff;}.btn-r{background:var(--rd);color:#fff;}
 .btn-b:hover,.btn-g:hover,.btn-r:hover{opacity:.9;}
 .btn-o{background:transparent;color:var(--mu);border:1px solid var(--bdr);}.btn-o:hover{background:var(--bg);color:var(--tx);}
 .btn-sm{padding:5px 11px;font-size:11px;}.btn-xs{padding:4px 9px;font-size:10.5px;}
-
-/* chips / tags */
 .chip{display:inline-flex;align-items:center;padding:2px 9px;border-radius:13px;font-size:10px;font-weight:600;}
 .c-b{background:var(--bll);color:var(--bl);}.c-g{background:var(--grl);color:var(--grd);}.c-a{background:var(--aml);color:#9a6a10;}
 .c-r{background:var(--rdl);color:var(--rd);}.c-t{background:var(--tel);color:var(--te);}.c-n{background:#eef1f5;color:var(--mu);}
 .tag{display:inline-flex;align-items:center;padding:2px 8px;border-radius:5px;font-size:10px;font-weight:700;}
 .tT2{background:var(--bll);color:var(--bl);}.tT1{background:var(--pul);color:var(--pu);}.tGDM{background:var(--aml);color:#9a6a10;}.tLADA{background:var(--tel);color:var(--te);}.tPre{background:#eef1f5;color:var(--mu);}
-
-/* filter pills */
-.fpills{display:flex;gap:7px;margin-bottom:14px;}
+.halert{display:inline-flex;align-items:center;gap:4px;padding:1px 7px;border-radius:4px;font-size:9px;font-weight:800;background:var(--rd);color:#fff;letter-spacing:.04em;}
+.code{font-size:9.5px;color:var(--su);font-family:ui-monospace,monospace;}
+.fpills{display:flex;gap:7px;margin-bottom:14px;flex-wrap:wrap;}
 .fp{padding:7px 15px;border:1px solid var(--bdr);background:var(--sur);border-radius:8px;font-size:12px;font-weight:600;color:var(--mu);cursor:pointer;}
 .fp.on{background:var(--nv);color:#fff;border-color:var(--nv);}
 .frow{display:flex;gap:10px;margin-bottom:14px;}
 .frow input,.frow select{padding:9px 12px;border:1px solid var(--bdr);border-radius:8px;font-size:13px;font-family:inherit;background:var(--sur);color:var(--tx);}
 .frow input{flex:1;}
-
-/* table */
 .tw{border:1px solid var(--bdr);border-radius:11px;overflow:hidden;background:var(--sur);}
 .tbl{width:100%;border-collapse:collapse;font-size:12px;}
 .tbl th{padding:11px 14px;text-align:left;font-size:9.5px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--mu);background:#fafbfc;border-bottom:1px solid var(--bdr);}
 .tbl td{padding:11px 14px;border-bottom:1px solid var(--bdr);vertical-align:middle;}
 .tbl tr:last-child td{border-bottom:none;}
-.tbl tbody tr{cursor:pointer;}.tbl tbody tr:hover td{background:var(--bll);}
+.tbl tbody tr.clk{cursor:pointer;}.tbl tbody tr.clk:hover td{background:var(--bll);}
 .pname{font-weight:600;font-size:12.5px;}
 .pmeta{font-size:10.5px;color:var(--mu);margin-top:2px;}
 .mono{font-variant-numeric:tabular-nums;}
 .adh{display:flex;align-items:center;gap:8px;}
 .abar{width:54px;height:6px;background:#eef1f5;border-radius:4px;overflow:hidden;}
 .abar > span{display:block;height:100%;}
-
-/* worklist row */
 .wl{display:flex;gap:13px;align-items:center;padding:12px 14px;border:1px solid var(--bdr);border-radius:10px;margin-bottom:9px;cursor:pointer;background:var(--sur);transition:border-color .12s,box-shadow .12s;}
 .wl:hover{border-color:var(--bl);box-shadow:0 2px 10px rgba(26,43,74,.07);}
 .wl.u{border-left:3px solid var(--rd);}.wl.m{border-left:3px solid var(--am);}.wl.l{border-left:3px solid var(--gr);}
 .wl .nm{font-size:13px;font-weight:700;}
 .wl .dt{font-size:10.5px;color:var(--mu);margin-top:2px;}
 .wl .ac{margin-left:auto;display:flex;gap:7px;align-items:center;flex-wrap:wrap;}
-
-/* form */
 .fsec{font-size:9.5px;font-weight:700;color:var(--nv);text-transform:uppercase;letter-spacing:.07em;margin-bottom:12px;padding-bottom:7px;border-bottom:2px solid var(--bll);}
 .fg{margin-bottom:12px;}
 .fg label{display:block;font-size:9.5px;font-weight:700;color:var(--mu);text-transform:uppercase;letter-spacing:.04em;margin-bottom:5px;}
@@ -130,33 +119,36 @@ button{font-family:inherit;}
 .fg textarea{resize:vertical;min-height:60px;line-height:1.6;}
 .frow2{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
 .frow3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;}
+.frow4{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;}
 .note{padding:10px 12px;background:#fafbfc;border:1px solid var(--bdr);border-radius:8px;font-size:11px;color:var(--mu);line-height:1.55;}
-
-/* modal / storyboard */
 .ov{display:none;position:fixed;inset:0;background:rgba(26,43,74,.45);z-index:200;align-items:flex-start;justify-content:center;padding:28px 16px;overflow-y:auto;}
 .ov.open{display:flex;}
-.modal{background:var(--sur);border-radius:13px;width:100%;max-width:940px;box-shadow:0 24px 60px rgba(0,0,0,.25);overflow:hidden;}
+.modal{background:var(--sur);border-radius:13px;width:100%;max-width:960px;box-shadow:0 24px 60px rgba(0,0,0,.25);overflow:hidden;}
 .mh{padding:14px 20px;border-bottom:1px solid var(--bdr);display:flex;align-items:center;justify-content:space-between;}
 .mh-t{font-size:15px;font-weight:800;display:flex;align-items:center;gap:9px;}
 .mx{background:none;border:none;font-size:20px;color:var(--mu);cursor:pointer;line-height:1;}
-.mb{padding:18px 20px;}
-/* sticky storyboard header */
-.sbd{position:sticky;top:0;background:var(--sur);z-index:5;padding:14px 20px;border-bottom:1px solid var(--bdr);margin:-18px -20px 16px;}
+.mb{padding:0;}
+.allergybar{padding:9px 20px;font-size:12px;font-weight:600;display:flex;align-items:center;gap:8px;}
+.allergybar.has{background:var(--rdl);color:var(--rd);border-bottom:1px solid #f3c9c4;}
+.allergybar.no{background:var(--grl);color:var(--grd);border-bottom:1px solid #cce6c0;}
+.sbd{position:sticky;top:0;background:var(--sur);z-index:5;padding:14px 20px;border-bottom:1px solid var(--bdr);}
 .sbd-h{display:flex;align-items:center;gap:14px;}
 .sbd-av{width:48px;height:48px;border-radius:11px;background:linear-gradient(135deg,#1a2b4a,#378add);color:#fff;display:flex;align-items:center;justify-content:center;font-size:17px;font-weight:800;flex-shrink:0;}
 .sbd-n{font-size:17px;font-weight:800;letter-spacing:-.3px;}
 .sbd-m{font-size:11.5px;color:var(--mu);margin-top:2px;}
 .vstrip{display:grid;grid-template-columns:repeat(7,1fr);gap:1px;margin-top:13px;background:var(--bdr);border:1px solid var(--bdr);border-radius:9px;overflow:hidden;}
-.vit{background:var(--sur);padding:9px 11px;text-align:left;}
+.vit{background:var(--sur);padding:9px 11px;}
 .vit .v{font-size:16px;font-weight:800;line-height:1;}
 .vit .l{font-size:8.5px;color:var(--mu);text-transform:uppercase;letter-spacing:.04em;margin-top:4px;font-weight:600;}
+.mbody{padding:18px 20px;}
 .scr-row{display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--bdr);font-size:12px;}
 .scr-row:last-child{border-bottom:none;}
 .scr-row .d{width:8px;height:8px;border-radius:50%;display:inline-block;margin-right:8px;}
 .alert{padding:9px 12px;border-radius:8px;font-size:12px;margin-bottom:7px;border-left:3px solid;line-height:1.45;}
 .al-r{background:var(--rdl);border-color:var(--rd);}.al-a{background:var(--aml);border-color:var(--am);}.al-g{background:var(--grl);border-color:var(--gr);}
-
-/* AI residency panel */
+.path-row{display:flex;align-items:center;gap:11px;padding:9px 0;border-bottom:1px solid var(--bdr);}
+.path-row:last-child{border-bottom:none;}
+.path-ic{width:18px;height:18px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;color:#fff;}
 .airpanel{border:1px solid var(--bdr);border-radius:11px;padding:18px 20px;background:var(--sur);}
 .airbadges{display:flex;gap:9px;flex-wrap:wrap;margin:12px 0;}
 .airb{display:inline-flex;align-items:center;gap:7px;font-size:11.5px;font-weight:600;padding:6px 12px;border-radius:18px;border:1px solid var(--bdr);}
@@ -172,7 +164,9 @@ button{font-family:inherit;}
 .sl:before{content:"";position:absolute;width:17px;height:17px;border-radius:50%;background:#fff;left:3px;top:3px;transition:.2s;}
 .sw input:checked + .sl{background:var(--te);}.sw input:checked + .sl:before{transform:translateX(17px);}
 .resnote{font-size:11.5px;color:var(--mu);margin-top:14px;padding:11px 13px;background:var(--bg);border-radius:8px;border-left:3px solid var(--bl);line-height:1.55;}
-
+.cov{display:flex;align-items:center;gap:10px;}
+.covbar{flex:1;height:9px;background:#eef1f5;border-radius:5px;overflow:hidden;max-width:160px;}
+.covbar > span{display:block;height:100%;}
 #toast{position:fixed;bottom:22px;right:22px;z-index:999;background:var(--nv);color:#fff;padding:12px 17px;border-radius:9px;font-size:12px;font-weight:600;box-shadow:0 8px 24px rgba(26,43,74,.28);transform:translateY(16px);opacity:0;transition:.25s;pointer-events:none;max-width:320px;}
 #toast.show{transform:translateY(0);opacity:1;}
 #toast .s{font-size:10.5px;opacity:.75;font-weight:400;margin-top:2px;}
@@ -181,7 +175,6 @@ button{font-family:inherit;}
 </head>
 <body>
 
-<!-- SIDEBAR -->
 <aside class="sb">
   <div class="sb-brand"><div class="sb-name">Jusoor</div><div class="sb-ar">جسور · DIABETES</div></div>
   <div class="sb-role"><span class="dot"></span>PHC Coordinator · Riyadh</div>
@@ -190,16 +183,18 @@ button{font-family:inherit;}
     <div class="nav on" data-v="dash"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg></span>Dashboard<span class="bdg bg-r" id="bDash">0</span></div>
     <div class="nav" data-v="worklist"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 5h16M4 12h16M4 19h10"/></svg></span>Morning Worklist<span class="bdg bg-a" id="bWork">0</span></div>
     <div class="nav" data-v="registry"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/></svg></span>Patient Registry<span class="bdg bg-b" id="bReg">0</span></div>
-    <div class="nav" data-v="huddle"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="9" cy="8" r="3"/><circle cx="17" cy="9" r="2.3"/><path d="M3 19c0-2.8 2.7-4.5 6-4.5s6 1.7 6 4.5M15.5 19c0-1.8 1-3 3-3"/></svg></span>Morning Huddle</div>
-    <div class="nav" data-v="tasks"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 11l3 3L22 4M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg></span>Care Tasks<span class="bdg bg-r" id="bTask">0</span></div>
-    <div class="nav" data-v="clinic"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="4" width="15" height="12" rx="2"/><path d="M22 8l-5 4 5 4z"/></svg></span>Virtual Clinic<span class="bdg bg-b" id="bClin">0</span></div>
+    <div class="nav" data-v="orders"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 11l3 3L22 4M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg></span>Orders &amp; Results<span class="bdg bg-r" id="bOrd">0</span></div>
+    <div class="sb-sec">Care Management</div>
+    <div class="nav" data-v="recall"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 12a9 9 0 1 0 3-6.7L3 8M3 3v5h5"/></svg></span>Recall Engine<span class="bdg bg-a" id="bRec">0</span></div>
+    <div class="nav" data-v="coverage"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg></span>Care Gaps &amp; Coverage<span class="bdg bg-r" id="bCov">0</span></div>
+    <div class="nav" data-v="pathway"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 3v12a3 3 0 0 0 3 3h6M6 3a2 2 0 1 0 0 .01M15 18a2 2 0 1 0 4 0 2 2 0 0 0-4 0"/></svg></span>Standard Work</div>
     <div class="sb-sec">Coordination</div>
     <div class="nav" data-v="enrol"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 5v14M5 12h14"/></svg></span>Enrol Patient</div>
     <div class="nav" data-v="messages"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 11.5a8.4 8.4 0 0 1-9 8.4L3 21l1.1-3.3A8.4 8.4 0 1 1 21 11.5z"/></svg></span>Patient Messages<span class="bdg bg-b" id="bMsg">0</span></div>
-    <div class="sb-sec">Care Team</div>
+    <div class="nav" data-v="tasks"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 6h16M4 12h16M4 18h10"/><circle cx="20" cy="18" r="1.6"/></svg></span>Care Tasks<span class="bdg bg-r" id="bTask">0</span></div>
+    <div class="sb-sec">System</div>
     <div class="nav" data-v="physician"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="8" r="4"/><path d="M5 21c0-4 3-6 7-6s7 2 7 6"/></svg></span>Physician<span class="bdg bg-r" id="bPhys">0</span></div>
-    <div class="nav" data-v="analytics"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 19V5M4 19h16M8 16v-5M12 16V8M16 16v-3M20 16v-7"/></svg></span>Analytics & RWE</div>
-    <div class="sb-sec">Integration</div>
+    <div class="nav" data-v="analytics"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 19V5M4 19h16M8 16v-5M12 16V8M16 16v-3M20 16v-7"/></svg></span>Analytics &amp; RWE</div>
     <div class="nav" data-v="naphies"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M7 7l-4 5 4 5M17 7l4 5-4 5M14 4l-4 16"/></svg></span>NAPHIES · Raqeem</div>
     <div class="nav" data-v="settings"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="3.1"/><path d="M19.4 12c0-.4 0-.8-.1-1.2l2-1.5-2-3.4-2.3 1a7 7 0 0 0-2-1.2l-.3-2.5H8.3l-.3 2.5a7 7 0 0 0-2 1.2l-2.3-1-2 3.4 2 1.5a7.4 7.4 0 0 0 0 2.4l-2 1.5 2 3.4 2.3-1a7 7 0 0 0 2 1.2l.3 2.5h3.4l.3-2.5a7 7 0 0 0 2-1.2l2.3 1 2-3.4-2-1.5c.1-.4.1-.8.1-1.2z"/></svg></span>Settings</div>
   </div>
@@ -207,7 +202,6 @@ button{font-family:inherit;}
   <div class="sb-user"><div class="sb-av">MZ</div><div><div class="sb-un">Nurse Mona Al-Zahrani</div><div class="sb-uc">Diabetes Nurse</div></div></div>
 </aside>
 
-<!-- MAIN -->
 <div class="main">
   <div class="top">
     <div><div class="top-t" id="topT">Population Overview</div><div class="top-s" id="topS">Riyadh PHC Cluster · Diabetes Care Programme · 50 patients</div></div>
@@ -227,7 +221,16 @@ button{font-family:inherit;}
       <div class="kpi" style="--c:var(--rd)" onclick="show('worklist')"><div class="kv" id="kHigh">0</div><div class="kl">High Risk</div><div class="ks link">Action required today</div></div>
       <div class="kpi" style="--c:var(--am)" onclick="show('worklist')"><div class="kv" id="kFu">0</div><div class="kl">Follow-up Needed</div><div class="ks">Within 7 days</div></div>
       <div class="kpi" style="--c:var(--gr)"><div class="kv" id="kStable">0</div><div class="kl">Stable</div><div class="ks">On target</div></div>
-      <div class="kpi" style="--c:var(--te)" onclick="show('worklist')"><div class="kv" id="kScr">0%</div><div class="kl">Screening Complete</div><div class="ks">Annual protocol</div></div>
+      <div class="kpi" style="--c:var(--te)" onclick="show('coverage')"><div class="kv" id="kScr">0%</div><div class="kl">Screening Coverage</div><div class="ks">Annual protocol</div></div>
+    </div>
+    <div class="card cp" style="margin-bottom:14px">
+      <div class="ch"><div><div class="ct">Order-to-completion — flow &amp; waste at a glance</div><div class="cs">where work is waiting between the clinical order and the outcome · click to recover</div></div><button class="btn btn-o btn-sm" onclick="show('orders')">Open order tracker</button></div>
+      <div class="lean">
+        <div class="cell" style="--c:var(--am)" onclick="show('orders')"><div class="cv" id="lnLab">0</div><div class="cl">HbA1c ordered, not completed</div></div>
+        <div class="cell" style="--c:var(--rd)" onclick="show('orders')"><div class="cv" id="lnMed">0</div><div class="cl">Medication ordered, not collected</div></div>
+        <div class="cell" style="--c:var(--bl)" onclick="show('orders')"><div class="cv" id="lnRes">0</div><div class="cl">Result back, not actioned</div></div>
+        <div class="cell" style="--c:var(--te)" onclick="show('recall')"><div class="cv" id="lnRec">0</div><div class="cl">Due for recall this month</div></div>
+      </div>
     </div>
     <div class="trow">
       <div class="tcard" style="--c:var(--bl)"><div class="tl">Type 2 DM</div><div class="tv" id="tT2">0</div><div class="ts">Insulin resistance · most common</div></div>
@@ -235,8 +238,8 @@ button{font-family:inherit;}
       <div class="tcard" style="--c:var(--am)"><div class="tl">Gestational DM</div><div class="tv" id="tGDM">0</div><div class="ts">Pregnancy-related</div></div>
     </div>
     <div class="g2" style="margin-bottom:14px">
-      <div class="card cp"><div class="ch"><div class="ct">HbA1c Distribution</div></div><div style="height:215px"><canvas id="chDist"></canvas></div></div>
-      <div class="card cp"><div class="ch"><div class="ct">DM Type Distribution</div></div><div style="height:215px"><canvas id="chType"></canvas></div></div>
+      <div class="card cp"><div class="ch"><div class="ct">HbA1c Distribution</div></div><div style="height:210px"><canvas id="chDist"></canvas></div></div>
+      <div class="card cp"><div class="ch"><div class="ct">DM Type Distribution</div></div><div style="height:210px"><canvas id="chType"></canvas></div></div>
     </div>
     <div class="g2">
       <div class="card cp"><div class="ch"><div><div class="ct">Panel HbA1c — 4-Quarter Trend</div><div class="cs">All enrolled patients</div></div></div><div style="height:200px"><canvas id="chTrend"></canvas></div></div>
@@ -265,23 +268,32 @@ button{font-family:inherit;}
     <div class="tw"><table class="tbl"><thead><tr><th>Patient</th><th>DM Type</th><th>HbA1c</th><th>BP</th><th>eGFR</th><th>Adherence</th><th>Last visit</th><th>AI Risk</th><th></th></tr></thead><tbody id="regBody"></tbody></table></div>
   </div>
 
-  <!-- MORNING HUDDLE -->
-  <div class="view" id="v-huddle">
+  <!-- ORDERS & RESULTS -->
+  <div class="view" id="v-orders">
+    <div class="card cp" style="margin-bottom:14px"><div class="ch"><div><div class="ct">Order-to-completion loop</div><div class="cs">Every order tracked to its end-state. Non-completion is something to recover, not assume.</div></div><div style="display:flex;gap:7px"><button class="btn btn-o btn-sm" onclick="ordFilter('open',this)">Open</button><button class="btn btn-o btn-sm" onclick="ordFilter('result',this)">Results to action</button><button class="btn btn-o btn-sm" onclick="ordFilter('all',this)">All</button></div></div></div>
+    <div class="tw"><table class="tbl"><thead><tr><th>Patient</th><th>Order</th><th>Code</th><th>Placed</th><th>Stage</th><th>Status</th><th></th></tr></thead><tbody id="ordBody"></tbody></table></div>
+  </div>
+
+  <!-- RECALL ENGINE -->
+  <div class="view" id="v-recall">
+    <div class="card cp" style="margin-bottom:14px"><div class="ch"><div><div class="ct">Recall engine — pull, not push</div><div class="cs">The patient's clinical clock is the pull signal. HbA1c ~quarterly; annual retinal, foot and renal screening. The system schedules the work when the cadence says it is due.</div></div><button class="btn btn-g btn-sm" onclick="recallAllDue()">Generate all due recalls</button></div></div>
     <div class="g2" style="margin-bottom:14px">
-      <div class="kpi" style="--c:var(--rd)"><div class="kv" id="huUnc" style="color:var(--rd)">0</div><div class="kl">Uncontrolled to review</div><div class="ks">HbA1c ≥ 9%</div></div>
-      <div class="kpi" style="--c:var(--am)"><div class="kv" id="huGap" style="color:var(--am)">0</div><div class="kl">Open care gaps</div><div class="ks">labs &amp; screening due</div></div>
+      <div class="kpi" style="--c:var(--am)"><div class="kv" id="recHb" style="color:var(--am)">0</div><div class="kl">HbA1c due / overdue</div><div class="ks">≥ 3 months since last</div></div>
+      <div class="kpi" style="--c:var(--rd)"><div class="kv" id="recScr" style="color:var(--rd)">0</div><div class="kl">Screening due / overdue</div><div class="ks">annual cadence</div></div>
     </div>
-    <div class="card cp"><div class="ch"><div><div class="ct">Today's huddle — standard work</div><div class="cs">Coordinator &amp; nurse · highest-need patients for the team to action</div></div></div><div id="huddleList"></div></div>
+    <div class="card cp"><div class="ct" style="margin-bottom:11px">Due this cycle</div><div id="recList"></div></div>
   </div>
 
-  <!-- CARE TASKS -->
-  <div class="view" id="v-tasks">
-    <div class="card cp"><div class="ch"><div><div class="ct">Care tasks</div><div class="cs">Grouped by patient · generated from gaps, recalls and logged actions</div></div></div><div id="taskList"></div></div>
+  <!-- COVERAGE -->
+  <div class="view" id="v-coverage">
+    <div class="card cp" style="margin-bottom:14px"><div class="ct" style="margin-bottom:11px">Complication-screening coverage</div><div class="cs" style="margin-bottom:13px">The same "who is overdue" engine, applied to the three places diabetes coverage quietly leaks. Drive each toward target.</div><div id="covBars"></div></div>
+    <div class="card cp"><div class="ch"><div><div class="ct">Open care gaps — worklist</div><div class="cs">order-to-completion · each gap is something to recover</div></div><button class="btn btn-g btn-sm" onclick="recallAllDue()">Recall all due</button></div><div id="gapList"></div></div>
   </div>
 
-  <!-- VIRTUAL CLINIC -->
-  <div class="view" id="v-clinic">
-    <div class="card cp"><div class="ch"><div><div class="ct">Virtual clinic — tele-visits</div><div class="cs">Remote review for patients not requiring an in-person visit</div></div></div><div id="clinList"></div></div>
+  <!-- STANDARD WORK / PATHWAY -->
+  <div class="view" id="v-pathway">
+    <div class="card cp" style="margin-bottom:14px"><div class="ct" style="margin-bottom:11px">Standard work — diabetes pathway adherence</div><div class="cs" style="margin-bottom:13px">Every patient measured against the evidence-based standard (visit cadence, labs, complication screening, statin and ACE/ARB eligibility). Deviations are visible at a glance.</div><div id="pathBars"></div></div>
+    <div class="card cp"><div class="ch"><div><div class="ct">Patients off-pathway</div><div class="cs">standard work + visual management — sorted by number of deviations</div></div></div><div id="pathList"></div></div>
   </div>
 
   <!-- ENROL -->
@@ -300,13 +312,13 @@ button{font-family:inherit;}
           <div class="fg"><label>eGFR</label><select id="enEgfr"></select></div>
           <div class="fg"><label>Phone</label><input id="enPhone" placeholder="+9665XXXXXXX"></div>
         </div>
-        <div class="note" style="margin-bottom:12px">Number fields use pick-lists to keep entry fast and error-free. HbA1c stays a 0.1-step decimal; whole numbers are tap-to-select. Data entered once flows to the registry, worklists and messages.</div>
+        <div class="note" style="margin-bottom:12px">Whole-number fields are tap-to-select pick-lists (age, eGFR) to keep entry fast and error-free; HbA1c stays a controlled 0.1-step list. A value entered once flows to the registry, worklists, recall engine and messages — no double entry.</div>
         <button class="btn btn-g" onclick="enrolManual()">Add to registry</button>
       </div>
       <div class="card cp">
-        <div class="fsec">Import a batch</div>
-        <div class="note" style="margin-bottom:11px">Paste one patient per line: <b>Name, MRN, Age, Type, HbA1c, Phone</b>. Manual entry is always available — import never replaces it, and the platform works with no external connection.</div>
-        <textarea id="impBox" style="width:100%;height:150px;font-family:ui-monospace,monospace;font-size:11.5px;border:1px solid var(--bdr);border-radius:8px;padding:11px" placeholder="Sara Al-Otaibi, SA-9001, 58, T2, 8.6, +9665 1122334"></textarea>
+        <div class="fsec">Import from hospital system / batch</div>
+        <div class="note" style="margin-bottom:11px">Dual intake: where the Raqeem / hospital feed is available it is <b>read once</b> into one source of truth (no re-keying); where it is not, manual and paste entry are always available. The platform never blocks on an integration it may not have.</div>
+        <textarea id="impBox" style="width:100%;height:130px;font-family:ui-monospace,monospace;font-size:11.5px;border:1px solid var(--bdr);border-radius:8px;padding:11px" placeholder="Sara Al-Otaibi, SA-9001, 58, T2, 8.6, +9665 1122334"></textarea>
         <div style="display:flex;gap:8px;margin-top:11px"><button class="btn btn-o btn-sm" onclick="loadImpDemo()">Load sample batch</button><button class="btn btn-b btn-sm" onclick="processImport()">Process &amp; add</button></div>
         <div id="impResult" style="margin-top:12px"></div>
       </div>
@@ -327,39 +339,46 @@ button{font-family:inherit;}
     </div>
   </div>
 
-  <!-- PHYSICIAN -->
-  <div class="view" id="v-physician">
-    <div class="card cp"><div class="ch"><div><div class="ct">Physician queue</div><div class="cs">Patients flagged by the rule engine for medical review — intensification, renal dosing, statin</div></div></div><div id="physList"></div></div>
+  <!-- TASKS -->
+  <div class="view" id="v-tasks">
+    <div class="card cp"><div class="ch"><div><div class="ct">Care tasks</div><div class="cs">Grouped by patient · generated from gaps, recalls and logged actions</div></div></div><div id="taskList"></div></div>
   </div>
 
-  <!-- ANALYTICS / RWE -->
+  <!-- PHYSICIAN -->
+  <div class="view" id="v-physician">
+    <div class="card cp"><div class="ch"><div><div class="ct">Physician queue</div><div class="cs">Flagged by the rule engine for medical action — intensification, renal dosing, statin, ACE/ARB</div></div></div><div id="physList"></div></div>
+  </div>
+
+  <!-- ANALYTICS -->
   <div class="view" id="v-analytics">
     <div class="g2" style="margin-bottom:14px">
       <div class="card cp"><div class="ct" style="margin-bottom:11px">Real-world evidence</div><div class="note" style="margin-bottom:11px;line-height:1.7">Generated locally from cohort data — no patient identifiers leave the device.</div>
         <div class="set-row"><div class="set-n">Mean cohort HbA1c</div><span class="mono" id="rweA1c">—</span></div>
         <div class="set-row"><div class="set-n">% at target (&lt;7%)</div><span class="mono" id="rweTgt">—</span></div>
         <div class="set-row"><div class="set-n">Complication-screening coverage</div><span class="mono" id="rweScr">—</span></div>
+        <div class="set-row"><div class="set-n">Order-to-completion rate</div><span class="mono" id="rweLoop">—</span></div>
         <div class="set-row"><div class="set-n">Patients improved vs. baseline</div><span class="mono" id="rweImp">—</span></div>
         <button class="btn btn-o btn-sm" style="margin-top:12px" onclick="toast('RWE report generated','On-device · de-identified')">Generate RWE report</button>
       </div>
       <div class="card cp"><div class="ct" style="margin-bottom:11px">Lean KPIs vs target</div>
         <div class="tw"><table class="tbl"><thead><tr><th>Metric</th><th>Target</th><th>Now</th><th></th></tr></thead><tbody>
-          <tr style="cursor:default"><td>HbA1c completed on schedule</td><td>90%</td><td id="kpiA1c" class="mono">—</td><td><span class="chip c-a">Building</span></td></tr>
-          <tr style="cursor:default"><td>Screening coverage</td><td>90%</td><td id="kpiScr2" class="mono">—</td><td><span class="chip c-a">Building</span></td></tr>
-          <tr style="cursor:default"><td>Uncontrolled patients contacted</td><td>100%</td><td id="kpiUnc" class="mono">—</td><td><span class="chip c-g">On track</span></td></tr>
+          <tr><td>HbA1c completed on schedule</td><td>90%</td><td id="kpiA1c" class="mono">—</td><td><span class="chip c-a">Building</span></td></tr>
+          <tr><td>Order-to-completion rate</td><td>95%</td><td id="kpiLoop" class="mono">—</td><td><span class="chip c-a">Building</span></td></tr>
+          <tr><td>Screening coverage</td><td>90%</td><td id="kpiScr2" class="mono">—</td><td><span class="chip c-a">Building</span></td></tr>
+          <tr><td>Uncontrolled patients contacted</td><td>100%</td><td id="kpiUnc" class="mono">—</td><td><span class="chip c-g">On track</span></td></tr>
         </tbody></table></div>
       </div>
     </div>
   </div>
 
-  <!-- NAPHIES / RAQEEM -->
+  <!-- NAPHIES -->
   <div class="view" id="v-naphies">
     <div class="g2">
       <div class="card cp"><div class="ct" style="margin-bottom:12px">Data sources &amp; integrations</div>
         <div class="set-row"><div><div class="set-n">Manual entry</div><div class="set-d">Always available — no external dependency</div></div><span class="chip c-g">Active</span></div>
-        <div class="set-row"><div><div class="set-n">Batch import (paste / file)</div><div class="set-d">Optional convenience when data exists</div></div><span class="chip c-g">Active</span></div>
-        <div class="set-row"><div><div class="set-n">NAPHIES (national eligibility)</div><div class="set-d">Phase 0 demo — eligibility &amp; coverage checks</div></div><span class="chip c-a">Phase 0</span></div>
-        <div class="set-row"><div><div class="set-n">Raqeem (registries)</div><div class="set-d">Phase 1 pilot — read orders, labs, diagnoses</div></div><span class="chip c-b">Phase 1</span></div>
+        <div class="set-row"><div><div class="set-n">Batch / paste import</div><div class="set-d">Optional convenience when data exists</div></div><span class="chip c-g">Active</span></div>
+        <div class="set-row"><div><div class="set-n">Hospital EMR / Raqeem feed (read)</div><div class="set-d">Reads orders, labs, diagnoses once — no re-keying when available</div></div><span class="chip c-a">Adapter ready</span></div>
+        <div class="set-row"><div><div class="set-n">NAPHIES (national eligibility)</div><div class="set-d">Phase 0 demo</div></div><span class="chip c-a">Phase 0</span></div>
         <div class="set-row"><div><div class="set-n">WhatsApp Business API</div><div class="set-d">Patient engagement channel</div></div><span class="chip c-b">Configured</span></div>
       </div>
       <div class="card cp"><div class="ct" style="margin-bottom:12px">Data residency</div>
@@ -371,7 +390,7 @@ button{font-family:inherit;}
 
   <!-- SETTINGS -->
   <div class="view" id="v-settings">
-    <div class="airpanel" style="margin-bottom:14px;max-width:780px">
+    <div class="airpanel" style="margin-bottom:14px;max-width:790px">
       <div class="ct">AI Engine &amp; Data Residency</div>
       <div class="cs">How clinical intelligence is computed and where patient data is processed.</div>
       <div class="airbadges">
@@ -379,7 +398,7 @@ button{font-family:inherit;}
         <span class="airb airon"><span class="d" style="background:var(--te)"></span>Data stays in Saudi Arabia</span>
         <span class="airb airoff" id="airExtBadge"><span class="d" style="background:#9ca3af"></span>External AI · off</span>
       </div>
-      <div class="cs" style="line-height:1.6;color:var(--mu)">Risk stratification, eligibility, dropout scoring, screening-due logic and dose rules run deterministically in the browser. No patient data leaves the device, there is no per-call cost, and every result is auditable and explainable.</div>
+      <div class="cs" style="line-height:1.6;color:var(--mu)">Risk stratification, eligibility, order-to-completion, dropout scoring, recall cadence and dose rules run deterministically in the browser. No patient data leaves the device, there is no per-call cost, and every result is auditable and explainable.</div>
       <div class="set-row" style="margin-top:8px"><div><div class="set-n">External AI connection (optional)</div><div class="set-d">Off by default. Only de-identified features are sent when enabled.</div></div><label class="sw"><input type="checkbox" id="airT" onchange="toggleExt(this.checked)"><span class="sl"></span></label></div>
       <div id="airFields" style="opacity:.5;pointer-events:none">
         <div class="frow2" style="margin-top:13px">
@@ -389,17 +408,16 @@ button{font-family:inherit;}
       </div>
       <div class="resnote"><b>Phase 1 (pilot):</b> rule engine only — nothing leaves the device. <b>Phase 2:</b> point the endpoint at an in-Kingdom local LLM for open-ended tasks. No rebuild required. Processing mode: <strong id="airMode">Local</strong>.</div>
     </div>
-    <div class="g2" style="max-width:780px">
-      <div class="card cp"><div class="ct" style="margin-bottom:12px">Programme &amp; safety</div>
-        <div class="set-row"><div><div class="set-n">Medication safety prompts</div><div class="set-d">Renal check with metformin, allergy &amp; interaction flags</div></div><label class="sw"><input type="checkbox" checked><span class="sl"></span></label></div>
+    <div class="g2" style="max-width:790px">
+      <div class="card cp"><div class="ct" style="margin-bottom:12px">Programme &amp; safety (poka-yoke)</div>
+        <div class="set-row"><div><div class="set-n">Renal check with metformin</div><div class="set-d">Block / flag when eGFR below threshold</div></div><label class="sw"><input type="checkbox" checked><span class="sl"></span></label></div>
+        <div class="set-row"><div><div class="set-n">High-alert &amp; allergy flags</div><div class="set-d">Insulin, sulfonylurea &amp; allergy banners</div></div><label class="sw"><input type="checkbox" checked><span class="sl"></span></label></div>
         <div class="set-row"><div><div class="set-n">Ramadan dose-adjustment guidance</div><div class="set-d">For relevant agents</div></div><label class="sw"><input type="checkbox" checked><span class="sl"></span></label></div>
         <div class="set-row"><div><div class="set-n">HbA1c recall cadence</div><div class="set-d">Automatic pull-based scheduling</div></div><span class="chip c-b">Every 3 months</span></div>
-        <div class="set-row"><div><div class="set-n">PDPL consent &amp; audit trail</div><div class="set-d">Logged per patient</div></div><label class="sw"><input type="checkbox" checked><span class="sl"></span></label></div>
       </div>
       <div class="card cp"><div class="ct" style="margin-bottom:12px">About</div>
-        <div class="note" style="line-height:1.7;margin-bottom:11px">Version 2.0 · Riyadh PHC Cluster Pilot · rule-based diabetes care coordination platform aligned with ADA standards and Saudi HSTP / Vision 2030.</div>
-        <div style="display:flex;gap:7px;flex-wrap:wrap"><span class="chip c-b">Phase 0 Demo</span><span class="chip c-g">ADA aligned</span><span class="chip c-a">PDPL aligned</span><span class="chip c-t">Rule-based AI</span></div>
-        <div class="fg" style="margin-top:14px"><label>Replace logo (PNG/SVG)</label><input type="file" accept="image/*"></div>
+        <div class="note" style="line-height:1.7;margin-bottom:11px">Version 3.0 · Riyadh PHC Cluster Pilot · rule-based diabetes care coordination layer over the hospital EMR, aligned with ADA standards and Saudi HSTP / Vision 2030. Built to operate alongside the clinical system — closing the order-to-completion loop the EMR does not own.</div>
+        <div style="display:flex;gap:7px;flex-wrap:wrap"><span class="chip c-b">Phase 0 Demo</span><span class="chip c-g">ADA aligned</span><span class="chip c-a">PDPL aligned</span><span class="chip c-t">Lean / on-device</span></div>
       </div>
     </div>
   </div>
@@ -407,9 +425,7 @@ button{font-family:inherit;}
   </div>
 </div>
 
-<!-- PATIENT MODAL -->
 <div class="ov" id="ov"><div class="modal"><div class="mh"><div class="mh-t" id="mhT">Patient record</div><button class="mx" onclick="closePat()">×</button></div><div class="mb" id="mhB"></div></div></div>
-
 <div id="toast"><div id="tMain"></div><div class="s" id="tSub"></div></div>
 
 <script>
@@ -421,23 +437,41 @@ function numOpts(min,max,step,sel){var o="",v;step=step||1;for(v=min;v<=max+1e-9
 function ini(n){return n.replace(/^(Dr\.|Nurse)\s/,'').split(" ").map(function(x){return x[0];}).join("").slice(0,2);}
 function toast(m,s){var t=document.getElementById("toast");document.getElementById("tMain").textContent=m;document.getElementById("tSub").textContent=s||"";t.classList.add("show");clearTimeout(t._t);t._t=setTimeout(function(){t.classList.remove("show");},2600);}
 
-/* ---------- data ---------- */
+/* ---------- reference data ---------- */
 var FN_M=["Mohammed","Khalid","Faisal","Omar","Abdulaziz","Hamad","Saud","Nasser","Sultan","Turki","Bandar","Majed","Yousef"];
 var FN_F=["Sara","Nadia","Hessa","Maryam","Reem","Haya","Jawaher","Mona","Latifa","Huda","Amal","Dana","Noura"];
 var LN=["Al-Otaibi","Al-Zahrani","Al-Ghamdi","Al-Mutairi","Al-Dosari","Al-Shehri","Al-Qahtani","Al-Harbi","Al-Rashidi","Al-Amri","Al-Subaie"];
 var DIST=["Al-Olaya","Al-Malaz","Al-Wazarat","Al-Naseem","Al-Yarmouk"];
 var DOCS=["Dr. Al-Qahtani","Dr. Al-Harbi","Dr. Al-Dossari","Dr. Al-Mutairi"];
 var COORD=["Sarah Al-Ghamdi","Mona Al-Harbi","Khalid Al-Otaibi"];
-var EDU=["Reem Al-Dosari","Huda Al-Shehri","Abdullah Al-Mutairi"];
-var DRUGS=[{n:"Metformin 1000mg",cls:"Biguanide",renal:true},{n:"Metformin XR 750mg",cls:"Biguanide",renal:true},{n:"Empagliflozin 10mg",cls:"SGLT2 inhibitor"},{n:"Dapagliflozin 10mg",cls:"SGLT2 inhibitor"},{n:"Sitagliptin 100mg",cls:"DPP-4 inhibitor"},{n:"Gliclazide MR 60mg",cls:"Sulfonylurea",ramadan:true},{n:"Glibenclamide 5mg",cls:"Sulfonylurea",ramadan:true},{n:"Insulin glargine",cls:"Basal insulin",ramadan:true},{n:"Semaglutide 1mg",cls:"GLP-1 RA"},{n:"Atorvastatin 20mg",cls:"Statin"},{n:"Ramipril 5mg",cls:"ACE inhibitor"}];
-var FREQ=["Once daily","Twice daily","Three times daily","At bedtime","With breakfast","Weekly"];
-/* type split: 24 T2, 15 T1, 11 GDM = 50 */
+var ICD={T2:"E11.9",T1:"E10.9",GDM:"O24.4",LADA:"E13.9",Pre:"R73.03"};
+var DRUGS=[
+ {n:"Metformin",dose:"1000 mg",cls:"Biguanide",renal:true},
+ {n:"Metformin XR",dose:"750 mg prolonged-release",cls:"Biguanide",renal:true},
+ {n:"Empagliflozin",dose:"10 mg",cls:"SGLT2 inhibitor"},
+ {n:"Dapagliflozin",dose:"10 mg",cls:"SGLT2 inhibitor"},
+ {n:"Sitagliptin",dose:"100 mg",cls:"DPP-4 inhibitor"},
+ {n:"Gliclazide MR",dose:"60 mg",cls:"Sulfonylurea",high:true,ramadan:true},
+ {n:"Insulin glargine",dose:"20 units",cls:"Basal insulin",high:true,ramadan:true},
+ {n:"Semaglutide",dose:"1 mg weekly",cls:"GLP-1 RA"},
+ {n:"Atorvastatin",dose:"20 mg",cls:"Statin"},
+ {n:"Ramipril",dose:"5 mg",cls:"ACE inhibitor"}];
+var FREQ=[{l:"Once daily",t:1},{l:"Twice daily",t:2},{l:"Three times daily",t:3},{l:"At bedtime",t:1},{l:"Once weekly",t:1}];
 var TYPESEQ=[];var i;for(i=0;i<24;i++)TYPESEQ.push("T2");for(i=0;i<15;i++)TYPESEQ.push("T1");for(i=0;i<11;i++)TYPESEQ.push("GDM");
 var TODAY=new Date("2026-06-29");
 function daysAgo(n){return new Date(TODAY.getTime()-n*86400000).toISOString().slice(0,10);}
 
+/* ---------- cohort ---------- */
 var patients=[];
-function mkMed(di){var d=DRUGS[di];return{drug:d.n,cls:d.cls,freq:pk(["Once daily","Twice daily","Once daily"]),timing:pk(["with breakfast","with meals","at bedtime","morning"]),days:pk([30,60,90])};}
+function mkMed(di){var d=DRUGS[di];var f=pk([FREQ[0],FREQ[1],FREQ[0]]);if(d.cls==="GLP-1 RA")f=FREQ[4];return{drug:d.n,dose:d.dose,cls:d.cls,freq:f.l,tpd:f.t,timing:pk(["with breakfast","with meals","at bedtime","morning"]),days:pk([30,60,90]),high:!!d.high,renal:!!d.renal};}
+function scrMo(){return ch(.64)?Math.floor(rnd()*11):12+Math.floor(rnd()*9);}
+function mkOrders(p){var o=[],ag;
+  ag=7+Math.floor(rnd()*40);o.push({t:"HbA1c",code:"LOINC 4548-4",cat:"lab",status:pk(["actioned","actioned","resulted","drawn","ordered"]),d:daysAgo(ag)});
+  if(p.ldl>2.6||p.age>40){ag=5+Math.floor(rnd()*30);o.push({t:"Lipid panel",code:"LOINC 24331-1",cat:"lab",status:pk(["actioned","resulted","drawn","actioned"]),d:daysAgo(ag)});}
+  if(p.scr.kidney>=8){ag=3+Math.floor(rnd()*20);o.push({t:"Urine ACR",code:"LOINC 9318-7",cat:"lab",status:pk(["ordered","ordered","drawn","resulted"]),d:daysAgo(ag)});}
+  if(p.meds.length){var m=p.meds[p.meds.length-1];ag=2+Math.floor(rnd()*14);o.push({t:m.drug+" "+m.dose,code:"RxNorm",cat:"med",status:pk(["collected","collected","ordered"]),d:daysAgo(ag),high:m.high});}
+  if(p.a1c>=9){ag=4+Math.floor(rnd()*18);o.push({t:"Endocrinology review",code:"Referral",cat:"ref",status:pk(["ordered","ordered","completed"]),d:daysAgo(ag)});}
+  return o;}
 function makePatient(i){
   var sex=ch(.5)?"M":"F",fn=pk(sex==="M"?FN_M:FN_F),ln=pk(LN);
   var type=TYPESEQ[i];
@@ -448,25 +482,34 @@ function makePatient(i){
   var sbp=Math.round(112+rnd()*52),dbp=Math.round(68+rnd()*22);
   var ldl=+(1.6+rnd()*2.6).toFixed(1),bmi=+(23+rnd()*15).toFixed(1),fbs=+(5+rnd()*8).toFixed(1);
   var meds=[];if(type!=="Pre"&&type!=="GDM"){meds.push(mkMed(ch(.5)?0:1));}
-  if(ch(.5)&&type!=="GDM")meds.push(mkMed(2+Math.floor(rnd()*5)));
-  if(a1c>=9&&ch(.6))meds.push(mkMed(8));if(ldl>2.6||age>55)meds.push(mkMed(9));
-  function scrMo(){return ch(.64)?Math.floor(rnd()*11):12+Math.floor(rnd()*9);}
+  if(ch(.5)&&type!=="GDM")meds.push(mkMed(2+Math.floor(rnd()*4)));
+  if(a1c>=9&&ch(.6))meds.push(mkMed(ch(.5)?5:6));
+  if(ldl>2.6||age>55)meds.push(mkMed(8));
+  if(sbp>=140||egfr<60)meds.push(mkMed(9));
   var scr={retinal:scrMo(),foot:scrMo(),kidney:scrMo(),cardiac:scrMo(),neuro:scrMo()};
   var resp=Math.round(35+rnd()*60),noShow=ch(.25)?1+Math.floor(rnd()*2):0,lastContact=2+Math.floor(rnd()*70);
   var adhScore=Math.max(0,Math.min(100,resp-(noShow*15)+(a1c<7?15:a1c>9?-15:0)));
   var adh=adhScore>=68?"Good":adhScore>=45?"Fair":"Poor";
-  var comms=[];
-  if(a1c>=8.5||noShow)comms.push({who:pk(COORD),role:"Care Coordinator",date:daysAgo(3+Math.floor(rnd()*20)),txt:pk(["Patient called — reports occasional dizziness and missed doses this week. Please review.","Reminder sent for upcoming lab; awaiting confirmation.","Patient requested education on diet and Ramadan dosing."])});
-  return {id:i,name:fn+" "+ln,mrn:"SA-"+(4000+i*7+Math.floor(rnd()*6)),sex:sex,age:age,type:type,district:pk(DIST),doc:pk(DOCS),coord:pk(COORD),edu:pk(EDU),
-    a1c:a1c,prev:prev,egfr:egfr,sbp:sbp,dbp:dbp,ldl:ldl,bmi:bmi,fbs:fbs,adh:adh,adhScore:adhScore,meds:meds,scr:scr,
-    resp:resp,noShow:noShow,lastContact:lastContact,lastVisit:daysAgo(lastContact),phone:"+9665"+(10000000+Math.floor(rnd()*8999999)),notes:[],comms:comms};
-}
+  var allergy=ch(.18)?pk(["Penicillin","Sulfa drugs","Contrast media","Aspirin"]):"No known allergies";
+  var p={id:i,name:fn+" "+ln,mrn:"SA-"+(4000+i*7+Math.floor(rnd()*6)),sex:sex,age:age,type:type,district:pk(DIST),doc:pk(DOCS),coord:pk(COORD),
+    a1c:a1c,prev:prev,egfr:egfr,sbp:sbp,dbp:dbp,ldl:ldl,bmi:bmi,fbs:fbs,adh:adh,adhScore:adhScore,meds:meds,scr:scr,allergy:allergy,
+    resp:resp,noShow:noShow,lastContact:lastContact,lastVisit:daysAgo(lastContact),phone:"+9665"+(10000000+Math.floor(rnd()*8999999)),notes:[],comms:[]};
+  if(a1c>=8.5||noShow)p.comms.push({who:pk(COORD),role:"Care Coordinator",date:daysAgo(3+Math.floor(rnd()*20)),txt:pk(["Patient called — reports occasional dizziness and missed doses this week. Please review.","Reminder sent for upcoming lab; awaiting confirmation.","Patient requested education on diet and Ramadan dosing."])});
+  p.orders=mkOrders(p);
+  return p;}
 for(i=0;i<50;i++)patients.push(makePatient(i));
+
+/* ---------- order helpers ---------- */
+function ordOpen(o){if(o.cat==="lab")return o.status==="ordered"||o.status==="drawn";if(o.cat==="med")return o.status==="ordered";if(o.cat==="ref")return o.status==="ordered";return false;}
+function ordResult(o){return o.cat==="lab"&&o.status==="resulted";}
+function ordStageList(o){if(o.cat==="lab")return["ordered","drawn","resulted","actioned"];if(o.cat==="med")return["ordered","collected"];return["ordered","completed"];}
+function advanceOrder(pid,oi){var p=patients[pid],o=p.orders[oi],st=ordStageList(o),k=st.indexOf(o.status);if(k<st.length-1)o.status=st[k+1];refreshAll();if(document.getElementById("v-orders").classList.contains("on"))renderOrders();openPat(pid);toast("Loop advanced",o.t+" → "+o.status);}
 
 /* ---------- rule engine ---------- */
 function control(p){if(p.type==="Pre")return{label:"Pre-diabetes",cls:"c-n"};if(p.a1c<7)return{label:"At target",cls:"c-g"};if(p.a1c<9)return{label:"Above target",cls:"c-a"};return{label:"Uncontrolled",cls:"c-r"};}
 function gaps(p){var g=[];if(p.scr.retinal>=12)g.push("Retinal screen overdue");if(p.scr.foot>=12)g.push("Foot exam overdue");if(p.scr.kidney>=12)g.push("Renal (uACR) overdue");if(p.scr.cardiac>=12)g.push("Cardiac review overdue");return g;}
 function scrDone(p){var k=["retinal","foot","kidney","cardiac","neuro"],done=0;k.forEach(function(x){if(p.scr[x]<12)done++;});return done/k.length;}
+function hbDueMo(p){var hb=p.orders.filter(function(o){return o.t==="HbA1c"&&(o.status==="resulted"||o.status==="actioned");}).map(function(o){return Math.round((TODAY-new Date(o.d))/2628000000);});var last=hb.length?Math.min.apply(null,hb):12;return last;}
 function riskScore(p){var s=10,d=[];
   if(p.a1c>=9){s+=28;d.push("HbA1c "+p.a1c+"% (uncontrolled)");}else if(p.a1c>=8){s+=15;d.push("HbA1c "+p.a1c+"% (above target)");}
   if(p.a1c>p.prev+0.3){s+=10;d.push("HbA1c rising vs last");}
@@ -483,27 +526,38 @@ function dropoutScore(p){var s=8,d=[];
   s=Math.min(99,s);var tier=s>=52?"High":s>=30?"Moderate":"Low";
   var act=p.resp<45?"Switch channel — phone call":p.noShow>=2?"Re-book with reminder":p.a1c>=9?"Priority recall + review":"Send reminder + education";
   return{score:s,tier:tier,drivers:d.slice(0,3),action:act};}
+function pathway(p){var items=[];
+  items.push({l:"HbA1c on cadence (≤3 mo)",ok:hbDueMo(p)<3});
+  items.push({l:"Annual retinal screen",ok:p.scr.retinal<12});
+  items.push({l:"Annual foot exam",ok:p.scr.foot<12});
+  items.push({l:"Annual renal (uACR)",ok:p.scr.kidney<12});
+  var onStatin=p.meds.some(function(m){return m.cls==="Statin";});
+  items.push({l:"Statin if LDL>2.6 / age>40",ok:!(p.ldl>2.6||p.age>40)||onStatin});
+  var onACE=p.meds.some(function(m){return m.cls==="ACE inhibitor";});
+  items.push({l:"ACE/ARB if BP high / renal",ok:!(p.sbp>=140||p.egfr<60)||onACE});
+  return items;}
 function alerts(p){var a=[];
+  if(p.allergy!=="No known allergies")a.push({s:"r",t:"Allergy on file: "+p.allergy+" — verify before prescribing"});
   if(p.a1c>=9)a.push({s:"r",t:"HbA1c "+p.a1c+"% — urgent intensification needed"});
   if(p.scr.retinal>=12)a.push({s:"r",t:"Retinal exam overdue "+p.scr.retinal+" months"});
   var onMet=p.meds.some(function(m){return m.drug.indexOf("Metformin")>-1;});
-  if(onMet&&p.egfr<45)a.push({s:"r",t:"Metformin with eGFR "+p.egfr+" — review dose / suitability (renal)"});
+  if(onMet&&p.egfr<45)a.push({s:"r",t:"Metformin with eGFR "+p.egfr+" — review dose / suitability (renal poka-yoke)"});
   var onSGLT=p.meds.some(function(m){return m.cls==="SGLT2 inhibitor";});
   if(!onSGLT&&(p.egfr<60||p.sbp>=140)&&p.type==="T2")a.push({s:"r",t:"SGLT2i not prescribed — CV + kidney benefit indicated"});
-  if(p.ldl>2.6)a.push({s:"a",t:"LDL "+p.ldl+" — high-intensity statin indicated"});
-  var onSU=p.meds.some(function(m){return m.cls==="Sulfonylurea"||m.cls==="Basal insulin";});
-  if(onSU)a.push({s:"a",t:"On agent with hypo risk — reinforce Ramadan dose adjustment"});
+  if(p.ldl>2.6&&!p.meds.some(function(m){return m.cls==="Statin";}))a.push({s:"a",t:"LDL "+p.ldl+" — high-intensity statin indicated"});
+  var onSU=p.meds.some(function(m){return m.high;});
+  if(onSU)a.push({s:"a",t:"On high-alert agent with hypo risk — reinforce Ramadan dose adjustment & symptom advice"});
   if(!a.length)a.push({s:"g",t:"No outstanding clinical flags"});
   return a;}
 
 /* ---------- nav ---------- */
-var TITLES={dash:["Population Overview","Riyadh PHC Cluster · Diabetes Care Programme · 50 patients"],worklist:["Morning Worklist","Highest clinical need first · rule-prioritised"],registry:["Patient Registry","Diabetes cohort · risk scored locally"],huddle:["Morning Huddle","Standard work · coordinator &amp; nurse"],tasks:["Care Tasks","Coordinator &amp; nurse queue"],clinic:["Virtual Clinic","Tele-visits · remote review"],enrol:["Enrol Patient","Manual entry or batch import"],messages:["Patient Messages","Arabic-first engagement"],physician:["Physician Review","Flagged for medical action"],analytics:["Analytics & RWE","Outcomes · generated on-device"],naphies:["NAPHIES · Raqeem","Integrations & data residency"],settings:["Settings","AI engine · safety · programme"]};
+var TITLES={dash:["Population Overview","Riyadh PHC Cluster · Diabetes Care Programme · 50 patients"],worklist:["Morning Worklist","Highest clinical need first · rule-prioritised"],registry:["Patient Registry","Diabetes cohort · risk scored locally"],orders:["Orders &amp; Results","Order-to-completion loop · close the gap after the order"],recall:["Recall Engine","Pull-based cadence · the clinical clock schedules the work"],coverage:["Care Gaps &amp; Coverage","Complication-screening coverage drive"],pathway:["Standard Work","Diabetes pathway adherence · deviations visible"],enrol:["Enrol Patient","Dual intake · manual or hospital feed"],messages:["Patient Messages","Arabic-first engagement"],tasks:["Care Tasks","Coordinator &amp; nurse queue"],physician:["Physician Review","Flagged for medical action"],analytics:["Analytics &amp; RWE","Outcomes · generated on-device"],naphies:["NAPHIES · Raqeem","Integrations &amp; data residency"],settings:["Settings","AI engine · safety · programme"]};
 function show(v){var el=document.getElementById("v-"+v);if(!el)return;
   document.querySelectorAll(".view").forEach(function(x){x.classList.remove("on");});el.classList.add("on");
   document.querySelectorAll(".nav").forEach(function(n){n.classList.toggle("on",n.getAttribute("data-v")===v);});
   document.getElementById("topT").innerHTML=TITLES[v][0];document.getElementById("topS").innerHTML=TITLES[v][1];
   document.querySelector(".content").scrollTop=0;
-  if(v==="registry")renderReg();if(v==="worklist")renderWork();if(v==="huddle")renderHuddle();if(v==="tasks")renderTasks();if(v==="clinic")renderClinic();if(v==="physician")renderPhys();if(v==="analytics")renderAnalytics();if(v==="messages")renderMsg();}
+  if(v==="registry")renderReg();if(v==="worklist")renderWork();if(v==="orders")renderOrders();if(v==="recall")renderRecall();if(v==="coverage")renderCoverage();if(v==="pathway")renderPathway();if(v==="tasks")renderTasks();if(v==="physician")renderPhys();if(v==="analytics")renderAnalytics();if(v==="messages")renderMsg();}
 document.querySelectorAll(".nav").forEach(function(n){n.onclick=function(){show(n.getAttribute("data-v"));};});
 
 /* ---------- registry ---------- */
@@ -512,14 +566,10 @@ function filterReg(f,btn){regFilter=f;btn.parentNode.querySelectorAll(".fp").for
 function adhBar(p){var col=p.adh==="Good"?"var(--gr)":p.adh==="Fair"?"var(--am)":"var(--rd)";return "<div class='adh'><span class='abar'><span style='width:"+p.adhScore+"%;background:"+col+"'></span></span>"+p.adh+"</div>";}
 function renderReg(){
   var q=(document.getElementById("regSearch").value||"").toLowerCase();var rf=document.getElementById("regRisk").value;
-  var list=patients.filter(function(p){
-    if(regFilter!=="all"&&p.type!==regFilter)return false;
-    if(rf&&riskScore(p).tier!==rf)return false;
-    if(q&&p.name.toLowerCase().indexOf(q)<0&&p.mrn.toLowerCase().indexOf(q)<0)return false;return true;});
-  document.getElementById("regBody").innerHTML=list.map(function(p){var c=control(p),rk=riskScore(p);
-    var a1col=p.a1c>=9?"var(--rd)":p.a1c>=7.5?"var(--am)":"var(--gr)";
-    var rcol=rk.tier==="High"?"c-r":rk.tier==="Moderate"?"c-a":"c-g";
-    return "<tr onclick='openPat("+p.id+")'><td><div class='pname'>"+p.name+"</div><div class='pmeta'>"+p.mrn+" · "+p.district+" · "+p.doc+" · Coord: "+p.coord+"</div></td>"+
+  var list=patients.filter(function(p){if(regFilter!=="all"&&p.type!==regFilter)return false;if(rf&&riskScore(p).tier!==rf)return false;if(q&&p.name.toLowerCase().indexOf(q)<0&&p.mrn.toLowerCase().indexOf(q)<0)return false;return true;});
+  document.getElementById("regBody").innerHTML=list.map(function(p){var rk=riskScore(p);
+    var a1col=p.a1c>=9?"var(--rd)":p.a1c>=7.5?"var(--am)":"var(--gr)";var rcol=rk.tier==="High"?"c-r":rk.tier==="Moderate"?"c-a":"c-g";
+    return "<tr class='clk' onclick='openPat("+p.id+")'><td><div class='pname'>"+p.name+(p.allergy!=="No known allergies"?" <span class='halert' style='background:var(--am)'>ALLERGY</span>":"")+"</div><div class='pmeta'>"+p.mrn+" · "+ICD[p.type]+" · "+p.district+" · "+p.doc+"</div></td>"+
     "<td><span class='tag t"+p.type+"'>"+p.type+"</span></td><td class='mono' style='font-weight:700;color:"+a1col+"'>"+p.a1c+"%</td>"+
     "<td class='mono'>"+p.sbp+"/"+p.dbp+"</td><td class='mono' style='color:"+(p.egfr<45?"var(--rd)":"inherit")+"'>"+p.egfr+"</td>"+
     "<td>"+adhBar(p)+"</td><td style='color:var(--mu)'>"+p.lastVisit+"</td><td><span class='chip "+rcol+"'>"+rk.tier+"</span></td>"+
@@ -527,69 +577,109 @@ function renderReg(){
   }).join("")||"<tr><td colspan='9' style='text-align:center;color:var(--mu);padding:20px'>No patients match this view.</td></tr>";
 }
 
-/* ---------- patient record (Storyboard) ---------- */
-function openPat(id){var p=patients[id],c=control(p),rk=riskScore(p),dr=dropoutScore(p),al=alerts(p),g=gaps(p);
-  document.getElementById("mhT").innerHTML=p.name+" <span class='tag t"+p.type+"'>"+p.type+" DM</span> <span class='chip "+(rk.tier==="High"?"c-r":rk.tier==="Moderate"?"c-a":"c-g")+"'>"+rk.tier+" risk</span>";
-  var trend=p.a1c>p.prev?"▲":p.a1c<p.prev?"▼":"—",tcol=p.a1c>p.prev?"var(--rd)":"var(--gr)";
-  var a1col=p.a1c>=9?"var(--rd)":p.a1c>=7.5?"var(--am)":"var(--gr)";
+/* ---------- orders & results ---------- */
+var ordF="open";
+function ordFilter(f,btn){ordF=f;if(btn){btn.parentNode.querySelectorAll(".btn").forEach(function(b){b.className="btn btn-o btn-sm";});btn.className="btn btn-p btn-sm";}renderOrders();}
+function renderOrders(){var rows=[];
+  patients.forEach(function(p){p.orders.forEach(function(o,oi){
+    if(ordF==="open"&&!ordOpen(o))return;if(ordF==="result"&&!ordResult(o))return;
+    var open=ordOpen(o),res=ordResult(o);var stcol=res?"c-b":open?"c-a":"c-g";
+    var stage=ordStageList(o);var idx=stage.indexOf(o.status);var stageTxt=(idx+1)+" of "+stage.length;
+    rows.push({sc:res?2:open?3:1,html:"<tr class='clk' onclick='openPat("+p.id+")'><td><div class='pname'>"+p.name+"</div><div class='pmeta'>"+p.mrn+" · "+p.type+"</div></td>"+
+      "<td>"+o.t+(o.high?" <span class='halert'>HIGH-ALERT</span>":"")+"</td><td class='code'>"+o.code+"</td><td style='color:var(--mu)'>"+o.d+"</td><td class='mono' style='font-size:11px;color:var(--mu)'>"+stageTxt+"</td>"+
+      "<td><span class='chip "+stcol+"'>"+o.status+"</span></td>"+
+      "<td>"+((open||res)?"<button class='btn btn-"+(res?"b":"g")+" btn-xs' onclick='event.stopPropagation();advanceOrder("+p.id+","+oi+")'>"+(res?"Mark actioned":"Advance")+"</button>":"<span class='chip c-g'>closed</span>")+"</td></tr>"});
+  });});
+  rows.sort(function(a,b){return b.sc-a.sc;});
+  document.getElementById("ordBody").innerHTML=rows.map(function(r){return r.html;}).join("")||"<tr><td colspan='7' style='text-align:center;color:var(--mu);padding:20px'>Nothing in this view — loop is clear.</td></tr>";
+}
+
+/* ---------- recall engine ---------- */
+function dueForRecall(p){return hbDueMo(p)>=3||gaps(p).length>0;}
+function renderRecall(){
+  var hb=patients.filter(function(p){return hbDueMo(p)>=3;});
+  var sc=patients.filter(function(p){return gaps(p).length>0;});
+  document.getElementById("recHb").textContent=hb.length;document.getElementById("recScr").textContent=sc.length;
+  var due=patients.filter(dueForRecall).sort(function(a,b){return riskScore(b).score-riskScore(a).score;});
+  document.getElementById("recList").innerHTML=due.map(function(p){var reasons=[];if(hbDueMo(p)>=3)reasons.push("HbA1c due ("+hbDueMo(p)+" mo)");gaps(p).forEach(function(g){reasons.push(g);});
+    return "<div class='wl "+(p.a1c>=9?"u":"m")+"' onclick='openPat("+p.id+")'><div><div class='nm'>"+p.name+" <span class='tag t"+p.type+"'>"+p.type+"</span></div><div class='dt'>"+reasons.slice(0,3).join(" · ")+"</div></div><div class='ac'><button class='btn btn-g btn-xs' onclick='event.stopPropagation();recallPat("+p.id+")'>Recall</button></div></div>";}).join("")||"<div class='note'>No recalls due this cycle.</div>";
+}
+
+/* ---------- coverage ---------- */
+function renderCoverage(){
+  var cats=[["Retinal screen","retinal"],["Foot exam","foot"],["Renal (uACR)","kidney"],["Cardiac review","cardiac"]];
+  document.getElementById("covBars").innerHTML=cats.map(function(c){var done=patients.filter(function(p){return p.scr[c[1]]<12;}).length;var pct=Math.round(done/patients.length*100);var col=pct>=80?"var(--gr)":pct>=60?"var(--am)":"var(--rd)";
+    return "<div class='set-row'><div style='min-width:160px'><div class='set-n'>"+c[0]+"</div><div class='set-d'>"+(patients.length-done)+" overdue · target 90%</div></div><div class='cov' style='flex:1'><span class='covbar'><span style='width:"+pct+"%;background:"+col+"'></span></span><span class='mono' style='font-weight:700;color:"+col+"'>"+pct+"%</span></div></div>";}).join("");
+  var rows=patients.filter(function(p){return gaps(p).length;}).sort(function(a,b){return gaps(b).length-gaps(a).length;});
+  document.getElementById("gapList").innerHTML=rows.map(function(p){var g=gaps(p);
+    return "<div class='wl m' onclick='openPat("+p.id+")'><div><div class='nm'>"+p.name+" <span class='tag t"+p.type+"'>"+p.type+"</span></div><div class='dt'>"+g.join(" · ")+"</div></div><div class='ac'><span class='chip c-r'>"+g.length+" gap(s)</span><button class='btn btn-g btn-xs' onclick='event.stopPropagation();recallPat("+p.id+")'>Recall</button></div></div>";}).join("")||"<div class='note'>No open care gaps.</div>";
+}
+
+/* ---------- standard work / pathway ---------- */
+function renderPathway(){
+  var checks=["HbA1c cadence","Retinal","Foot","Renal","Statin","ACE/ARB"];
+  var totals=[0,0,0,0,0,0];
+  patients.forEach(function(p){pathway(p).forEach(function(it,k){if(it.ok)totals[k]++;});});
+  document.getElementById("pathBars").innerHTML=checks.map(function(c,k){var pct=Math.round(totals[k]/patients.length*100);var col=pct>=80?"var(--gr)":pct>=60?"var(--am)":"var(--rd)";
+    return "<div class='set-row'><div style='min-width:170px'><div class='set-n'>"+c+"</div></div><div class='cov' style='flex:1'><span class='covbar'><span style='width:"+pct+"%;background:"+col+"'></span></span><span class='mono' style='font-weight:700;color:"+col+"'>"+pct+"%</span></div></div>";}).join("");
+  var off=patients.map(function(p){return{p:p,dev:pathway(p).filter(function(it){return !it.ok;})};}).filter(function(x){return x.dev.length;}).sort(function(a,b){return b.dev.length-a.dev.length;});
+  document.getElementById("pathList").innerHTML=off.map(function(x){return "<div class='wl "+(x.dev.length>=3?"u":"m")+"' onclick='openPat("+x.p.id+")'><div><div class='nm'>"+x.p.name+" <span class='tag t"+x.p.type+"'>"+x.p.type+"</span></div><div class='dt'>Off-pathway: "+x.dev.map(function(d){return d.l;}).slice(0,3).join(" · ")+"</div></div><div class='ac'><span class='chip c-r'>"+x.dev.length+" deviation(s)</span></div></div>";}).join("")||"<div class='note'>All patients on standard pathway.</div>";
+}
+
+/* ---------- patient record ---------- */
+function openPat(id){var p=patients[id],c=control(p),rk=riskScore(p),dr=dropoutScore(p),al=alerts(p),g=gaps(p),pw=pathway(p);
+  document.getElementById("mhT").innerHTML=p.name+" <span class='tag t"+p.type+"'>"+p.type+" DM</span> <span class='code'>"+ICD[p.type]+"</span> <span class='chip "+(rk.tier==="High"?"c-r":rk.tier==="Moderate"?"c-a":"c-g")+"'>"+rk.tier+" risk</span>";
+  var trend=p.a1c>p.prev?"▲":p.a1c<p.prev?"▼":"=",a1col=p.a1c>=9?"var(--rd)":p.a1c>=7.5?"var(--am)":"var(--gr)";
   function vit(v,l,col){return "<div class='vit'><div class='v' style='color:"+(col||"var(--tx)")+"'>"+v+"</div><div class='l'>"+l+"</div></div>";}
+  var hasAllergy=p.allergy!=="No known allergies";
   var scrItems=[["Retinal",p.scr.retinal],["Foot",p.scr.foot],["Kidney",p.scr.kidney],["Cardiac",p.scr.cardiac],["Neuro",p.scr.neuro]];
+  var openOrd=p.orders.map(function(o,oi){return{o:o,oi:oi};}).filter(function(x){return ordOpen(x.o)||ordResult(x.o);});
   var html=
+  "<div class='allergybar "+(hasAllergy?"has":"no")+"'>"+(hasAllergy?"Allergy: "+p.allergy+" — verify before prescribing":"No known drug allergies")+"</div>"+
   "<div class='sbd'><div class='sbd-h'><div class='sbd-av'>"+ini(p.name)+"</div>"+
-    "<div style='flex:1'><div class='sbd-n'>"+p.name+"</div><div class='sbd-m'>"+p.age+"y · "+(p.sex==="M"?"Male":"Female")+" · "+p.mrn+" · "+p.district+" · "+p.doc+" · "+p.phone+"</div></div>"+
+    "<div style='flex:1'><div class='sbd-n'>"+p.name+"</div><div class='sbd-m'>"+p.age+"y · "+(p.sex==="M"?"Male":"Female")+" · "+p.mrn+" · "+ICD[p.type]+" · "+p.district+" · "+p.doc+" · "+p.phone+"</div></div>"+
     "<div style='display:flex;gap:7px'><button class='btn btn-b btn-sm' onclick='messagePat("+p.id+")'>Message</button><button class='btn btn-g btn-sm' onclick='recallPat("+p.id+")'>Recall</button></div></div>"+
     "<div class='vstrip'>"+vit(p.a1c+"% "+trend,"HbA1c",a1col)+vit(p.sbp+"/"+p.dbp,"BP")+vit(p.ldl,"LDL",p.ldl>2.6?"var(--am)":"var(--tx)")+vit(p.egfr,"eGFR",p.egfr<45?"var(--rd)":"var(--tx)")+vit(p.bmi,"BMI")+vit(p.adh,"Adherence",p.adh==="Poor"?"var(--rd)":p.adh==="Fair"?"var(--am)":"var(--gr)")+vit(p.fbs,"FBS")+"</div></div>"+
+  "<div class='mbody'>"+
   "<div class='g2' style='margin-bottom:14px'>"+
-    "<div class='card cp'><div class='ct' style='margin-bottom:9px'>Medications ("+p.meds.length+")</div>"+(p.meds.length?p.meds.map(function(m){return "<div style='padding:8px 0;border-bottom:1px solid var(--bdr)'><div style='font-weight:700;font-size:12px'>"+m.drug+"</div><div style='font-size:10.5px;color:var(--mu);margin-top:2px'>"+m.cls+" · "+m.freq+" · "+m.timing+" · "+m.days+" days</div></div>";}).join(""):"<div class='note'>No medications recorded.</div>")+"<button class='btn btn-o btn-xs' style='margin-top:10px' onclick='addMedForm("+p.id+")'>+ Add medication</button><div id='medForm'></div></div>"+
+    "<div class='card cp'><div class='ct' style='margin-bottom:9px'>Medications ("+p.meds.length+")</div>"+(p.meds.length?p.meds.map(function(m){return "<div style='padding:8px 0;border-bottom:1px solid var(--bdr)'><div style='font-weight:700;font-size:12px'>"+m.drug+" "+m.dose+(m.high?" <span class='halert'>HIGH-ALERT</span>":"")+"</div><div style='font-size:10.5px;color:var(--mu);margin-top:2px'>"+m.cls+" · "+m.freq+" ("+m.tpd+"×/day) · "+m.timing+" · "+m.days+" days</div></div>";}).join(""):"<div class='note'>No medications recorded.</div>")+"<button class='btn btn-o btn-xs' style='margin-top:10px' onclick='addMedForm("+p.id+")'>+ Order medication</button><div id='medForm'></div></div>"+
     "<div class='card cp'><div class='ct' style='margin-bottom:9px'>Complication screening</div>"+scrItems.map(function(s){var ov=s[1]>=12;return "<div class='scr-row'><span><span class='d' style='background:"+(ov?"var(--rd)":"var(--gr)")+"'></span>"+s[0]+"</span><span style='color:"+(ov?"var(--rd)":"var(--mu)")+"'>"+(ov?"Overdue · "+s[1]+" mo":s[1]+" mo ago")+"</span></div>";}).join("")+(g.length?"<button class='btn btn-g btn-xs' style='margin-top:10px' onclick='recallPat("+p.id+")'>Recall to close "+g.length+" gap(s)</button>":"<div class='chip c-g' style='margin-top:9px'>All screening up to date</div>")+"</div>"+
   "</div>"+
-  "<div class='card cp' style='border:1px solid var(--rdl);margin-bottom:14px'><div class='ct' style='margin-bottom:4px'>Clinical decision support — rule engine</div><div class='cs' style='margin-bottom:11px'>deterministic · explainable · on-device</div>"+al.map(function(x){return "<div class='alert "+(x.s==="r"?"al-r":x.s==="a"?"al-a":"al-g")+"'>"+x.t+"</div>";}).join("")+"</div>"+
-  "<div class='card cp'><div class='ct' style='margin-bottom:9px'>Care-team communication</div>"+(p.comms.length?p.comms.map(function(c){return "<div style='padding:9px 0;border-bottom:1px solid var(--bdr)'><div style='font-size:11px'><b>"+c.who+"</b> <span style='color:var(--mu)'>"+c.role+" · "+c.date+"</span></div><div style='font-size:12px;margin-top:3px'>"+c.txt+"</div></div>";}).join(""):"<div class='note'>No recent care-team notes.</div>")+(p.notes.map(function(n){return "<div class='note' style='margin-top:8px'>"+n+"</div>";}).join(""))+"</div>";
+  "<div class='card cp' style='margin-bottom:14px'><div class='ct' style='margin-bottom:9px'>Orders — completion loop</div>"+(p.orders.length?"<div class='tw'><table class='tbl'><thead><tr><th>Order</th><th>Code</th><th>Placed</th><th>Status</th><th></th></tr></thead><tbody>"+p.orders.map(function(o,oi){var open=ordOpen(o),res=ordResult(o);var stcol=res?"c-b":open?"c-a":"c-g";return "<tr><td>"+o.t+(o.high?" <span class='halert'>HIGH-ALERT</span>":"")+"</td><td class='code'>"+o.code+"</td><td style='color:var(--mu)'>"+o.d+"</td><td><span class='chip "+stcol+"'>"+o.status+"</span></td><td>"+((open||res)?"<button class='btn btn-"+(res?"b":"g")+" btn-xs' onclick='advanceOrder("+p.id+","+oi+")'>"+(res?"Action":"Advance")+"</button>":"")+"</td></tr>";}).join("")+"</tbody></table></div>":"<div class='note'>No active orders.</div>")+"</div>"+
+  "<div class='g2' style='margin-bottom:14px'>"+
+    "<div class='card cp' style='border:1px solid var(--rdl)'><div class='ct' style='margin-bottom:4px'>Clinical decision support — rule engine</div><div class='cs' style='margin-bottom:11px'>deterministic · explainable · on-device</div>"+al.map(function(x){return "<div class='alert "+(x.s==="r"?"al-r":x.s==="a"?"al-a":"al-g")+"'>"+x.t+"</div>";}).join("")+"</div>"+
+    "<div class='card cp'><div class='ct' style='margin-bottom:9px'>Standard-work pathway</div>"+pw.map(function(it){return "<div class='path-row'><span class='path-ic' style='background:"+(it.ok?"var(--gr)":"var(--rd)")+"'>"+(it.ok?"✓":"!")+"</span><span style='font-size:12px'>"+it.l+"</span></div>";}).join("")+"</div>"+
+  "</div>"+
+  "<div class='card cp'><div class='ct' style='margin-bottom:9px'>Care-team communication</div>"+(p.comms.length?p.comms.map(function(c){return "<div style='padding:9px 0;border-bottom:1px solid var(--bdr)'><div style='font-size:11px'><b>"+c.who+"</b> <span style='color:var(--mu)'>"+c.role+" · "+c.date+"</span></div><div style='font-size:12px;margin-top:3px'>"+c.txt+"</div></div>";}).join(""):"<div class='note'>No recent care-team notes.</div>")+(p.notes.map(function(n){return "<div class='note' style='margin-top:8px'>"+n+"</div>";}).join(""))+"</div>"+
+  "</div>";
   document.getElementById("mhB").innerHTML=html;document.getElementById("ov").classList.add("open");
 }
 function closePat(){document.getElementById("ov").classList.remove("open");}
 document.getElementById("ov").onclick=function(e){if(e.target.id==="ov")closePat();};
-function addMedForm(id){document.getElementById("medForm").innerHTML="<div style='border:1px solid var(--bdr);border-radius:8px;padding:11px;margin-top:10px'><div class='fg'><label>Drug</label><select id='mfDrug'>"+DRUGS.map(function(d){return "<option>"+d.n+"</option>";}).join("")+"</select></div><div class='frow2'><div class='fg'><label>Frequency</label><select id='mfFreq'>"+FREQ.map(function(f){return "<option>"+f+"</option>";}).join("")+"</select></div><div class='fg'><label>Duration (days)</label><select id='mfDays'>"+numOpts(7,90,7,30)+"</select></div></div><div class='fg'><label>Timing</label><select id='mfTime'><option>with breakfast</option><option>with meals</option><option>at bedtime</option><option>before meals</option></select></div><button class='btn btn-g btn-xs' onclick='saveMed("+id+")'>Save medication</button></div>";}
-function saveMed(id){var p=patients[id],dn=document.getElementById("mfDrug").value,d=DRUGS.filter(function(x){return x.n===dn;})[0]||{};p.meds.push({drug:dn,cls:d.cls||"",freq:document.getElementById("mfFreq").value,timing:document.getElementById("mfTime").value,days:+document.getElementById("mfDays").value});toast("Medication added","with frequency & duration");openPat(id);}
+function addMedForm(id){document.getElementById("medForm").innerHTML="<div style='border:1px solid var(--bdr);border-radius:8px;padding:11px;margin-top:10px'><div class='frow2'><div class='fg'><label>Drug</label><select id='mfDrug'>"+DRUGS.map(function(d,k){return "<option value='"+k+"'>"+d.n+" "+d.dose+(d.high?" (high-alert)":"")+"</option>";}).join("")+"</select></div><div class='fg'><label>Frequency / times per day</label><select id='mfFreq'>"+FREQ.map(function(f,k){return "<option value='"+k+"'>"+f.l+" ("+f.t+"×/day)</option>";}).join("")+"</select></div></div><div class='frow2'><div class='fg'><label>Timing</label><select id='mfTime'><option>with breakfast</option><option>with meals</option><option>at bedtime</option><option>before meals</option><option>morning</option></select></div><div class='fg'><label>Duration (days)</label><select id='mfDays'>"+numOpts(7,90,7,30)+"</select></div></div><button class='btn btn-g btn-xs' onclick='saveMed("+id+")'>Place order</button></div>";}
+function saveMed(id){var p=patients[id],di=+document.getElementById("mfDrug").value,d=DRUGS[di],f=FREQ[+document.getElementById("mfFreq").value];
+  if(d.renal&&p.egfr<45){toast("Poka-yoke: renal check","eGFR "+p.egfr+" — confirm dose before ordering "+d.n);}
+  p.meds.push({drug:d.n,dose:d.dose,cls:d.cls,freq:f.l,tpd:f.t,timing:document.getElementById("mfTime").value,days:+document.getElementById("mfDays").value,high:!!d.high,renal:!!d.renal});
+  p.orders.unshift({t:d.n+" "+d.dose,code:"RxNorm",cat:"med",status:"ordered",d:daysAgo(0),high:!!d.high});
+  toast("Medication ordered",d.n+" "+d.dose+" · "+f.l+" ("+f.t+"×/day)");openPat(id);}
 function recallPat(id){var p=patients[id];addTask(id,"Recall for review & due care","Coordinator");p.notes.unshift("Recall generated · "+daysAgo(0));refreshAll();toast("Recall generated",p.name);openPat(id);}
 function messagePat(id){var p=patients[id];closePat();show("messages");var el=document.getElementById("msgPt");if(el){el.value=p.name+" · "+p.mrn;msgWho();aiMsg();}}
 
-/* ---------- worklist ---------- */
-function priQueue(){return patients.map(function(p){var sc=Math.max(riskScore(p).score,dropoutScore(p).score)+gaps(p).length*6;return{p:p,sc:sc};}).filter(function(x){return x.p.a1c>=8||gaps(x.p).length||dropoutScore(x.p).tier==="High";}).sort(function(a,b){return b.sc-a.sc;});}
-function renderWork(){var q=priQueue();
-  document.getElementById("workList").innerHTML=q.map(function(x){var p=x.p,c=control(p),g=gaps(p),dr=dropoutScore(p);
-    var sev=p.a1c>=9?"u":g.length||dr.tier==="High"?"m":"l";
-    var reason=p.a1c>=9?"Uncontrolled (HbA1c "+p.a1c+"%)":g.length?g[0]:dr.tier==="High"?"High dropout risk":"Above target";
-    return "<div class='wl "+sev+"' onclick='openPat("+p.id+")'><div><div class='nm'>"+p.name+" <span class='tag t"+p.type+"'>"+p.type+"</span></div><div class='dt'>"+p.age+"y · "+reason+" · last visit "+p.lastVisit+"</div></div><div class='ac'><span class='chip "+c.cls+"'>"+c.label+"</span><button class='btn btn-o btn-xs' onclick='event.stopPropagation();recallPat("+p.id+")'>Recall</button></div></div>";
-  }).join("")||"<div class='note'>Worklist clear.</div>";}
-
-/* ---------- huddle ---------- */
-function renderHuddle(){var unc=patients.filter(function(p){return p.a1c>=9;}),gp=patients.reduce(function(s,p){return s+gaps(p).length;},0);
-  document.getElementById("huUnc").textContent=unc.length;document.getElementById("huGap").textContent=gp;
-  document.getElementById("huddleList").innerHTML=priQueue().slice(0,8).map(function(x){var p=x.p,c=control(p),rk=riskScore(p);
-    return "<div class='wl "+(p.a1c>=9?"u":"m")+"' onclick='openPat("+p.id+")'><div><div class='nm'>"+p.name+"</div><div class='dt'>HbA1c "+p.a1c+"% · "+(gaps(p).length?gaps(p).length+" gap(s)":"review")+" · "+p.coord+"</div></div><div class='ac'><span class='chip "+c.cls+"'>"+c.label+"</span></div></div>";}).join("")||"<div class='note'>No huddle items.</div>";}
-
-/* ---------- tasks ---------- */
+/* ---------- worklist / huddle / tasks / physician / messages ---------- */
+function priQueue(){return patients.map(function(p){var sc=Math.max(riskScore(p).score,dropoutScore(p).score)+gaps(p).length*6+p.orders.filter(ordOpen).length*4;return{p:p,sc:sc};}).filter(function(x){return x.p.a1c>=8||gaps(x.p).length||dropoutScore(x.p).tier==="High"||x.p.orders.some(ordResult);}).sort(function(a,b){return b.sc-a.sc;});}
+function renderWork(){var q=priQueue();document.getElementById("workList").innerHTML=q.map(function(x){var p=x.p,c=control(p),g=gaps(p),dr=dropoutScore(p);var sev=p.a1c>=9?"u":g.length||dr.tier==="High"?"m":"l";var reason=p.a1c>=9?"Uncontrolled (HbA1c "+p.a1c+"%)":p.orders.some(ordResult)?"Result back, not actioned":g.length?g[0]:dr.tier==="High"?"High dropout risk":"Above target";
+    return "<div class='wl "+sev+"' onclick='openPat("+p.id+")'><div><div class='nm'>"+p.name+" <span class='tag t"+p.type+"'>"+p.type+"</span></div><div class='dt'>"+p.age+"y · "+reason+" · last visit "+p.lastVisit+"</div></div><div class='ac'><span class='chip "+c.cls+"'>"+c.label+"</span><button class='btn btn-o btn-xs' onclick='event.stopPropagation();recallPat("+p.id+")'>Recall</button></div></div>";}).join("")||"<div class='note'>Worklist clear.</div>";}
 var tasks=[];
 function addTask(pid,txt,role){if(tasks.some(function(t){return !t.done&&t.pid===pid&&t.txt===txt;}))return;tasks.unshift({pid:pid,txt:txt,role:role||"Coordinator",done:false});}
-function seedTasks(){patients.forEach(function(p){var g=gaps(p);if(p.a1c>=9)addTask(p.id,"Uncontrolled — intensify & recall","Physician");if(g.length>=2)addTask(p.id,"Close "+g.length+" care gap(s)","Coordinator");});}
+function seedTasks(){patients.forEach(function(p){var g=gaps(p);if(p.a1c>=9)addTask(p.id,"Uncontrolled — intensify & recall","Physician");if(g.length>=2)addTask(p.id,"Close "+g.length+" care gap(s)","Coordinator");if(p.orders.some(ordResult))addTask(p.id,"Action returned result","Coordinator");});}
 function renderTasks(){var open=tasks.filter(function(t){return !t.done;}),grp={};open.forEach(function(t){(grp[t.pid]=grp[t.pid]||[]).push(t);});
   document.getElementById("taskList").innerHTML=Object.keys(grp).map(function(pid){var p=patients[pid];
     return "<div style='border:1px solid var(--bdr);border-radius:10px;padding:11px 13px;margin-bottom:9px'><div style='display:flex;justify-content:space-between;align-items:center;margin-bottom:8px'><div><b>"+p.name+"</b> <span style='font-size:10.5px;color:var(--mu)'>"+p.mrn+" · "+p.type+"</span></div><button class='btn btn-o btn-xs' onclick='openPat("+p.id+")'>Open</button></div><div style='display:flex;flex-wrap:wrap;gap:6px'>"+grp[pid].map(function(t){return "<span class='chip c-b' style='padding:4px 9px'>"+t.txt+" <span style='cursor:pointer;font-weight:700;color:var(--gr)' onclick='completeTask("+tasks.indexOf(t)+")'>✓</span></span>";}).join("")+"</div></div>";}).join("")||"<div class='note'>No open tasks.</div>";
   document.getElementById("bTask").textContent=open.length;}
 function completeTask(i){tasks[i].done=true;renderTasks();refreshMetrics();}
-
-/* ---------- virtual clinic ---------- */
-function renderClinic(){var list=patients.filter(function(p){return p.a1c<9&&p.a1c>=7&&!gaps(p).length;}).slice(0,10);
-  document.getElementById("clinList").innerHTML=list.map(function(p){var c=control(p);return "<div class='wl l' onclick='openPat("+p.id+")'><div><div class='nm'>"+p.name+" <span class='tag t"+p.type+"'>"+p.type+"</span></div><div class='dt'>HbA1c "+p.a1c+"% · suitable for tele-review · "+p.phone+"</div></div><div class='ac'><span class='chip c-t'>Tele-visit</span><button class='btn btn-b btn-xs' onclick='event.stopPropagation();toast(\"Tele-visit booked\",p_name("+p.id+"))'>Book</button></div></div>";}).join("")||"<div class='note'>No tele-visit candidates.</div>";document.getElementById("bClin").textContent=list.length;}
-function p_name(id){return patients[id].name;}
-
-/* ---------- physician ---------- */
-function renderPhys(){var list=patients.filter(function(p){return alerts(p).some(function(a){return a.s==="r";});}).sort(function(a,b){return riskScore(b).score-riskScore(a).score;});
-  document.getElementById("physList").innerHTML=list.map(function(p){var al=alerts(p).filter(function(a){return a.s==="r";});
-    return "<div class='wl u' onclick='openPat("+p.id+")'><div><div class='nm'>"+p.name+" <span class='tag t"+p.type+"'>"+p.type+"</span></div><div class='dt'>"+al[0].t+"</div></div><div class='ac'><span class='chip c-r'>"+al.length+" flag(s)</span><button class='btn btn-o btn-xs' onclick='event.stopPropagation();openPat("+p.id+")'>Review</button></div></div>";}).join("")||"<div class='note'>No patients flagged for physician review.</div>";document.getElementById("bPhys").textContent=list.length;}
-
-/* ---------- messages ---------- */
+function renderPhys(){var list=patients.filter(function(p){return alerts(p).some(function(a){return a.s==="r"&&a.t.indexOf("Allergy")<0;});}).sort(function(a,b){return riskScore(b).score-riskScore(a).score;});
+  document.getElementById("physList").innerHTML=list.map(function(p){var al=alerts(p).filter(function(a){return a.s==="r"&&a.t.indexOf("Allergy")<0;});
+    return "<div class='wl u' onclick='openPat("+p.id+")'><div><div class='nm'>"+p.name+" <span class='tag t"+p.type+"'>"+p.type+"</span></div><div class='dt'>"+(al[0]?al[0].t:"")+"</div></div><div class='ac'><span class='chip c-r'>"+al.length+" flag(s)</span><button class='btn btn-o btn-xs' onclick='event.stopPropagation();openPat("+p.id+")'>Review</button></div></div>";}).join("")||"<div class='note'>No patients flagged for physician review.</div>";document.getElementById("bPhys").textContent=list.length;}
 var TPL=[
  {l:"HbA1c recall",ar:"السلام عليكم، حان موعد فحص السكر التراكمي (HbA1c). نحجز لك موعداً في أقرب وقت مناسب؟"},
  {l:"Uncontrolled — review",ar:"نود الاطمئنان على مستوى السكر لديك وضبط الخطة العلاجية. نرتب لك موعد مراجعة قريباً؟"},
@@ -604,46 +694,49 @@ function renderMsg(){document.getElementById("msgList").innerHTML=patients.map(f
 function pickTpl(i){document.getElementById("msgAr").value=TPL[i].ar;document.getElementById("msgTpl").value=i;}
 function applyTpl(){var i=document.getElementById("msgTpl").value;if(i!=="")pickTpl(+i);}
 function msgWho(){var v=document.getElementById("msgPt").value,p=patients.filter(function(x){return v&&(v.indexOf(x.mrn)>-1||v.indexOf(x.name)>-1);})[0];document.getElementById("msgWho").textContent=p?("→ "+p.name+" · "+p.type+" · HbA1c "+p.a1c+"% · "+p.phone):"";}
-function aiMsg(){var v=document.getElementById("msgPt").value,p=patients.filter(function(x){return v&&(v.indexOf(x.mrn)>-1||v.indexOf(x.name)>-1);})[0];if(!p){toast("Pick a patient first");return;}
-  document.getElementById("msgAr").value=p.a1c>=9?TPL[1].ar:p.scr.retinal>=12?TPL[2].ar:TPL[0].ar;msgWho();toast("Message suggested",p.name);}
+function aiMsg(){var v=document.getElementById("msgPt").value,p=patients.filter(function(x){return v&&(v.indexOf(x.mrn)>-1||v.indexOf(x.name)>-1);})[0];if(!p){toast("Pick a patient first");return;}document.getElementById("msgAr").value=p.a1c>=9?TPL[1].ar:p.scr.retinal>=12?TPL[2].ar:TPL[0].ar;msgWho();toast("Message suggested",p.name);}
 document.getElementById("msgPt").addEventListener("input",msgWho);
 function sendMsg(){if(!document.getElementById("msgAr").value.trim()){toast("Write a message first");return;}toast("Message sent","via WhatsApp");document.getElementById("msgAr").value="";}
 
 /* ---------- enrol / import ---------- */
 function enrolManual(){var name=document.getElementById("enName").value.trim();if(!name){toast("Enter a name");return;}
   var id=patients.length,a1c=+document.getElementById("enA1c").value;
-  patients.push({id:id,name:name,mrn:document.getElementById("enMrn").value||("SA-"+(9000+id)),sex:document.getElementById("enSex").value==="Male"?"M":"F",age:+document.getElementById("enAge").value,type:document.getElementById("enType").value,a1c:a1c,prev:a1c,egfr:+document.getElementById("enEgfr").value,sbp:130,dbp:80,ldl:2.4,bmi:29,fbs:7,adh:"Good",adhScore:75,meds:[],scr:{retinal:0,foot:0,kidney:0,cardiac:0,neuro:0},resp:70,noShow:0,lastContact:0,phone:document.getElementById("enPhone").value||"+9665XXXXXXX",lastVisit:daysAgo(0),district:pk(DIST),doc:pk(DOCS),coord:pk(COORD),edu:pk(EDU),notes:[],comms:[]});
+  var p={id:id,name:name,mrn:document.getElementById("enMrn").value||("SA-"+(9000+id)),sex:document.getElementById("enSex").value==="Male"?"M":"F",age:+document.getElementById("enAge").value,type:document.getElementById("enType").value,a1c:a1c,prev:a1c,egfr:+document.getElementById("enEgfr").value,sbp:130,dbp:80,ldl:2.4,bmi:29,fbs:7,adh:"Good",adhScore:75,meds:[],scr:{retinal:0,foot:0,kidney:0,cardiac:0,neuro:0},allergy:"No known allergies",resp:70,noShow:0,lastContact:0,phone:document.getElementById("enPhone").value||"+9665XXXXXXX",lastVisit:daysAgo(0),district:pk(DIST),doc:pk(DOCS),coord:pk(COORD),notes:[],comms:[],orders:[{t:"HbA1c",code:"LOINC 4548-4",cat:"lab",status:"ordered",d:daysAgo(0)}]};
+  patients.push(p);
   document.getElementById("enName").value="";document.getElementById("enMrn").value="";document.getElementById("enPhone").value="";
-  refreshAll();toast("Patient enrolled",name);show("registry");}
+  refreshAll();toast("Patient enrolled",name+" · HbA1c ordered");show("registry");}
 function loadImpDemo(){document.getElementById("impBox").value="Sara Al-Otaibi, SA-9101, 58, T2, 8.6, +9665 1122334\nFaisal Al-Harbi, SA-9102, 64, T2, 9.4, +9665 2233445\nMona Al-Qahtani, SA-9103, 47, GDM, 6.4, +9665 3344556\nKhalid Al-Dosari, SA-9104, 71, T2, 7.2, +9665 4455667";}
 function processImport(){var lines=document.getElementById("impBox").value.split("\n").map(function(l){return l.trim();}).filter(Boolean);var added=0,dup=0,rows=[];
   lines.forEach(function(l){var p=l.split(",").map(function(x){return x.trim();});if(p.length<5)return;var mrn=p[1];
     if(patients.some(function(x){return x.mrn===mrn;})){dup++;rows.push({n:p[0],s:"duplicate"});return;}
     var id=patients.length,a1c=+p[4];
-    patients.push({id:id,name:p[0],mrn:mrn,sex:"?",age:+p[2],type:p[3],a1c:a1c,prev:a1c,egfr:80,sbp:130,dbp:80,ldl:2.4,bmi:29,fbs:7,adh:"Good",adhScore:75,meds:[],scr:{retinal:0,foot:0,kidney:0,cardiac:0,neuro:0},resp:70,noShow:0,lastContact:0,phone:p[5]||"+9665XXXXXXX",lastVisit:daysAgo(0),district:pk(DIST),doc:pk(DOCS),coord:pk(COORD),edu:pk(EDU),notes:[],comms:[]});
+    patients.push({id:id,name:p[0],mrn:mrn,sex:"?",age:+p[2],type:p[3],a1c:a1c,prev:a1c,egfr:80,sbp:130,dbp:80,ldl:2.4,bmi:29,fbs:7,adh:"Good",adhScore:75,meds:[],scr:{retinal:0,foot:0,kidney:0,cardiac:0,neuro:0},allergy:"No known allergies",resp:70,noShow:0,lastContact:0,phone:p[5]||"+9665XXXXXXX",lastVisit:daysAgo(0),district:pk(DIST),doc:pk(DOCS),coord:pk(COORD),notes:[],comms:[],orders:[{t:"HbA1c",code:"LOINC 4548-4",cat:"lab",status:"ordered",d:daysAgo(0)}]});
     added++;rows.push({n:p[0],s:a1c>=9?"added · uncontrolled":"added"});});
-  document.getElementById("impResult").innerHTML="<div class='card cp' style='border-top:3px solid var(--gr)'><div style='font-weight:700;color:var(--grd);margin-bottom:8px'>Imported "+added+" · "+dup+" duplicate(s) skipped</div>"+rows.map(function(r){return "<div style='display:flex;justify-content:space-between;font-size:11.5px;padding:3px 0'><span>"+r.n+"</span><span class='chip "+(r.s==="duplicate"?"c-a":"c-g")+"'>"+r.s+"</span></div>";}).join("")+"</div>";
+  document.getElementById("impResult").innerHTML="<div class='card cp' style='border-top:3px solid var(--gr)'><div style='font-weight:700;color:var(--grd);margin-bottom:8px'>Read "+added+" once · "+dup+" duplicate(s) skipped — no re-keying</div>"+rows.map(function(r){return "<div style='display:flex;justify-content:space-between;font-size:11.5px;padding:3px 0'><span>"+r.n+"</span><span class='chip "+(r.s==="duplicate"?"c-a":"c-g")+"'>"+r.s+"</span></div>";}).join("")+"</div>";
   refreshAll();}
 
 /* ---------- metrics / charts ---------- */
 var chDist,chType,chTrend,chRisk;
+function loopRate(){var tot=0,closed=0;patients.forEach(function(p){p.orders.forEach(function(o){tot++;if(!ordOpen(o)&&!ordResult(o))closed++;});});return tot?Math.round(closed/tot*100):0;}
 function refreshMetrics(){
   var tiers=patients.map(function(p){return riskScore(p).tier;});
-  var high=tiers.filter(function(t){return t==="High";}).length;
-  var fu=tiers.filter(function(t){return t==="Moderate";}).length;
-  var stable=tiers.filter(function(t){return t==="Low";}).length;
-  var scrPct=Math.round(patients.reduce(function(s,p){return s+scrDone(p);},0)/patients.length*100);
   document.getElementById("kEnr").textContent=patients.length;
-  document.getElementById("kHigh").textContent=high;
-  document.getElementById("kFu").textContent=fu;
-  document.getElementById("kStable").textContent=stable;
-  document.getElementById("kScr").textContent=scrPct+"%";
+  document.getElementById("kHigh").textContent=tiers.filter(function(t){return t==="High";}).length;
+  document.getElementById("kFu").textContent=tiers.filter(function(t){return t==="Moderate";}).length;
+  document.getElementById("kStable").textContent=tiers.filter(function(t){return t==="Low";}).length;
+  document.getElementById("kScr").textContent=Math.round(patients.reduce(function(s,p){return s+scrDone(p);},0)/patients.length*100)+"%";
   document.getElementById("tT2").textContent=patients.filter(function(p){return p.type==="T2";}).length;
   document.getElementById("tT1").textContent=patients.filter(function(p){return p.type==="T1";}).length;
   document.getElementById("tGDM").textContent=patients.filter(function(p){return p.type==="GDM";}).length;
-  document.getElementById("bDash").textContent=high;
+  var lab=0,med=0,res=0;patients.forEach(function(p){p.orders.forEach(function(o){if(o.t==="HbA1c"&&ordOpen(o))lab++;if(o.cat==="med"&&o.status==="ordered")med++;if(ordResult(o))res++;});});
+  var rec=patients.filter(dueForRecall).length;
+  document.getElementById("lnLab").textContent=lab;document.getElementById("lnMed").textContent=med;document.getElementById("lnRes").textContent=res;document.getElementById("lnRec").textContent=rec;
+  document.getElementById("bDash").textContent=tiers.filter(function(t){return t==="High";}).length;
   document.getElementById("bWork").textContent=priQueue().length;
   document.getElementById("bReg").textContent=patients.length;
+  document.getElementById("bOrd").textContent=lab+med+res;
+  document.getElementById("bRec").textContent=rec;
+  document.getElementById("bCov").textContent=patients.filter(function(p){return gaps(p).length;}).length;
   drawCharts();
 }
 function drawCharts(){
@@ -667,19 +760,18 @@ function renderAnalytics(){
   var dia=patients.filter(function(p){return p.type!=="Pre";});
   var tgt=Math.round(patients.filter(function(p){return p.type!=="Pre"&&p.a1c<7;}).length/dia.length*100);
   var scr=Math.round(patients.reduce(function(s,p){return s+scrDone(p);},0)/patients.length*100);
-  var imp=patients.filter(function(p){return p.a1c<p.prev;}).length;
-  document.getElementById("rweA1c").textContent=mean+"%";document.getElementById("rweTgt").textContent=tgt+"%";document.getElementById("rweScr").textContent=scr+"%";document.getElementById("rweImp").textContent=imp+" of "+patients.length;
-  document.getElementById("kpiA1c").textContent=Math.round(patients.filter(function(p){return p.scr.kidney<6;}).length/patients.length*100)+"%";
-  document.getElementById("kpiScr2").textContent=scr+"%";
-  document.getElementById("kpiUnc").textContent="100%";
+  var imp=patients.filter(function(p){return p.a1c<p.prev;}).length;var loop=loopRate();
+  document.getElementById("rweA1c").textContent=mean+"%";document.getElementById("rweTgt").textContent=tgt+"%";document.getElementById("rweScr").textContent=scr+"%";document.getElementById("rweLoop").textContent=loop+"%";document.getElementById("rweImp").textContent=imp+" of "+patients.length;
+  document.getElementById("kpiA1c").textContent=Math.round(patients.filter(function(p){return hbDueMo(p)<3;}).length/patients.length*100)+"%";
+  document.getElementById("kpiLoop").textContent=loop+"%";document.getElementById("kpiScr2").textContent=scr+"%";document.getElementById("kpiUnc").textContent="100%";
 }
-function recallAllDue(){var n=0;patients.forEach(function(p){if(gaps(p).length){addTask(p.id,"Recall — close due care","Coordinator");n++;}});refreshAll();toast("Recalls generated for "+n+" patients","Pull-based · added to Care Tasks");}
+function recallAllDue(){var n=0;patients.forEach(function(p){if(dueForRecall(p)){addTask(p.id,"Recall — close due care","Coordinator");n++;}});refreshAll();toast("Recalls generated for "+n+" patients","Pull-based · added to Care Tasks");}
 function toggleExt(on){var f=document.getElementById("airFields");f.style.opacity=on?"1":".5";f.style.pointerEvents=on?"auto":"none";
   var b=document.getElementById("airExtBadge");b.className="airb "+(on?"airon":"airoff");b.innerHTML="<span class='d' style='background:"+(on?"var(--am)":"#9ca3af")+"'></span>External AI · "+(on?"ready":"off");
   document.getElementById("airMode").textContent=on?"Local + External (de-identified)":"Local";
   document.getElementById("pillAI").innerHTML="<span class='d' style='background:"+(on?"var(--am)":"var(--gr)")+"'></span>"+(on?"Rule engine + external":"Rule engine · local");
   toast(on?"External adapter enabled":"External adapter off",on?"Only de-identified features sent":"All processing on-device");}
-function refreshAll(){refreshMetrics();if(document.getElementById("v-registry").classList.contains("on"))renderReg();if(document.getElementById("v-worklist").classList.contains("on"))renderWork();renderTasks();}
+function refreshAll(){refreshMetrics();if(document.getElementById("v-registry").classList.contains("on"))renderReg();if(document.getElementById("v-worklist").classList.contains("on"))renderWork();if(document.getElementById("v-orders").classList.contains("on"))renderOrders();if(document.getElementById("v-recall").classList.contains("on"))renderRecall();if(document.getElementById("v-coverage").classList.contains("on"))renderCoverage();if(document.getElementById("v-pathway").classList.contains("on"))renderPathway();renderTasks();}
 
 /* ---------- init ---------- */
 document.getElementById("enAge").innerHTML=numOpts(18,95,1,55);
