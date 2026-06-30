@@ -324,23 +324,165 @@ button{font-family:inherit;}
 
   <!-- ENROL -->
   <div class="view" id="v-enrol">
-    <div class="g2">
+    <style>
+    .wzchip{display:inline-flex;align-items:center;padding:7px 13px;border-radius:999px;border:1px solid var(--bdr);background:var(--sur);font-size:12px;font-weight:600;color:var(--mu);cursor:pointer;margin:0 6px 6px 0;transition:.12s}
+    .wzchip:hover{border-color:var(--nv)}
+    .wzchip.on{background:var(--nv);color:#fff;border-color:var(--nv)}
+    .wzchip.tog.on{background:var(--bl);border-color:var(--bl)}
+    .wzstep{display:inline-flex;align-items:center;gap:7px;padding:6px 10px;border-radius:8px;font-size:11.5px;font-weight:600;color:var(--mu);cursor:pointer;opacity:.55}
+    .wzstep.on{opacity:1;background:var(--bg)} .wzstep.done{opacity:1}
+    .wzstep .n{width:20px;height:20px;border-radius:50%;display:grid;place-items:center;font-size:10.5px;background:#e6eaf0;color:var(--mu)}
+    .wzstep.on .n{background:var(--nv);color:#fff} .wzstep.done .n{background:var(--gr);color:#fff}
+    .wzrec{display:flex;gap:11px;align-items:flex-start;padding:11px 13px;border:1px solid var(--bdr);border-left-width:4px;border-radius:9px;background:var(--sur);margin-bottom:9px}
+    .wzrec h4{margin:0 0 3px;font-size:13px} .wzrec p{margin:0;font-size:12px;color:var(--mu);line-height:1.5}
+    .wzsum{display:grid;grid-template-columns:repeat(4,1fr);gap:9px;margin:14px 0}
+    .wzsum .c{background:var(--bg);border:1px solid var(--bdr);border-radius:8px;padding:9px 11px}
+    .wzsum .k{font-size:9px;text-transform:uppercase;letter-spacing:.04em;color:var(--mu);font-weight:700}
+    .wzsum .v{font-size:15px;font-weight:700;margin-top:2px}
+    @media(max-width:760px){.wzsum{grid-template-columns:1fr 1fr}}
+    .medsec{font-size:10px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;margin:14px 0 6px}
+    .med-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-top:6px}
+    @media(max-width:760px){.med-grid{grid-template-columns:1fr 1fr}}
+    .med-item{display:flex;align-items:flex-start;gap:7px;padding:8px 10px;border:1px solid var(--bdr);border-radius:7px;cursor:pointer;font-size:11px;transition:all .12s;background:var(--sur)}
+    .med-item:hover{border-color:var(--bl);background:var(--bll)}
+    .med-item input[type=checkbox]{margin-top:1px;cursor:pointer;accent-color:var(--nv);width:13px;height:13px;flex-shrink:0}
+    .med-name{font-weight:700;color:var(--tx);font-size:11px}
+    .med-dose{font-size:9px;color:var(--mu);margin-top:1px;line-height:1.3}
+    .med-note{font-size:9px;margin-top:2px;font-weight:600}
+    .mn-g{color:var(--grd)}.mn-a{color:#b45309}.mn-r{color:var(--rd)}
+    </style>
+    <div style="display:grid;grid-template-columns:1fr 286px;gap:14px;align-items:start" id="wzGrid">
       <div class="card cp">
-        <div class="fsec">Manual enrolment</div>
-        <div class="frow2"><div class="fg"><label>Full name</label><input id="enName" placeholder="Patient name"></div><div class="fg"><label>MRN</label><input id="enMrn" placeholder="SA-XXXX"></div></div>
-        <div class="frow3">
-          <div class="fg"><label>Age</label><select id="enAge"></select></div>
-          <div class="fg"><label>Sex</label><select id="enSex"><option>Male</option><option>Female</option></select></div>
-          <div class="fg"><label>Diabetes type</label><select id="enType"><option>T2</option><option>T1</option><option>GDM</option><option>LADA</option><option>Pre</option></select></div>
+        <div class="fsec">Enrol patient — AI-guided intake</div>
+        <div id="wzSteps" style="display:flex;gap:5px;flex-wrap:wrap;margin-bottom:16px"></div>
+
+        <div class="wzPanel" data-s="0">
+          <div style="display:flex;justify-content:flex-end;margin-bottom:10px"><button type="button" class="btn btn-o btn-sm" onclick="wzRaqeem()">⤓ Import from Raqeem (NPHIES)</button></div>
+          <div class="frow2"><div class="fg"><label>Full name</label><input id="enName" placeholder="Patient name"></div><div class="fg"><label>National ID / Iqama (MRN)</label><input id="enMrn" placeholder="SA-XXXX"></div></div>
+          <div class="frow3">
+            <div class="fg"><label>Age</label><select id="enAge" onchange="wzRecalc()"></select></div>
+            <div class="fg"><label>Sex</label><select id="enSex"><option>Male</option><option>Female</option></select></div>
+            <div class="fg"><label>Phone</label><input id="enPhone" placeholder="+9665XXXXXXX"></div>
+          </div>
+          <div class="frow2"><div class="fg"><label>Nationality</label><input id="enNat" placeholder="Saudi"></div><div class="fg"><label>PHC centre</label><select id="enCtr"><option>Al-Olaya</option><option>Al-Malaz</option><option>Al-Wazarat</option><option>Al-Naseem</option><option>Al-Yarmouk</option></select></div></div>
+          <div class="note">Entered once, this record flows to the registry, worklists, recall engine and messages — no double entry. Where the Raqeem / hospital feed is available it pre-fills; manual entry always works.</div>
         </div>
-        <div class="frow3">
-          <div class="fg"><label>HbA1c (%)</label><select id="enA1c"></select></div>
-          <div class="fg"><label>eGFR</label><select id="enEgfr"></select></div>
-          <div class="fg"><label>Phone</label><input id="enPhone" placeholder="+9665XXXXXXX"></div>
+
+        <div class="wzPanel" data-s="1" hidden>
+          <div class="fg"><label>Diabetes type</label><select id="enType" onchange="wzType()"><option>T2</option><option>T1</option><option>GDM</option><option>LADA</option><option>Pre</option></select></div>
+          <div id="dm-type-specific" style="margin-bottom:6px"></div>
+          <div class="frow3">
+            <div class="fg"><label>HbA1c (%)</label><select id="enA1c" onchange="wzRecalc()"></select></div>
+            <div class="fg"><label>FBS (mmol/L)</label><input id="enFbs" type="number" step="0.1" placeholder="fasting"></div>
+            <div class="fg"><label>Year of diagnosis</label><input id="enDx" type="number" placeholder="2019"></div>
+          </div>
+          <div class="frow2"><div class="fg"><label>PPG (mmol/L)</label><input id="enPpg" type="number" step="0.1" placeholder="post-prandial"></div><div class="fg"><label>Random glucose (mmol/L)</label><input id="enRbs" type="number" step="0.1" placeholder="optional"></div></div>
         </div>
-        <div class="note" style="margin-bottom:12px">Whole-number fields are tap-to-select pick-lists (age, eGFR) to keep entry fast and error-free; HbA1c stays a controlled 0.1-step list. A value entered once flows to the registry, worklists, recall engine and messages — no double entry.</div>
-        <button class="btn btn-g" onclick="enrolManual()">Add to registry</button>
+
+        <div class="wzPanel" data-s="2" hidden>
+          <div class="frow3">
+            <div class="fg"><label>SBP (mmHg)</label><input id="enSbp" type="number" placeholder="systolic" oninput="wzRecalc()"></div>
+            <div class="fg"><label>DBP (mmHg)</label><input id="enDbp" type="number" placeholder="diastolic"></div>
+            <div class="fg"><label>Weight (kg)</label><input id="enWt" type="number" step="0.1" oninput="wzBmi()"></div>
+            <div class="fg"><label>Height (cm)</label><input id="enHt" type="number" oninput="wzBmi()"></div>
+            <div class="fg"><label>BMI (kg/m²)</label><input id="enBmi" readonly placeholder="auto"></div>
+            <div class="fg"><label>Total chol (mmol/L)</label><input id="enTc" type="number" step="0.1"></div>
+            <div class="fg"><label>LDL (mmol/L)</label><input id="enLdl" type="number" step="0.1" oninput="wzRecalc()"></div>
+            <div class="fg"><label>HDL (mmol/L)</label><input id="enHdl" type="number" step="0.1"></div>
+            <div class="fg"><label>Triglycerides (mmol/L)</label><input id="enTg" type="number" step="0.1"></div>
+            <div class="fg"><label>Creatinine (µmol/L)</label><input id="enCr" type="number" oninput="wzRecalc()"></div>
+            <div class="fg"><label>eGFR (mL/min)</label><div style="display:flex;gap:6px"><select id="enEgfr" onchange="wzRecalc()" style="flex:1"></select><button type="button" class="btn btn-b btn-sm" onclick="wzEgfr()">Calc</button></div></div>
+            <div class="fg"><label>ACR (mg/g)</label><input id="enAcr" type="number" oninput="wzRecalc()"></div>
+          </div>
+          <div id="enEgfrNote" style="font-size:10.5px;color:var(--grd);min-height:13px;margin:-2px 0 8px"></div>
+          <div class="fg"><label>Medication adherence</label><div id="enAdh"><span class="wzchip on" data-v="Good" onclick="wzPick(this,'adh')">Good (&gt;80%)</span><span class="wzchip" data-v="Fair" onclick="wzPick(this,'adh')">Fair (50–80%)</span><span class="wzchip" data-v="Poor" onclick="wzPick(this,'adh')">Poor (&lt;50%)</span></div></div>
+          <div class="note">eGFR auto-calculates with the race-free <b>CKD-EPI 2021</b> equation from creatinine + age + sex (µmol/L → mg/dL ÷ 88.4).</div>
+        </div>
+
+        <div class="wzPanel" data-s="3" hidden>
+          <div style="font-size:11px;color:var(--mu);margin-bottom:6px">Tick all medications currently prescribed — evidence tags reflect ADA 2024 / major trials.</div>
+          <div id="enMedGrid" onclick="wzRecalc()">
+            <div class="medsec" style="color:var(--bl);margin-top:4px">Glucose-Lowering Agents</div>
+            <div class="med-grid">
+              <label class="med-item"><input type="checkbox" id="m-met"><div><div class="med-name">Metformin</div><div class="med-dose">500–2000mg/day · First-line</div><div class="med-note mn-g">✓ ADA 2024 first-line</div></div></label>
+              <label class="med-item"><input type="checkbox" id="m-empa"><div><div class="med-name">Empagliflozin (Jardiance)</div><div class="med-dose">10–25mg OD · SGLT2i</div><div class="med-note mn-g">✓ EMPA-REG · CV benefit</div></div></label>
+              <label class="med-item"><input type="checkbox" id="m-dapa"><div><div class="med-name">Dapagliflozin (Forxiga)</div><div class="med-dose">10mg OD · SGLT2i</div><div class="med-note mn-g">✓ DAPA-HF · kidney</div></div></label>
+              <label class="med-item"><input type="checkbox" id="m-cana"><div><div class="med-name">Canagliflozin (Invokana)</div><div class="med-dose">100–300mg OD · SGLT2i</div><div class="med-note mn-g">✓ CANVAS trial</div></div></label>
+              <label class="med-item"><input type="checkbox" id="m-sema"><div><div class="med-name">Semaglutide SC (Ozempic)</div><div class="med-dose">0.5–1mg/week · GLP-1 RA</div><div class="med-note mn-g">✓ SUSTAIN · CV + weight</div></div></label>
+              <label class="med-item"><input type="checkbox" id="m-sema-oral"><div><div class="med-name">Semaglutide PO (Rybelsus)</div><div class="med-dose">3–14mg/day · oral GLP-1</div></div></label>
+              <label class="med-item"><input type="checkbox" id="m-lira"><div><div class="med-name">Liraglutide (Victoza)</div><div class="med-dose">1.2–1.8mg OD SC · GLP-1</div><div class="med-note mn-g">✓ LEADER trial</div></div></label>
+              <label class="med-item"><input type="checkbox" id="m-dula"><div><div class="med-name">Dulaglutide (Trulicity)</div><div class="med-dose">0.75–1.5mg/wk SC · GLP-1</div><div class="med-note mn-g">✓ REWIND trial</div></div></label>
+              <label class="med-item"><input type="checkbox" id="m-sita"><div><div class="med-name">Sitagliptin (Januvia)</div><div class="med-dose">100mg OD · DPP-4i</div><div class="med-note mn-a">Neutral CV</div></div></label>
+              <label class="med-item"><input type="checkbox" id="m-saxa"><div><div class="med-name">Saxagliptin (Onglyza)</div><div class="med-dose">5mg OD · DPP-4i</div><div class="med-note mn-a">⚠ Caution HF risk</div></div></label>
+              <label class="med-item"><input type="checkbox" id="m-glicla"><div><div class="med-name">Gliclazide MR (Diamicron)</div><div class="med-dose">30–120mg OD · SU</div><div class="med-note mn-a">⚠ Avoid CKD/elderly</div></div></label>
+              <label class="med-item"><input type="checkbox" id="m-glib"><div><div class="med-name">Glibenclamide</div><div class="med-dose">5–20mg/day · SU</div><div class="med-note mn-r">⚠ Avoid elderly/CKD</div></div></label>
+              <label class="med-item"><input type="checkbox" id="m-glar"><div><div class="med-name">Insulin Glargine (Lantus)</div><div class="med-dose">Basal · titrate to FBS</div></div></label>
+              <label class="med-item"><input type="checkbox" id="m-detem"><div><div class="med-name">Insulin Detemir (Levemir)</div><div class="med-dose">Basal · BD option</div></div></label>
+              <label class="med-item"><input type="checkbox" id="m-piog"><div><div class="med-name">Pioglitazone (Actos)</div><div class="med-dose">15–30mg OD · TZD</div><div class="med-note mn-a">⚠ Avoid HF</div></div></label>
+            </div>
+            <div class="medsec" style="color:#0d9488">Kidney / Proteinuria Protection</div>
+            <div class="med-grid">
+              <label class="med-item"><input type="checkbox" id="m-rami"><div><div class="med-name">Ramipril</div><div class="med-dose">2.5–10mg OD · ACEi</div><div class="med-note mn-g">✓ DM+HTN/ACR first-line</div></div></label>
+              <label class="med-item"><input type="checkbox" id="m-lisi"><div><div class="med-name">Lisinopril</div><div class="med-dose">5–40mg OD · ACEi</div><div class="med-note mn-g">✓ DM+CKD preferred</div></div></label>
+              <label class="med-item"><input type="checkbox" id="m-vals"><div><div class="med-name">Valsartan</div><div class="med-dose">80–320mg OD · ARB</div></div></label>
+              <label class="med-item"><input type="checkbox" id="m-losa"><div><div class="med-name">Losartan</div><div class="med-dose">50–100mg OD · ARB</div></div></label>
+              <label class="med-item"><input type="checkbox" id="m-irbe"><div><div class="med-name">Irbesartan</div><div class="med-dose">150–300mg OD · ARB</div><div class="med-note mn-g">✓ IDNT / IRMA-2</div></div></label>
+              <label class="med-item"><input type="checkbox" id="m-finer"><div><div class="med-name">Finerenone (Kerendia)</div><div class="med-dose">10–20mg OD · MRA</div><div class="med-note mn-g">✓ FIDELIO-DKD</div></div></label>
+            </div>
+            <div class="medsec" style="color:var(--rd)">Antihypertensive (comorbid)</div>
+            <div class="med-grid">
+              <label class="med-item"><input type="checkbox" id="m-amlo"><div><div class="med-name">Amlodipine 5–10mg</div><div class="med-dose">OD · CCB · well tolerated</div></div></label>
+              <label class="med-item"><input type="checkbox" id="m-biso"><div><div class="med-name">Bisoprolol 2.5–10mg</div><div class="med-dose">OD · BB · HF comorbidity</div></div></label>
+              <label class="med-item"><input type="checkbox" id="m-carve"><div><div class="med-name">Carvedilol 6.25–25mg</div><div class="med-dose">BD · BB · HF comorbidity</div></div></label>
+              <label class="med-item"><input type="checkbox" id="m-hctz"><div><div class="med-name">HCTZ 12.5–25mg</div><div class="med-dose">OD · Thiazide</div><div class="med-note mn-a">⚠ May raise glucose</div></div></label>
+              <label class="med-item"><input type="checkbox" id="m-indap"><div><div class="med-name">Indapamide 1.5–2.5mg</div><div class="med-dose">OD · Thiazide-like</div><div class="med-note mn-g">↑ Preferred over HCTZ</div></div></label>
+              <label class="med-item"><input type="checkbox" id="m-cloni"><div><div class="med-name">Clonidine 75–150mcg</div><div class="med-dose">BD · add-on only</div></div></label>
+            </div>
+            <div class="medsec" style="color:var(--nv)">Lipid / CV Protection</div>
+            <div class="med-grid">
+              <label class="med-item"><input type="checkbox" id="m-ator"><div><div class="med-name">Atorvastatin 40mg</div><div class="med-dose">Nocte · high-intensity</div><div class="med-note mn-g">✓ ADA: most DM age≥40</div></div></label>
+              <label class="med-item"><input type="checkbox" id="m-rosu"><div><div class="med-name">Rosuvastatin 20mg</div><div class="med-dose">OD · high-intensity</div></div></label>
+              <label class="med-item"><input type="checkbox" id="m-ezet"><div><div class="med-name">Ezetimibe 10mg</div><div class="med-dose">OD · add-on to statin</div></div></label>
+              <label class="med-item"><input type="checkbox" id="m-asp"><div><div class="med-name">Aspirin 81mg</div><div class="med-dose">OD · secondary CV prevention</div></div></label>
+              <label class="med-item"><input type="checkbox" id="m-bemp"><div><div class="med-name">Bempedoic acid</div><div class="med-dose">180mg OD · statin-intolerant</div></div></label>
+              <label class="med-item"><input type="checkbox" id="m-pcsk9"><div><div class="med-name">PCSK9i (Evolocumab)</div><div class="med-dose">140mg q2wk · very-high-risk</div><div class="med-note mn-g">✓ FOURIER</div></div></label>
+              <label class="med-item"><input type="checkbox" id="m-feno"><div><div class="med-name">Fenofibrate</div><div class="med-dose">145mg OD · high TG</div></div></label>
+              <label class="med-item"><input type="checkbox" id="m-ico"><div><div class="med-name">Icosapent ethyl</div><div class="med-dose">2g BD · residual CV risk</div><div class="med-note mn-g">✓ REDUCE-IT</div></div></label>
+            </div>
+            <div class="fg" style="margin-top:14px"><label>Other medications</label><textarea id="e-other-meds" rows="2" placeholder="e.g. Omeprazole 20mg, Vitamin D3 1000IU…"></textarea></div>
+          </div>
+        </div>
+
+        <div class="wzPanel" data-s="4" hidden>
+          <div class="frow2">
+            <div class="fg"><label>Retinal screening</label><select id="enScrEye"><option value="">— select —</option><option>Done — normal</option><option>Done — retinopathy</option><option>Overdue</option><option>Never done</option></select></div>
+            <div class="fg"><label>Diabetic foot exam</label><select id="enScrFoot"><option value="">— select —</option><option>Low risk</option><option>Moderate risk</option><option>High risk / ulcer</option><option>Overdue</option><option>Never done</option></select></div>
+            <div class="fg"><label>Nephropathy (uACR)</label><select id="enScrKid"><option value="">— select —</option><option>Normoalbuminuric</option><option>Microalbuminuria</option><option>Macroalbuminuria</option><option>Not tested</option></select></div>
+            <div class="fg"><label>Neuropathy (monofilament)</label><select id="enScrNeuro"><option value="">— select —</option><option>Normal</option><option>Reduced sensation</option><option>Not tested</option></select></div>
+            <div class="fg"><label>Smoking status</label><select id="enSmoke"><option value="">— select —</option><option>Never</option><option>Ex-smoker</option><option>Current</option></select></div>
+            <div class="fg"><label>Influenza / pneumococcal</label><select id="enVax"><option value="">— select —</option><option>Up to date</option><option>Due</option><option>Unknown</option></select></div>
+          </div>
+          <div class="note">Screening status drives the recall engine and care-gap counts. "Overdue" / "Never done" items become tasks the moment the patient is enrolled.</div>
+        </div>
+
+        <div class="wzPanel" data-s="5" hidden><div id="enAiReview"></div></div>
+
+        <div style="display:flex;justify-content:space-between;margin-top:16px;padding-top:14px;border-top:1px solid var(--bdr)">
+          <button type="button" class="btn btn-o" id="wzBack" onclick="wzGo(-1)" style="visibility:hidden">← Back</button>
+          <button type="button" class="btn btn-g" id="wzNext" onclick="wzGo(1)">Continue →</button>
+        </div>
       </div>
+
+      <div class="card cp" style="position:sticky;top:0">
+        <div class="fsec">Live AI risk score</div>
+        <div style="display:flex;align-items:baseline;gap:9px"><div id="wzPct" style="font-size:36px;font-weight:800;line-height:1;color:var(--grd)">—</div><div><div id="wzTier" style="font-weight:700;font-size:13px">No data yet</div><div style="font-size:10.5px;color:var(--mu)">updates as you type</div></div></div>
+        <div style="height:8px;border-radius:5px;background:var(--bg);overflow:hidden;margin:11px 0 8px"><i id="wzBar" style="display:block;height:100%;width:0;background:var(--gr);transition:width .3s,background .3s"></i></div>
+        <div id="wzDrivers" style="display:flex;flex-direction:column;gap:6px"></div>
+        <div class="note" style="margin-top:12px">Full analysis &amp; care-plan recommendations appear on the <b>AI Review</b> step.</div>
+      </div>
+    </div>
+
+    <div style="margin-top:14px">
       <div class="card cp">
         <div class="fsec">Import from hospital system / batch</div>
         <div class="note" style="margin-bottom:11px">Dual intake: where the Raqeem / hospital feed is available it is <b>read once</b> into one source of truth (no re-keying); where it is not, manual and paste entry are always available. The platform never blocks on an integration it may not have.</div>
@@ -861,6 +1003,214 @@ document.getElementById("enAge").innerHTML=numOpts(18,95,1,55);
 document.getElementById("enA1c").innerHTML=numOpts(5.0,14.0,0.1,7.5);
 document.getElementById("enEgfr").innerHTML=numOpts(15,120,1,80);
 if(!loadState())seedTasks();renderMsg();refreshMetrics();renderTasks();lgHint();
+</script>
+<script>
+/* ===== AI enrolment wizard — reuses riskScore, gaps, patients, mkMed, mkOrders, refreshAll, show, toast ===== */
+(function(){
+  var WS=["Demographics","DM Type & Labs","Metabolic","Medications","Screening","AI Review"];
+  var wz={s:0, adh:"Good", meds:[]};
+  var $=function(id){return document.getElementById(id);};
+
+  window.wzPick=function(el,key){
+    var box=el.parentElement;
+    [].forEach.call(box.querySelectorAll('.wzchip'),function(c){c.classList.remove('on');});
+    el.classList.add('on'); wz[key]=el.getAttribute('data-v'); wzRecalc();
+  };
+  window.wzTog=function(el){
+    el.classList.toggle('on');
+    wz.meds=[].map.call($('enMeds').querySelectorAll('.wzchip.on'),function(c){return c.getAttribute('data-v');});
+    wzRecalc();
+  };
+  window.wzBmi=function(){
+    var w=+$('enWt').value, h=+$('enHt').value/100;
+    $('enBmi').value=(w>0&&h>0)?(w/(h*h)).toFixed(1):'';
+  };
+  window.wzEgfr=function(){
+    var cr=+$('enCr').value, age=+$('enAge').value, female=$('enSex').value==='Female', note=$('enEgfrNote');
+    if(!cr||!age){note.style.color='var(--rd)';note.textContent='Need creatinine and age first.';return;}
+    var scr=cr/88.4, k=female?0.7:0.9, a=female?-0.241:-0.302;
+    var e=142*Math.pow(Math.min(scr/k,1),a)*Math.pow(Math.max(scr/k,1),-1.2)*Math.pow(0.9938,age)*(female?1.012:1);
+    var v=Math.round(e); wzSetEgfr(v);
+    note.style.color='var(--grd)';note.textContent='CKD-EPI 2021 = '+v+' mL/min/1.73m² (Scr '+scr.toFixed(2)+' mg/dL)';
+    wzRecalc();
+  };
+  function wzSetEgfr(v){
+    var sel=$('enEgfr');
+    if(![].some.call(sel.options,function(o){return o.value===String(v);})){
+      var op=document.createElement('option');op.text=String(v);op.value=String(v);sel.add(op);
+    }
+    sel.value=String(v);
+  }
+  function mo(sel,overdueVals){var v=$(sel).value;if(!v)return 2;return overdueVals.indexOf(v)>-1?14:2;}
+  function kidMo(){var v=$('enScrKid').value;return (v==='Microalbuminuria'||v==='Macroalbuminuria'||v==='Not tested')?14:2;}
+  function cand(){
+    var a1c=+$('enA1c').value||0;
+    return {a1c:a1c, prev:a1c, type:$('enType').value, egfr:+$('enEgfr').value||90,
+      sbp:+$('enSbp').value||120, dbp:+$('enDbp').value||78, ldl:+$('enLdl').value||2.0,
+      scr:{ retinal:mo('enScrEye',['Overdue','Never done']), foot:mo('enScrFoot',['Overdue','Never done']),
+            kidney:kidMo(), cardiac:2, neuro:2 } };
+  }
+  function tierCol(t){return t==='High'?'var(--rd)':t==='Moderate'?'#b45309':'var(--grd)';}
+  function tierBar(t){return t==='High'?'var(--rd)':t==='Moderate'?'#d97706':'var(--gr)';}
+
+  window.wzRecalc=function(){
+    var r=riskScore(cand());
+    $('wzPct').textContent=r.score+'%'; $('wzPct').style.color=tierCol(r.tier);
+    $('wzTier').textContent=r.tier+' risk';
+    $('wzBar').style.width=r.score+'%'; $('wzBar').style.background=tierBar(r.tier);
+    var d=$('wzDrivers');
+    d.innerHTML=(r.drivers.length?r.drivers:['No major risk drivers']).map(function(x){
+      return '<div style="font-size:11.5px;padding:6px 9px;border-radius:7px;background:var(--bg);border:1px solid var(--bdr)">'+x+'</div>';}).join('');
+  };
+
+  function recs(){
+    var a1c=+$('enA1c').value, egfr=+$('enEgfr').value, acr=+$('enAcr').value, ldl=+$('enLdl').value, sbp=+$('enSbp').value;
+    var fl=medFlags(), out=[];
+    if(a1c>=9) out.push(['var(--rd)','Intensify glycaemic therapy','HbA1c ≥9% — escalate treatment and refer to structured education.']);
+    else if(a1c>=7.5) out.push(['#d97706','Optimise glucose control','HbA1c above 7% target — review therapy and adherence.']);
+    if((egfr&&egfr<60)||(acr&&acr>=30)){
+      if(!fl.sglt2&&!fl.glp1) out.push(['var(--rd)','Add SGLT2 inhibitor (or GLP-1 RA)','Reduced eGFR / albuminuria with no SGLT2i or GLP-1 — strong cardiorenal indication (EMPA-REG, DAPA-HF, FIDELIO).']);
+      if(!fl.ras) out.push(['#c2410c','Start ACEi / ARB','Albuminuria / CKD without RAS blockade — renoprotective indication.']);
+    }
+    if(ldl&&ldl>1.8&&!fl.statin) out.push(['#c2410c','Initiate statin','LDL above goal in a diabetic patient not on a statin (ADA: most DM age ≥40).']);
+    if(sbp&&sbp>=140) out.push(['#d97706','Address blood pressure','SBP ≥140 mmHg — titrate toward <130/80.']);
+    if(wz.adh==='Poor') out.push(['var(--rd)','Adherence support (PSP track)','Poor adherence — refill sync, reminders, pharmacist review.']);
+    var eye=$('enScrEye').value, foot=$('enScrFoot').value;
+    if(eye==='Overdue'||eye==='Never done') out.push(['#d97706','Schedule retinal screening','Overdue / never done — auto-create recall task.']);
+    if(foot==='High risk / ulcer') out.push(['var(--rd)','Urgent foot referral','High-risk foot / ulcer — fast-track podiatry.']);
+    return out;
+  }
+  function renderReview(){
+    var r=riskScore(cand()), name=$('enName').value||'This patient';
+    var g=function(id,suf){var v=$(id).value;return v?(v+(suf||'')):'—';};
+    var html='<div style="display:flex;gap:16px;align-items:center;flex-wrap:wrap;border:1px solid var(--bdr);border-radius:10px;padding:15px;background:var(--bg)">'+
+      '<div style="display:flex;align-items:baseline;gap:9px"><div style="font-size:40px;font-weight:800;line-height:1;color:'+tierCol(r.tier)+'">'+r.score+'%</div>'+
+      '<div style="font-weight:700;color:'+tierCol(r.tier)+'">'+r.tier+' risk</div></div>'+
+      '<div style="flex:1;min-width:200px"><div style="height:8px;border-radius:5px;background:#e6eaf0;overflow:hidden"><i style="display:block;height:100%;width:'+r.score+'%;background:'+tierBar(r.tier)+'"></i></div>'+
+      '<div style="font-size:11.5px;color:var(--mu);margin-top:7px">'+name+' is '+r.tier.toLowerCase()+' risk — '+(r.drivers.length?'driven by '+r.drivers.slice(0,2).join(' and ').toLowerCase():'parameters within range')+'.</div></div></div>';
+    var cells=[['DM type',$('enType').value],['HbA1c',g('enA1c','%')],['eGFR',g('enEgfr')],['ACR',g('enAcr',' mg/g')],['BP',($('enSbp').value||'—')+'/'+($('enDbp').value||'—')],['LDL',g('enLdl')],['BMI',g('enBmi')],['Adherence',wz.adh]];
+    html+='<div class="wzsum">'+cells.map(function(c){return '<div class="c"><div class="k">'+c[0]+'</div><div class="v">'+c[1]+'</div></div>';}).join('')+'</div>';
+    var rc=recs();
+    if(!rc.length) rc=[['var(--gr)','On track','No high-priority guideline gaps from the data entered.']];
+    html+=rc.map(function(x){return '<div class="wzrec" style="border-left-color:'+x[0]+'"><div><h4>'+x[1]+'</h4><p>'+x[2]+'</p></div></div>';}).join('');
+    html+='<div class="note" style="margin-top:6px">AI risk reuses the platform’s transparent rule-weighted model (glycaemic control, renal function, BP, lipids, screening gaps). Decision-support, not a diagnosis.</div>';
+    $('enAiReview').innerHTML=html;
+  }
+
+  function renderSteps(){
+    $('wzSteps').innerHTML=WS.map(function(t,i){
+      var cls='wzstep'+(i===wz.s?' on':(i<wz.s?' done':''));
+      return '<span class="'+cls+'" onclick="wzJump('+i+')"><span class="n">'+(i<wz.s?'✓':(i+1))+'</span>'+t+'</span>';
+    }).join('');
+  }
+  function paint(){
+    [].forEach.call(document.querySelectorAll('.wzPanel'),function(p){p.hidden=(+p.getAttribute('data-s')!==wz.s);});
+    $('wzBack').style.visibility=wz.s===0?'hidden':'visible';
+    $('wzNext').textContent=wz.s===WS.length-1?'Enrol patient ✓':'Continue →';
+    renderSteps(); wzRecalc();
+    if(wz.s===5) renderReview();
+  }
+  window.wzJump=function(i){ if(i<=wz.s){wz.s=i;paint();} };
+  window.wzGo=function(d){
+    if(d>0 && wz.s===WS.length-1){ wzSave(); return; }
+    wz.s=Math.max(0,Math.min(WS.length-1,wz.s+d)); paint();
+    try{document.querySelector('.content').scrollTop=0;}catch(e){}
+  };
+
+  var MM={'m-met':['Metformin','1000 mg','Biguanide'],'m-empa':['Empagliflozin','10 mg','SGLT2i'],'m-dapa':['Dapagliflozin','10 mg','SGLT2i'],'m-cana':['Canagliflozin','100 mg','SGLT2i'],'m-sema':['Semaglutide','0.5 mg/wk','GLP-1 RA'],'m-sema-oral':['Semaglutide PO','7 mg','GLP-1 RA'],'m-lira':['Liraglutide','1.2 mg','GLP-1 RA'],'m-dula':['Dulaglutide','0.75 mg/wk','GLP-1 RA'],'m-sita':['Sitagliptin','100 mg','DPP-4i'],'m-saxa':['Saxagliptin','5 mg','DPP-4i'],'m-glicla':['Gliclazide MR','60 mg','Sulfonylurea'],'m-glib':['Glibenclamide','5 mg','Sulfonylurea'],'m-glar':['Insulin Glargine','basal','Insulin'],'m-detem':['Insulin Detemir','basal','Insulin'],'m-piog':['Pioglitazone','15 mg','TZD'],'m-rami':['Ramipril','5 mg','ACEi'],'m-lisi':['Lisinopril','10 mg','ACEi'],'m-vals':['Valsartan','160 mg','ARB'],'m-losa':['Losartan','50 mg','ARB'],'m-irbe':['Irbesartan','150 mg','ARB'],'m-finer':['Finerenone','10 mg','MRA'],'m-amlo':['Amlodipine','5 mg','CCB'],'m-biso':['Bisoprolol','5 mg','Beta-blocker'],'m-carve':['Carvedilol','12.5 mg','Beta-blocker'],'m-hctz':['HCTZ','25 mg','Thiazide'],'m-indap':['Indapamide','1.5 mg','Thiazide-like'],'m-cloni':['Clonidine','75 mcg','Central'],'m-ator':['Atorvastatin','40 mg','Statin'],'m-rosu':['Rosuvastatin','20 mg','Statin'],'m-ezet':['Ezetimibe','10 mg','Ezetimibe'],'m-asp':['Aspirin','81 mg','Antiplatelet'],'m-bemp':['Bempedoic acid','180 mg','ACL inhibitor'],'m-pcsk9':['Evolocumab','140 mg q2wk','PCSK9i'],'m-feno':['Fenofibrate','145 mg','Fibrate'],'m-ico':['Icosapent ethyl','2 g BD','Omega-3']};
+  function chk(id){var e=$(id);return !!(e&&e.checked);}
+  function medFlags(){
+    return { sglt2:chk('m-empa')||chk('m-dapa')||chk('m-cana'),
+      glp1:chk('m-sema')||chk('m-sema-oral')||chk('m-lira')||chk('m-dula'),
+      statin:chk('m-ator')||chk('m-rosu')||chk('m-ezet')||chk('m-bemp')||chk('m-pcsk9'),
+      ras:chk('m-rami')||chk('m-lisi')||chk('m-vals')||chk('m-losa')||chk('m-irbe') };
+  }
+  function buildMeds(){
+    var out=[];
+    Object.keys(MM).forEach(function(id){ if(chk(id)){var m=MM[id];out.push({drug:m[0],dose:m[1],cls:m[2],freq:'Once daily',tpd:1,timing:'',days:30,high:false,renal:m[2]==='Biguanide'});} });
+    var oth=($('e-other-meds')&&$('e-other-meds').value||'').trim();
+    if(oth) oth.split(',').forEach(function(x){x=x.trim();if(x)out.push({drug:x,dose:'',cls:'Other',freq:'',tpd:1,timing:'',days:30,high:false,renal:false});});
+    return out;
+  }
+  function enrolSummary(p,r){
+    var e=p.enrol||{}, L=[];
+    L.push('AI risk: '+r.score+'% ('+r.tier+')'+((r.drivers&&r.drivers.length)?' — '+r.drivers.join('; '):''));
+    L.push('');
+    L.push('DEMOGRAPHICS: '+p.age+'y '+(p.sex==='M'?'Male':'Female')+(p.nationality?' · '+p.nationality:'')+' · '+p.district+(p.dxYear?' · Dx '+p.dxYear:''));
+    L.push('GLYCAEMIC: HbA1c '+p.a1c+'%'+(e.fbs?' · FBS '+e.fbs:'')+(e.ppg?' · PPG '+e.ppg:''));
+    L.push('VITALS: BP '+p.sbp+'/'+p.dbp+' · BMI '+p.bmi+((p.weight&&p.height)?' ('+p.weight+'kg / '+p.height+'cm)':''));
+    L.push('LIPIDS: '+[e.tc?'TC '+e.tc:'',e.hdl?'HDL '+e.hdl:'',p.ldl?'LDL '+p.ldl:'',e.tg?'TG '+e.tg:''].filter(Boolean).join(' · '));
+    L.push('RENAL: eGFR '+p.egfr+' (CKD-EPI 2021)'+(e.cr?' · Creatinine '+e.cr+' µmol/L':'')+(e.acr?' · ACR '+e.acr+' mg/g':''));
+    if(e.cpep||e.gad65==='true'||e.ia2==='true') L.push('AUTOIMMUNE: C-peptide '+(e.cpep||'—')+' · GAD-65 '+(e.gad65==='true'?'+':'−')+' · IA-2 '+(e.ia2==='true'?'+':'−'));
+    if(e.ga||e.ogtt) L.push('GESTATIONAL: GA '+(e.ga||'—')+'wk'+(e.ogtt?' · OGTT '+e.ogtt:''));
+    L.push('MEDICATIONS ('+p.meds.length+'): '+(p.meds.length?p.meds.map(function(m){return m.drug+(m.dose?' '+m.dose:'');}).join(', '):'none recorded'));
+    L.push('SCREENING: Retinal '+(e.retinal||'—')+' · Foot '+(e.foot||'—')+' · Nephropathy '+(e.kidney||'—')+' · Neuropathy '+(e.neuro||'—'));
+    L.push('LIFESTYLE: Smoking '+(e.smoke||'—')+' · Adherence '+p.adh+' · Vaccines '+(e.vax||'—'));
+    var rc=recs();
+    if(rc.length){ L.push(''); L.push('CARE PLAN:'); rc.forEach(function(x){L.push(' • '+x[1]+' — '+x[2]);}); }
+    return L.join('\n');
+  }
+  function wzSave(){
+    var name=$('enName').value.trim();
+    if(!name){ wz.s=0; paint(); toast('Enter a patient name'); return; }
+    var id=patients.length, a1c=+$('enA1c').value||7.0;
+    var adh=wz.adh, adhScore=adh==='Good'?78:adh==='Fair'?55:35;
+    var p={ id:id, name:name, mrn:$('enMrn').value||('SA-'+(9000+id)),
+      sex:$('enSex').value==='Male'?'M':'F', age:+$('enAge').value, type:$('enType').value,
+      district:$('enCtr').value||pk(DIST), doc:pk(DOCS), coord:pk(COORD),
+      a1c:a1c, prev:a1c, egfr:+$('enEgfr').value||80, sbp:+$('enSbp').value||130, dbp:+$('enDbp').value||80,
+      ldl:+$('enLdl').value||2.4, bmi:+$('enBmi').value||29, fbs:+$('enFbs').value||7,
+      adh:adh, adhScore:adhScore, meds:buildMeds(),
+      scr:{ retinal:mo('enScrEye',['Overdue','Never done']), foot:mo('enScrFoot',['Overdue','Never done']),
+            kidney:kidMo(), cardiac:2, neuro:2 },
+      allergy:'No known allergies', resp:70, noShow:0, lastContact:0, lastVisit:daysAgo(0),
+      phone:$('enPhone').value||'+9665XXXXXXX', notes:[], comms:[] };
+    var gv=function(id){return ($(id)&&$(id).value)||'';};
+    p.tc=+gv('enTc')||null; p.hdl=+gv('enHdl')||null; p.tg=+gv('enTg')||null;
+    p.cr=+gv('enCr')||null; p.acr=+gv('enAcr')||null; p.ppg=+gv('enPpg')||null;
+    p.height=+gv('enHt')||null; p.weight=+gv('enWt')||null; p.nationality=gv('enNat'); p.dxYear=gv('enDx');
+    p.smoking=gv('enSmoke'); p.vax=gv('enVax');
+    p.enrol={ fbs:gv('enFbs'),ppg:gv('enPpg'),tc:gv('enTc'),hdl:gv('enHdl'),tg:gv('enTg'),cr:gv('enCr'),acr:gv('enAcr'),
+      cpep:gv('e-cp'),gad65:gv('e-gad65'),ia2:gv('e-ia2'),ga:gv('e-ga'),ogtt:[gv('e-ogtt0'),gv('e-ogtt1'),gv('e-ogtt2')].filter(Boolean).join('/'),
+      retinal:gv('enScrEye'),foot:gv('enScrFoot'),kidney:gv('enScrKid'),neuro:gv('enScrNeuro'),smoke:gv('enSmoke'),vax:gv('enVax') };
+    p.orders=mkOrders(p);
+    var r=riskScore(p);
+    p.encounters=[{ type:'Enrolment assessment', author:(document.getElementById('sbUn')&&document.getElementById('sbUn').textContent)||'Diabetes Nurse', date:daysAgo(0), text:enrolSummary(p,r) }];
+    patients.push(p);
+    refreshAll();
+    toast('Patient enrolled', name+' · '+r.tier+' risk · full record saved');
+    wzReset();
+    show('registry');
+  }
+  window.updateDmFields=function(){
+    var t=$('enType').value, s=$('dm-type-specific'); if(!s)return;
+    if(t==='T1'||t==='LADA'){
+      s.innerHTML='<div class="card cp" style="background:#f5f3ff;border-color:#d8b4fe;margin-top:8px"><div class="fsec" style="color:#7c3aed">Autoimmune Tests</div><div class="frow3"><div class="fg"><label>C-Peptide (ng/mL)</label><input id="e-cp" type="number" step="0.01" placeholder="0.2"></div><div class="fg"><label>GAD-65</label><select id="e-gad65"><option value="false">Negative</option><option value="true">Positive</option></select></div><div class="fg"><label>IA-2</label><select id="e-ia2"><option value="false">Negative</option><option value="true">Positive</option></select></div></div><div class="fg"><label>Insulin Regimen</label><select id="e-insulin"><option value="">Not on insulin yet</option><option>Basal-only (Glargine/Detemir)</option><option>Basal-bolus (MDI)</option><option>Insulin pump (CSII)</option><option>Hybrid closed-loop pump</option></select></div></div>';
+    } else if(t==='GDM'){
+      s.innerHTML='<div class="card cp" style="background:#fffbeb;border-color:#fbbf24;margin-top:8px"><div class="fsec" style="color:#b45309">Gestational Profile</div><div class="frow2"><div class="fg"><label>GA (weeks)</label><input id="e-ga" type="number" placeholder="28"></div><div class="fg"><label>Previous GDM?</label><select id="e-prev-gdm"><option value="false">No</option><option value="true">Yes</option></select></div></div><div class="frow3"><div class="fg"><label>OGTT 0h (mmol/L)</label><input id="e-ogtt0" type="number" step="0.1" placeholder="5.8"></div><div class="fg"><label>OGTT 1h</label><input id="e-ogtt1" type="number" step="0.1" placeholder="10.2"></div><div class="fg"><label>OGTT 2h</label><input id="e-ogtt2" type="number" step="0.1" placeholder="8.8"></div></div></div>';
+    } else { s.innerHTML=''; }
+  };
+  window.wzType=function(){ updateDmFields(); wzRecalc(); };
+  window.wzRaqeem=function(){
+    var f={enName:'Abdullah Al-Qahtani',enMrn:'SA-'+(7000+Math.floor(Math.random()*900)),enPhone:'+96655'+Math.floor(1000000+Math.random()*8999999),enNat:'Saudi',enFbs:'8.2',enSbp:'148',enDbp:'88',enWt:'92',enHt:'171',enCr:'118',enLdl:'3.1',enAcr:'42'};
+    Object.keys(f).forEach(function(k){if($(k))$(k).value=f[k];});
+    $('enSex').value='Male'; $('enType').value='T2'; $('enA1c').value='8.7'; if($('enWt'))wzBmi();
+    updateDmFields(); wzRecalc();
+    toast('Imported from Raqeem (NPHIES)','Abdullah Al-Qahtani · read once, no re-keying');
+  };
+  function wzReset(){
+    ['enName','enMrn','enPhone','enNat','enFbs','enDx','enPpg','enRbs','enSbp','enDbp','enWt','enHt','enBmi','enTc','enLdl','enHdl','enTg','enCr','enAcr'].forEach(function(id){if($(id))$(id).value='';});
+    ['enScrEye','enScrFoot','enScrKid','enScrNeuro','enSmoke','enVax','enType'].forEach(function(id){if($(id))$(id).selectedIndex=0;});
+    Object.keys(MM).forEach(function(id){if($(id))$(id).checked=false;});
+    if($('e-other-meds'))$('e-other-meds').value='';
+    if($('dm-type-specific'))$('dm-type-specific').innerHTML='';
+    wz={s:0,adh:'Good',meds:[]};
+    [].forEach.call($('enAdh').querySelectorAll('.wzchip'),function(c){c.classList.toggle('on',c.getAttribute('data-v')==='Good');});
+    $('enEgfrNote').textContent='';
+    paint();
+  }
+  if($('wzSteps')) paint();
+})();
 </script>
 </body>
 </html>
