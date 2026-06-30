@@ -567,21 +567,20 @@ button{font-family:inherit;}
 
   <!-- SETTINGS -->
   <div class="view" id="v-settings">
+    <div style="display:flex;align-items:center;gap:13px;max-width:790px;margin-bottom:14px;padding:15px 18px;background:var(--sur);border:1px solid var(--bdr);border-radius:11px">
+      <svg width="44" height="44" viewBox="0 0 64 64" fill="none"><circle cx="40" cy="26" r="3" fill="#2563a8"/><circle cx="50" cy="34" r="2.4" fill="#2563a8"/><circle cx="44" cy="44" r="2.4" fill="#2563a8"/><circle cx="30" cy="40" r="2" fill="#9bb6d6"/><circle cx="22" cy="32" r="1.7" fill="#9bb6d6"/><circle cx="33" cy="24" r="2.2" fill="#2563a8"/><path d="M40 26L50 34M40 26L44 44M40 26L33 24M30 40L44 44M30 40L22 32M33 24L22 32" stroke="#2563a8" stroke-width="1.1" opacity=".55"/><path d="M9 50c10-13 36-13 46 0" stroke="#15294d" stroke-width="3" stroke-linecap="round"/></svg>
+      <div><div style="font-size:20px;font-weight:800;color:var(--nv);letter-spacing:.3px">Jusoor <span style="font-weight:600;color:var(--mu);font-size:13px">· Diabetes Care</span></div><div style="font-size:11px;color:var(--mu);margin-top:2px">Settings · AI &amp; integrations</div></div>
+    </div>
     <div class="airpanel" style="margin-bottom:14px;max-width:790px">
-      <div class="ct">AI Engine &amp; Data Residency</div>
+      <div class="ct">AI Engine &amp; Integrations</div>
       <div class="cs">How clinical intelligence is computed and where patient data is processed.</div>
-      <div class="airbadges">
-        <span class="airb airon"><span class="d" style="background:var(--te)"></span>Rule-based engine · on-device</span>
-        <span class="airb airon"><span class="d" style="background:var(--te)"></span>Data stays in Saudi Arabia</span>
-        <span class="airb airoff" id="airExtBadge"><span class="d" style="background:#9ca3af"></span>External AI · off</span>
-      </div>
-      <div class="cs" style="line-height:1.6;color:var(--mu)">Risk stratification, eligibility, order-to-completion, dropout scoring, recall cadence and dose rules run deterministically in the browser. No patient data leaves the device, there is no per-call cost, and every result is auditable and explainable.</div>
-      <div class="set-row" style="margin-top:8px"><div><div class="set-n">External AI connection (optional)</div><div class="set-d">Off by default. Only de-identified features are sent when enabled.</div></div><label class="sw"><input type="checkbox" id="airT" onchange="toggleExt(this.checked)"><span class="sl"></span></label></div>
-      <div id="airFields" style="opacity:.5;pointer-events:none">
+      <div class="cs" style="line-height:1.6;color:var(--mu)">Connect an AI model to power the enrolment AI Review and care-plan generation. Leave blank to keep the built-in rule-based engine.</div>
+      <div id="airFields">
         <div class="frow2" style="margin-top:13px">
-          <div class="fg"><label>AI endpoint (local LLM or proxy)</label><input id="airEp" autocomplete="off" placeholder="https://llm.internal.ksa/v1"></div>
-          <div class="fg"><label>Access key</label><input id="airKey" type="password" autocomplete="off" placeholder="optional"></div>
+          <div class="fg"><label>API link (endpoint)</label><input id="airEp" autocomplete="off" placeholder="https://api.anthropic.com/v1/messages"></div>
+          <div class="fg"><label>API key</label><input id="airKey" type="password" autocomplete="off" placeholder="paste API key"></div>
         </div>
+        <div style="display:flex;gap:9px;align-items:center;margin-top:11px"><button class="btn btn-p btn-sm" onclick="saveApi()">Save API link</button><span id="apiStat" class="chip c-n">Not set</span></div>
       </div>
     </div>
     <div class="airpanel" style="margin-bottom:14px;max-width:790px">
@@ -963,6 +962,8 @@ function toggleExt(on){var f=document.getElementById("airFields");f.style.opacit
   var __am=document.getElementById("airMode");if(__am)__am.textContent=on?"Local + External (de-identified)":"Local";
   document.getElementById("pillAI").innerHTML="<span class='d' style='background:"+(on?"var(--am)":"var(--gr)")+"'></span>"+(on?"Rule engine + external":"Rule engine · local");
   toast(on?"External adapter enabled":"External adapter off",on?"Only de-identified features sent":"All processing on-device");}
+function saveApi(){var ep=(document.getElementById("airEp")||{}).value||"",k=(document.getElementById("airKey")||{}).value||"";try{localStorage.setItem("jusoorApiEp",ep);localStorage.setItem("jusoorApiKey",k);}catch(e){}var st=document.getElementById("apiStat");if(st){st.className="chip "+(ep?"c-g":"c-n");st.textContent=ep?"Saved":"Not set";}toast(ep?"API link saved":"API link cleared",ep?"Stored locally on this device":"");}
+(function(){try{var ep=localStorage.getItem("jusoorApiEp")||"",k=localStorage.getItem("jusoorApiKey")||"";var e1=document.getElementById("airEp");if(e1)e1.value=ep;var e2=document.getElementById("airKey");if(e2)e2.value=k;var st=document.getElementById("apiStat");if(st&&ep){st.className="chip c-g";st.textContent="Saved";}}catch(e){}})();
 function refreshAll(){refreshMetrics();if(document.getElementById("v-registry").classList.contains("on"))renderReg();if(document.getElementById("v-worklist").classList.contains("on"))renderWork();if(document.getElementById("v-orders").classList.contains("on"))renderOrders();if(document.getElementById("v-recall").classList.contains("on"))renderRecall();if(document.getElementById("v-coverage").classList.contains("on"))renderCoverage();if(document.getElementById("v-pathway").classList.contains("on"))renderPathway();renderTasks();saveState();}
 
 /* ---------- reactivity / roles / upload ---------- */
