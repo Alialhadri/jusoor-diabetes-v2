@@ -433,11 +433,9 @@ button{font-family:inherit;}
           <div class="fg"><label>Access key</label><input id="airKey" type="password" autocomplete="off" placeholder="optional"></div>
         </div>
       </div>
-      <div class="resnote"><b>Phase 1 (pilot):</b> rule engine only — nothing leaves the device. <b>Phase 2:</b> point the endpoint at an in-Kingdom local LLM for open-ended tasks. No rebuild required. Processing mode: <strong id="airMode">Local</strong>.</div>
     </div>
     <div class="airpanel" style="margin-bottom:14px;max-width:790px">
       <div class="ct">In-Kingdom server connection</div>
-      <div class="cs">Connect to a local server inside the Kingdom — hospital EMR / HIS, a FHIR / HL7 endpoint, or a local LLM — when one is available. Off until configured; the platform runs fully on-device without it.</div>
       <div class="frow2" style="margin-top:13px">
         <div class="fg"><label>Server base URL (FHIR / HL7 / API)</label><input id="srvUrl" placeholder="https://emr.internal.hospital.sa/fhir" autocomplete="off"></div>
         <div class="fg"><label>API key / token</label><input id="srvKey" type="password" autocomplete="off" placeholder="stored locally"></div>
@@ -812,7 +810,7 @@ function renderAnalytics(){
 function recallAllDue(){var n=0;patients.forEach(function(p){if(dueForRecall(p)){addTask(p.id,"Recall — close due care","Coordinator");n++;}});refreshAll();toast("Recalls generated for "+n+" patients","Pull-based · added to Care Tasks");}
 function toggleExt(on){var f=document.getElementById("airFields");f.style.opacity=on?"1":".5";f.style.pointerEvents=on?"auto":"none";
   var b=document.getElementById("airExtBadge");b.className="airb "+(on?"airon":"airoff");b.innerHTML="<span class='d' style='background:"+(on?"var(--am)":"#9ca3af")+"'></span>External AI · "+(on?"ready":"off");
-  document.getElementById("airMode").textContent=on?"Local + External (de-identified)":"Local";
+  var __am=document.getElementById("airMode");if(__am)__am.textContent=on?"Local + External (de-identified)":"Local";
   document.getElementById("pillAI").innerHTML="<span class='d' style='background:"+(on?"var(--am)":"var(--gr)")+"'></span>"+(on?"Rule engine + external":"Rule engine · local");
   toast(on?"External adapter enabled":"External adapter off",on?"Only de-identified features sent":"All processing on-device");}
 function refreshAll(){refreshMetrics();if(document.getElementById("v-registry").classList.contains("on"))renderReg();if(document.getElementById("v-worklist").classList.contains("on"))renderWork();if(document.getElementById("v-orders").classList.contains("on"))renderOrders();if(document.getElementById("v-recall").classList.contains("on"))renderRecall();if(document.getElementById("v-coverage").classList.contains("on"))renderCoverage();if(document.getElementById("v-pathway").classList.contains("on"))renderPathway();renderTasks();saveState();}
