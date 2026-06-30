@@ -350,6 +350,12 @@ button{font-family:inherit;}
     .med-dose{font-size:9px;color:var(--mu);margin-top:1px;line-height:1.3}
     .med-note{font-size:9px;margin-top:2px;font-weight:600}
     .mn-g{color:var(--grd)}.mn-a{color:#b45309}.mn-r{color:var(--rd)}
+    .meddet-h{font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--mu);margin:16px 0 7px}
+    .meddet{display:flex;gap:6px;align-items:center;padding:6px 9px;border:1px solid var(--bdr);border-radius:7px;margin-bottom:5px;background:var(--bll)}
+    .meddet .mn{flex:1;font-size:11.5px;font-weight:700}
+    .meddet input{padding:5px 8px;font-size:11px;border:1px solid var(--bdr);border-radius:6px;font-family:inherit;background:var(--sur);color:var(--tx)}
+    .meddet .dz{width:120px}.meddet .fq{width:150px}
+    @media(max-width:640px){.meddet{flex-wrap:wrap}.meddet .dz,.meddet .fq{width:auto;flex:1}}
     </style>
     <div style="display:grid;grid-template-columns:1fr 286px;gap:14px;align-items:start" id="wzGrid">
       <div class="card cp">
@@ -401,7 +407,7 @@ button{font-family:inherit;}
 
         <div class="wzPanel" data-s="3" hidden>
           <div style="font-size:11px;color:var(--mu);margin-bottom:6px">Tick all medications currently prescribed — evidence tags reflect ADA 2024 / major trials.</div>
-          <div id="enMedGrid" onclick="wzRecalc()">
+          <div id="enMedGrid" onclick="wzMeds()">
             <div class="medsec" style="color:var(--bl);margin-top:4px">Glucose-Lowering Agents</div>
             <div class="med-grid">
               <label class="med-item"><input type="checkbox" id="m-met"><div><div class="med-name">Metformin</div><div class="med-dose">500–2000mg/day · First-line</div><div class="med-note mn-g">✓ ADA 2024 first-line</div></div></label>
@@ -451,14 +457,16 @@ button{font-family:inherit;}
             </div>
             <div class="fg" style="margin-top:14px"><label>Other medications</label><textarea id="e-other-meds" rows="2" placeholder="e.g. Omeprazole 20mg, Vitamin D3 1000IU…"></textarea></div>
           </div>
+          <div id="enMedDetail"></div>
+          <datalist id="freqList"><option>Once daily</option><option>Twice daily</option><option>Three times daily</option><option>Four times daily</option><option>At bedtime</option><option>Before breakfast</option><option>With meals</option><option>Once weekly</option><option>Every 2 weeks</option><option>As directed</option></datalist>
         </div>
 
         <div class="wzPanel" data-s="4" hidden>
           <div class="frow2">
-            <div class="fg"><label>Retinal screening</label><select id="enScrEye"><option value="">— select —</option><option>Done — normal</option><option>Done — retinopathy</option><option>Overdue</option><option>Never done</option></select></div>
-            <div class="fg"><label>Diabetic foot exam</label><select id="enScrFoot"><option value="">— select —</option><option>Low risk</option><option>Moderate risk</option><option>High risk / ulcer</option><option>Overdue</option><option>Never done</option></select></div>
-            <div class="fg"><label>Nephropathy (uACR)</label><select id="enScrKid"><option value="">— select —</option><option>Normoalbuminuric</option><option>Microalbuminuria</option><option>Macroalbuminuria</option><option>Not tested</option></select></div>
-            <div class="fg"><label>Neuropathy (monofilament)</label><select id="enScrNeuro"><option value="">— select —</option><option>Normal</option><option>Reduced sensation</option><option>Not tested</option></select></div>
+            <div class="fg"><label>Retinal screening</label><div style="display:flex;gap:6px"><select id="enScrEye" style="flex:1"><option value="">— select —</option><option>Done — normal</option><option>Done — retinopathy</option><option>Overdue</option><option>Never done</option></select><input type="date" id="enScrEyeD" style="flex:0 0 145px" title="Date performed — pick or type"></div></div>
+            <div class="fg"><label>Diabetic foot exam</label><div style="display:flex;gap:6px"><select id="enScrFoot" style="flex:1"><option value="">— select —</option><option>Low risk</option><option>Moderate risk</option><option>High risk / ulcer</option><option>Overdue</option><option>Never done</option></select><input type="date" id="enScrFootD" style="flex:0 0 145px" title="Date performed — pick or type"></div></div>
+            <div class="fg"><label>Nephropathy (uACR)</label><div style="display:flex;gap:6px"><select id="enScrKid" style="flex:1"><option value="">— select —</option><option>Normoalbuminuric</option><option>Microalbuminuria</option><option>Macroalbuminuria</option><option>Not tested</option></select><input type="date" id="enScrKidD" style="flex:0 0 145px" title="Date performed — pick or type"></div></div>
+            <div class="fg"><label>Neuropathy (monofilament)</label><div style="display:flex;gap:6px"><select id="enScrNeuro" style="flex:1"><option value="">— select —</option><option>Normal</option><option>Reduced sensation</option><option>Not tested</option></select><input type="date" id="enScrNeuroD" style="flex:0 0 145px" title="Date performed — pick or type"></div></div>
             <div class="fg"><label>Smoking status</label><select id="enSmoke"><option value="">— select —</option><option>Never</option><option>Ex-smoker</option><option>Current</option></select></div>
             <div class="fg"><label>Influenza / pneumococcal</label><select id="enVax"><option value="">— select —</option><option>Up to date</option><option>Due</option><option>Unknown</option></select></div>
           </div>
@@ -1136,9 +1144,27 @@ if(!loadState())seedTasks();renderMsg();refreshMetrics();renderTasks();lgHint();
       statin:chk('m-ator')||chk('m-rosu')||chk('m-ezet')||chk('m-bemp')||chk('m-pcsk9'),
       ras:chk('m-rami')||chk('m-lisi')||chk('m-vals')||chk('m-losa')||chk('m-irbe') };
   }
+  window.wzMeds=function(){ wzMedSync(); wzRecalc(); };
+  function wzMedSync(){
+    var box=$('enMedDetail'); if(!box)return;
+    var prev={}; [].forEach.call(box.querySelectorAll('.meddet'),function(r){prev[r.getAttribute('data-id')]={dose:r.querySelector('.dz').value,freq:r.querySelector('.fq').value};});
+    var checked=Object.keys(MM).filter(chk);
+    if(!checked.length){box.innerHTML='';return;}
+    var html='<div class="meddet-h">Dose &amp; frequency — adjust per patient (type or pick)</div>';
+    checked.forEach(function(id){var m=MM[id],pv=prev[id]||{};
+      html+='<div class="meddet" data-id="'+id+'"><span class="mn">'+m[0]+'</span>'+
+        '<input class="dz" placeholder="dose" value="'+((pv.dose!=null&&pv.dose!=='')?pv.dose:m[1])+'" oninput="wzRecalc()">'+
+        '<input class="fq" list="freqList" placeholder="frequency" value="'+(pv.freq||'Once daily')+'" oninput="wzRecalc()"></div>';
+    });
+    box.innerHTML=html;
+  }
   function buildMeds(){
-    var out=[];
-    Object.keys(MM).forEach(function(id){ if(chk(id)){var m=MM[id];out.push({drug:m[0],dose:m[1],cls:m[2],freq:'Once daily',tpd:1,timing:'',days:30,high:false,renal:m[2]==='Biguanide'});} });
+    var out=[], box=$('enMedDetail');
+    Object.keys(MM).forEach(function(id){ if(chk(id)){var m=MM[id];
+      var row=box&&box.querySelector('.meddet[data-id="'+id+'"]');
+      var dose=row?row.querySelector('.dz').value:m[1];
+      var freq=row?row.querySelector('.fq').value:'Once daily';
+      out.push({drug:m[0],dose:dose||m[1],cls:m[2],freq:freq||'Once daily',tpd:1,timing:'',days:30,high:false,renal:m[2]==='Biguanide'});} });
     var oth=($('e-other-meds')&&$('e-other-meds').value||'').trim();
     if(oth) oth.split(',').forEach(function(x){x=x.trim();if(x)out.push({drug:x,dose:'',cls:'Other',freq:'',tpd:1,timing:'',days:30,high:false,renal:false});});
     return out;
@@ -1154,8 +1180,9 @@ if(!loadState())seedTasks();renderMsg();refreshMetrics();renderTasks();lgHint();
     L.push('RENAL: eGFR '+p.egfr+' (CKD-EPI 2021)'+(e.cr?' · Creatinine '+e.cr+' µmol/L':'')+(e.acr?' · ACR '+e.acr+' mg/g':''));
     if(e.cpep||e.gad65==='true'||e.ia2==='true') L.push('AUTOIMMUNE: C-peptide '+(e.cpep||'—')+' · GAD-65 '+(e.gad65==='true'?'+':'−')+' · IA-2 '+(e.ia2==='true'?'+':'−'));
     if(e.ga||e.ogtt) L.push('GESTATIONAL: GA '+(e.ga||'—')+'wk'+(e.ogtt?' · OGTT '+e.ogtt:''));
-    L.push('MEDICATIONS ('+p.meds.length+'): '+(p.meds.length?p.meds.map(function(m){return m.drug+(m.dose?' '+m.dose:'');}).join(', '):'none recorded'));
-    L.push('SCREENING: Retinal '+(e.retinal||'—')+' · Foot '+(e.foot||'—')+' · Nephropathy '+(e.kidney||'—')+' · Neuropathy '+(e.neuro||'—'));
+    L.push('MEDICATIONS ('+p.meds.length+'):');
+    if(p.meds.length) p.meds.forEach(function(m){L.push('  • '+m.drug+(m.dose?' '+m.dose:'')+(m.freq?' · '+m.freq:''));}); else L.push('  • none recorded');
+    L.push('SCREENING: Retinal '+(e.retinal||'—')+(e.retinalD?' ('+e.retinalD+')':'')+' · Foot '+(e.foot||'—')+(e.footD?' ('+e.footD+')':'')+' · Nephropathy '+(e.kidney||'—')+(e.kidneyD?' ('+e.kidneyD+')':'')+' · Neuropathy '+(e.neuro||'—')+(e.neuroD?' ('+e.neuroD+')':''));
     L.push('LIFESTYLE: Smoking '+(e.smoke||'—')+' · Adherence '+p.adh+' · Vaccines '+(e.vax||'—'));
     var rc=recs();
     if(rc.length){ L.push(''); L.push('CARE PLAN:'); rc.forEach(function(x){L.push(' • '+x[1]+' — '+x[2]);}); }
@@ -1183,7 +1210,8 @@ if(!loadState())seedTasks();renderMsg();refreshMetrics();renderTasks();lgHint();
     p.smoking=gv('enSmoke'); p.vax=gv('enVax'); p.dxMonth=gv('enDxMo');
     p.enrol={ fbs:gv('enFbs'),ppg:gv('enPpg'),tc:gv('enTc'),hdl:gv('enHdl'),tg:gv('enTg'),cr:gv('enCr'),acr:gv('enAcr'),
       cpep:gv('e-cp'),gad65:gv('e-gad65'),ia2:gv('e-ia2'),ga:gv('e-ga'),ogtt:[gv('e-ogtt0'),gv('e-ogtt1'),gv('e-ogtt2')].filter(Boolean).join('/'),
-      retinal:gv('enScrEye'),foot:gv('enScrFoot'),kidney:gv('enScrKid'),neuro:gv('enScrNeuro'),smoke:gv('enSmoke'),vax:gv('enVax') };
+      retinal:gv('enScrEye'),foot:gv('enScrFoot'),kidney:gv('enScrKid'),neuro:gv('enScrNeuro'),smoke:gv('enSmoke'),vax:gv('enVax'),
+      retinalD:gv('enScrEyeD'),footD:gv('enScrFootD'),kidneyD:gv('enScrKidD'),neuroD:gv('enScrNeuroD') };
     p.orders=mkOrders(p);
     var r=riskScore(p);
     p.encounters=[{ type:'Enrolment assessment', author:(document.getElementById('sbUn')&&document.getElementById('sbUn').textContent)||'Diabetes Nurse', date:daysAgo(0), text:enrolSummary(p,r) }];
@@ -1212,8 +1240,10 @@ if(!loadState())seedTasks();renderMsg();refreshMetrics();renderTasks();lgHint();
   function wzReset(){
     ['enName','enMrn','enPhone','enNat','enFbs','enDx','enDxMo','enPpg','enRbs','enSbp','enDbp','enWt','enHt','enBmi','enTc','enLdl','enHdl','enTg','enCr','enAcr'].forEach(function(id){if($(id))$(id).value='';});
     ['enScrEye','enScrFoot','enScrKid','enScrNeuro','enSmoke','enVax','enType'].forEach(function(id){if($(id))$(id).selectedIndex=0;});
+    ['enScrEyeD','enScrFootD','enScrKidD','enScrNeuroD','enDxMo'].forEach(function(id){if($(id))$(id).value='';});
     Object.keys(MM).forEach(function(id){if($(id))$(id).checked=false;});
     if($('e-other-meds'))$('e-other-meds').value='';
+    if($('enMedDetail'))$('enMedDetail').innerHTML='';
     if($('dm-type-specific'))$('dm-type-specific').innerHTML='';
     wz={s:0,adh:'Good',meds:[]};
     [].forEach.call($('enAdh').querySelectorAll('.wzchip'),function(c){c.classList.toggle('on',c.getAttribute('data-v')==='Good');});
