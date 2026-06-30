@@ -374,7 +374,7 @@ button{font-family:inherit;}
           <div class="frow3">
             <div class="fg"><label>HbA1c (%)</label><select id="enA1c" onchange="wzRecalc()"></select></div>
             <div class="fg"><label>FBS (mmol/L)</label><input id="enFbs" type="number" step="0.1" placeholder="fasting"></div>
-            <div class="fg"><label>Year of diagnosis</label><input id="enDx" type="number" placeholder="2019"></div>
+            <div class="fg"><label>Diagnosis (month / year)</label><div style="display:flex;gap:6px"><input id="enDxMo" list="dxMonths" placeholder="Month" style="flex:1"><input id="enDx" list="dxYears" placeholder="Year" inputmode="numeric" style="flex:1"></div><datalist id="dxMonths"><option>Jan</option><option>Feb</option><option>Mar</option><option>Apr</option><option>May</option><option>Jun</option><option>Jul</option><option>Aug</option><option>Sep</option><option>Oct</option><option>Nov</option><option>Dec</option></datalist><datalist id="dxYears"></datalist></div>
           </div>
           <div class="frow2"><div class="fg"><label>PPG (mmol/L)</label><input id="enPpg" type="number" step="0.1" placeholder="post-prandial"></div><div class="fg"><label>Random glucose (mmol/L)</label><input id="enRbs" type="number" step="0.1" placeholder="optional"></div></div>
         </div>
@@ -1053,8 +1053,19 @@ if(!loadState())seedTasks();renderMsg();refreshMetrics();renderTasks();lgHint();
   function tierCol(t){return t==='High'?'var(--rd)':t==='Moderate'?'#b45309':'var(--grd)';}
   function tierBar(t){return t==='High'?'var(--rd)':t==='Moderate'?'#d97706':'var(--gr)';}
 
+  function liveScore(){
+    var h=+($('enA1c').value)||0, s=+($('enSbp').value)||0, e=+($('enEgfr').value)||0, acr=+($('enAcr').value)||0, ldl=+($('enLdl').value)||0;
+    var hPts=h>10?40:h>9?28:h>8?18:h>7.5?10:h>0?4:0;
+    var sPts=s>160?20:s>140?11:s>0?3:0;
+    var ePts=(e&&e<30)?30:(e&&e<45)?18:(e&&e<60)?8:0;
+    var aPts=acr>=300?12:acr>=30?6:0, lPts=ldl>3.4?8:ldl>2.6?4:0;
+    var sc=Math.min(hPts+sPts+ePts+aPts+lPts,100);
+    var tier=sc>65?'High':sc>40?'Moderate':'Low', dr=[];
+    if(h)dr.push('HbA1c '+h+'%'); if(s>=140)dr.push('BP '+s+' mmHg'); if(e&&e<60)dr.push('eGFR '+e); if(acr>=30)dr.push('ACR '+acr+' mg/g'); if(ldl>2.6)dr.push('LDL '+ldl+' mmol/L');
+    return {score:sc,tier:tier,drivers:dr};
+  }
   window.wzRecalc=function(){
-    var r=riskScore(cand());
+    var r=liveScore();
     $('wzPct').textContent=r.score+'%'; $('wzPct').style.color=tierCol(r.tier);
     $('wzTier').textContent=r.tier+' risk';
     $('wzBar').style.width=r.score+'%'; $('wzBar').style.background=tierBar(r.tier);
@@ -1081,7 +1092,7 @@ if(!loadState())seedTasks();renderMsg();refreshMetrics();renderTasks();lgHint();
     return out;
   }
   function renderReview(){
-    var r=riskScore(cand()), name=$('enName').value||'This patient';
+    var r=liveScore(), name=$('enName').value||'This patient';
     var g=function(id,suf){var v=$(id).value;return v?(v+(suf||'')):'—';};
     var html='<div style="display:flex;gap:16px;align-items:center;flex-wrap:wrap;border:1px solid var(--bdr);border-radius:10px;padding:15px;background:var(--bg)">'+
       '<div style="display:flex;align-items:baseline;gap:9px"><div style="font-size:40px;font-weight:800;line-height:1;color:'+tierCol(r.tier)+'">'+r.score+'%</div>'+
@@ -1136,7 +1147,7 @@ if(!loadState())seedTasks();renderMsg();refreshMetrics();renderTasks();lgHint();
     var e=p.enrol||{}, L=[];
     L.push('AI risk: '+r.score+'% ('+r.tier+')'+((r.drivers&&r.drivers.length)?' — '+r.drivers.join('; '):''));
     L.push('');
-    L.push('DEMOGRAPHICS: '+p.age+'y '+(p.sex==='M'?'Male':'Female')+(p.nationality?' · '+p.nationality:'')+' · '+p.district+(p.dxYear?' · Dx '+p.dxYear:''));
+    L.push('DEMOGRAPHICS: '+p.age+'y '+(p.sex==='M'?'Male':'Female')+(p.nationality?' · '+p.nationality:'')+' · '+p.district+(p.dxYear?' · Dx '+(p.dxMonth?p.dxMonth+' ':'')+p.dxYear:''));
     L.push('GLYCAEMIC: HbA1c '+p.a1c+'%'+(e.fbs?' · FBS '+e.fbs:'')+(e.ppg?' · PPG '+e.ppg:''));
     L.push('VITALS: BP '+p.sbp+'/'+p.dbp+' · BMI '+p.bmi+((p.weight&&p.height)?' ('+p.weight+'kg / '+p.height+'cm)':''));
     L.push('LIPIDS: '+[e.tc?'TC '+e.tc:'',e.hdl?'HDL '+e.hdl:'',p.ldl?'LDL '+p.ldl:'',e.tg?'TG '+e.tg:''].filter(Boolean).join(' · '));
@@ -1169,7 +1180,7 @@ if(!loadState())seedTasks();renderMsg();refreshMetrics();renderTasks();lgHint();
     p.tc=+gv('enTc')||null; p.hdl=+gv('enHdl')||null; p.tg=+gv('enTg')||null;
     p.cr=+gv('enCr')||null; p.acr=+gv('enAcr')||null; p.ppg=+gv('enPpg')||null;
     p.height=+gv('enHt')||null; p.weight=+gv('enWt')||null; p.nationality=gv('enNat'); p.dxYear=gv('enDx');
-    p.smoking=gv('enSmoke'); p.vax=gv('enVax');
+    p.smoking=gv('enSmoke'); p.vax=gv('enVax'); p.dxMonth=gv('enDxMo');
     p.enrol={ fbs:gv('enFbs'),ppg:gv('enPpg'),tc:gv('enTc'),hdl:gv('enHdl'),tg:gv('enTg'),cr:gv('enCr'),acr:gv('enAcr'),
       cpep:gv('e-cp'),gad65:gv('e-gad65'),ia2:gv('e-ia2'),ga:gv('e-ga'),ogtt:[gv('e-ogtt0'),gv('e-ogtt1'),gv('e-ogtt2')].filter(Boolean).join('/'),
       retinal:gv('enScrEye'),foot:gv('enScrFoot'),kidney:gv('enScrKid'),neuro:gv('enScrNeuro'),smoke:gv('enSmoke'),vax:gv('enVax') };
@@ -1199,7 +1210,7 @@ if(!loadState())seedTasks();renderMsg();refreshMetrics();renderTasks();lgHint();
     toast('Imported from Raqeem (NPHIES)','Abdullah Al-Qahtani · read once, no re-keying');
   };
   function wzReset(){
-    ['enName','enMrn','enPhone','enNat','enFbs','enDx','enPpg','enRbs','enSbp','enDbp','enWt','enHt','enBmi','enTc','enLdl','enHdl','enTg','enCr','enAcr'].forEach(function(id){if($(id))$(id).value='';});
+    ['enName','enMrn','enPhone','enNat','enFbs','enDx','enDxMo','enPpg','enRbs','enSbp','enDbp','enWt','enHt','enBmi','enTc','enLdl','enHdl','enTg','enCr','enAcr'].forEach(function(id){if($(id))$(id).value='';});
     ['enScrEye','enScrFoot','enScrKid','enScrNeuro','enSmoke','enVax','enType'].forEach(function(id){if($(id))$(id).selectedIndex=0;});
     Object.keys(MM).forEach(function(id){if($(id))$(id).checked=false;});
     if($('e-other-meds'))$('e-other-meds').value='';
@@ -1209,6 +1220,7 @@ if(!loadState())seedTasks();renderMsg();refreshMetrics();renderTasks();lgHint();
     $('enEgfrNote').textContent='';
     paint();
   }
+  (function(){var dl=$('dxYears');if(dl){var y=new Date().getFullYear(),o='';for(var i=y;i>=1980;i--)o+='<option>'+i+'</option>';dl.innerHTML=o;}})();
   if($('wzSteps')) paint();
 })();
 </script>
