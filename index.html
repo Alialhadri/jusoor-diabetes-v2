@@ -598,14 +598,14 @@ button{font-family:inherit;}
         <div class="fg"><label>Patient</label><select id="edPt"></select></div>
         <div class="frow2"><div class="fg"><label>Session type</label><select id="edType"><option>Initial DSME</option><option>Follow-up DSME</option><option>Nutrition counselling</option><option>Insulin technique</option><option>Blood glucose monitoring</option><option>Foot care</option><option>Hypo management</option><option>Ramadan preparation</option></select></div><div class="fg"><label>Duration (min)</label><select id="edDur"><option>15</option><option>30</option><option selected>45</option><option>60</option><option>90</option></select></div></div>
         <div class="fg"><label>Notes</label><textarea id="edNotes" rows="2" placeholder="Topics covered, patient understanding, barriers…"></textarea></div>
-        <button class="btn btn-g btn-sm" onclick="logEdu()">Save session</button>
+        <div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn btn-o btn-sm" onclick="aiEduNote()">✦ AI draft note</button><button class="btn btn-g btn-sm" onclick="logEdu()">Save session</button></div>
       </div>
       <div class="card cp">
         <div class="fsec">Set patient goal (SMART)</div>
         <div class="fg"><label>Patient</label><select id="glPt"></select></div>
         <div class="frow2"><div class="fg"><label>Goal category</label><select id="glCat"><option>HbA1c reduction</option><option>Weight / BMI</option><option>Physical activity</option><option>Diet / nutrition</option><option>Medication adherence</option><option>Smoking cessation</option><option>Blood pressure</option></select></div><div class="fg"><label>Target date</label><input type="date" id="glDate"></div></div>
         <div class="fg"><label>Specific goal</label><textarea id="glTxt" rows="2" placeholder="e.g. Walk 30 min, 5 days/week for 8 weeks…"></textarea></div>
-        <button class="btn btn-b btn-sm" onclick="setGoal()">Set goal</button>
+        <div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn btn-o btn-sm" onclick="aiEduGoal()">✦ AI SMART goal</button><button class="btn btn-b btn-sm" onclick="setGoal()">Set goal</button></div>
       </div>
     </div>
     <div class="card cp" style="margin-bottom:14px"><div class="ch"><div><div class="ct">DSME progress — the 7 self-care behaviours</div><div class="cs">click a cell to mark a topic covered · progress updates live</div></div></div>
@@ -640,7 +640,9 @@ button{font-family:inherit;}
           <div class="fg"><label>API link (endpoint)</label><input id="airEp" autocomplete="off" placeholder="https://api.anthropic.com/v1/messages"></div>
           <div class="fg"><label>API key</label><input id="airKey" type="password" autocomplete="off" placeholder="paste API key"></div>
         </div>
+        <div class="fg" style="margin-top:11px"><label>AI model</label><input id="airModel" autocomplete="off" placeholder="claude-sonnet-4-5"></div>
         <div style="display:flex;gap:9px;align-items:center;margin-top:11px"><button class="btn btn-p btn-sm" onclick="saveApi()">Save API link</button><span id="apiStat" class="chip c-n">Not set</span></div>
+        <div class="cs" style="margin-top:9px;line-height:1.6;color:var(--mu)">For a direct Anthropic key, leave the endpoint as <code>https://api.anthropic.com/v1/messages</code>. For production, point the endpoint at your in-Kingdom proxy / Cloudflare Worker so no key is held in the browser. If AI is not connected, the buttons fall back to an on-device draft.</div>
       </div>
     </div>
     <div class="airpanel" style="margin-bottom:14px;max-width:790px"><div class="ct">Branding — clinic logo</div><div class="note" style="margin-bottom:10px">Upload your Jusoor / clinic logo (PNG, JPG or SVG, under 1.5 MB). It replaces the sidebar wordmark and is stored on this device only.</div><div style="display:flex;align-items:center;gap:14px;flex-wrap:wrap"><img id="logoPreview" alt="logo preview" style="display:none;height:48px;max-width:190px;object-fit:contain;border:1px solid var(--bdr);border-radius:8px;padding:6px;background:#fff"><input type="file" id="logoFile" accept="image/png,image/jpeg,image/svg+xml" onchange="uploadLogo(this)" style="font-size:12px"><button class="btn btn-o btn-sm" type="button" onclick="clearLogo()">Remove logo</button></div></div>
@@ -1025,8 +1027,57 @@ function toggleExt(on){var f=document.getElementById("airFields");f.style.opacit
   var __am=document.getElementById("airMode");if(__am)__am.textContent=on?"Local + External (de-identified)":"Local";
   document.getElementById("pillAI").innerHTML="<span class='d' style='background:"+(on?"var(--am)":"var(--gr)")+"'></span>"+(on?"Rule engine + external":"Rule engine · local");
   toast(on?"External adapter enabled":"External adapter off",on?"Only de-identified features sent":"All processing on-device");}
-function saveApi(){var ep=(document.getElementById("airEp")||{}).value||"",k=(document.getElementById("airKey")||{}).value||"";try{localStorage.setItem("jusoorApiEp",ep);localStorage.setItem("jusoorApiKey",k);}catch(e){}var st=document.getElementById("apiStat");if(st){st.className="chip "+(ep?"c-g":"c-n");st.textContent=ep?"Saved":"Not set";}toast(ep?"API link saved":"API link cleared",ep?"Stored locally on this device":"");}
-(function(){try{var ep=localStorage.getItem("jusoorApiEp")||"",k=localStorage.getItem("jusoorApiKey")||"";var e1=document.getElementById("airEp");if(e1)e1.value=ep;var e2=document.getElementById("airKey");if(e2)e2.value=k;var st=document.getElementById("apiStat");if(st&&ep){st.className="chip c-g";st.textContent="Saved";}}catch(e){}})();
+function saveApi(){var ep=(document.getElementById("airEp")||{}).value||"",k=(document.getElementById("airKey")||{}).value||"",m=(document.getElementById("airModel")||{}).value||"";try{localStorage.setItem("jusoorApiEp",ep);localStorage.setItem("jusoorApiKey",k);localStorage.setItem("jusoorApiModel",m);}catch(e){}var st=document.getElementById("apiStat");if(st){st.className="chip "+((ep||k)?"c-g":"c-n");st.textContent=(ep||k)?"Saved":"Not set";}toast((ep||k)?"AI settings saved":"AI settings cleared",(ep||k)?"Stored locally on this device":"");}
+(function(){try{var ep=localStorage.getItem("jusoorApiEp")||"",k=localStorage.getItem("jusoorApiKey")||"",m=localStorage.getItem("jusoorApiModel")||"";var e1=document.getElementById("airEp");if(e1)e1.value=ep;var e2=document.getElementById("airKey");if(e2)e2.value=k;var e3=document.getElementById("airModel");if(e3)e3.value=m;var st=document.getElementById("apiStat");if(st&&(ep||k)){st.className="chip c-g";st.textContent="Saved";}}catch(e){}})();
+/* ===== Education AI (configurable endpoint + local fallback; no key ever stored in code) ===== */
+function aiCfg(){return {ep:(localStorage.getItem("jusoorApiEp")||"").trim(),key:(localStorage.getItem("jusoorApiKey")||"").trim(),model:(localStorage.getItem("jusoorApiModel")||"claude-sonnet-4-5").trim()};}
+function aiReady(){var c=aiCfg();return !!(c.key||c.ep);}
+function aiComplete(prompt,maxTok){var c=aiCfg();var url=c.ep||"https://api.anthropic.com/v1/messages";
+  var headers={"Content-Type":"application/json"},body;
+  if(c.ep&&!/api\.anthropic\.com/.test(c.ep)){ // proxy / OpenAI-style local server
+    body=JSON.stringify({model:c.model,max_tokens:maxTok||600,messages:[{role:"user",content:prompt}]});
+  } else {
+    headers["x-api-key"]=c.key;headers["anthropic-version"]="2023-06-01";headers["anthropic-dangerous-direct-browser-access"]="true";
+    body=JSON.stringify({model:c.model,max_tokens:maxTok||600,messages:[{role:"user",content:prompt}]});
+  }
+  return fetch(url,{method:"POST",headers:headers,body:body}).then(function(r){return r.json();}).then(function(d){
+    if(d.error)throw new Error(d.error.message||"AI error");
+    if(d.content&&d.content[0]&&d.content[0].text)return d.content[0].text.trim();      // Anthropic
+    if(d.choices&&d.choices[0]&&d.choices[0].message)return (d.choices[0].message.content||"").trim(); // OpenAI/proxy
+    throw new Error("Unexpected AI response");});
+}
+function eduPatient(sel){var id=+document.getElementById(sel).value;return patients[id];}
+function localNote(p){var pct=dsmePct(p);var pending=DSME_KEYS.filter(function(k){return !p.dsme||!p.dsme[k];});
+  var ctrl=p.a1c>=9?"uncontrolled":p.a1c>=7.5?"above target":"near target";
+  return "DSME session — "+(document.getElementById("edType").value)+".\n"+
+    "• Diabetes type "+p.type+"; HbA1c "+p.a1c+"% ("+ctrl+"), BP "+p.sbp+"/"+p.dbp+", BMI "+p.bmi+".\n"+
+    "• Topics reviewed today; patient understanding: fair–good.\n"+
+    "• Barriers discussed: adherence and diet; teach-back completed.\n"+
+    "• Self-care progress "+pct+"%. Focus next: "+(pending.slice(0,3).join(", ")||"maintenance")+".\n"+
+    "• Plan: reinforce priority topics, review in 4 weeks.";}
+function localGoal(p){var cat=document.getElementById("glCat").value;
+  var m={"HbA1c reduction":"Reduce HbA1c by 1% within 3 months through medication adherence and diet.",
+    "Weight / BMI":"Lose 3 kg over 8 weeks via 30-min daily walking and portion control.",
+    "Physical activity":"Walk 30 minutes, 5 days a week, for the next 8 weeks.",
+    "Diet / nutrition":"Cut sugary drinks to zero and limit rice to one portion/day for 6 weeks.",
+    "Medication adherence":"Take all diabetes medications daily with <2 missed doses per month.",
+    "Smoking cessation":"Reduce to zero cigarettes within 8 weeks with cessation support.",
+    "Blood pressure":"Reach BP <130/80 within 12 weeks via medication and low-salt diet."};
+  return m[cat]||"Achieve a specific, measurable self-management target within 8 weeks.";}
+function aiEduNote(){var p=eduPatient("edPt");if(!p){toast("Select a patient first");return;}
+  var ta=document.getElementById("edNotes");
+  if(!aiReady()){ta.value=localNote(p);toast("Draft note added (on-device)","Connect AI in Settings for live AI");return;}
+  var prev=ta.value;ta.value="✦ Drafting with AI…";
+  var prompt="You are a diabetes nurse educator. Draft concise DSME session notes (5-7 short lines) in English: topics covered, patient understanding, barriers, next-step plan. De-identified patient (no name/MRN): "+p.type+" diabetes, HbA1c "+p.a1c+"%, BP "+p.sbp+"/"+p.dbp+", BMI "+p.bmi+", eGFR "+p.egfr+". Session type: "+document.getElementById("edType").value+". Return plain text only, no preamble.";
+  aiComplete(prompt,700).then(function(t){ta.value=t||localNote(p);toast("AI note drafted","Review & edit before saving");})
+    .catch(function(e){ta.value=localNote(p);toast("AI unavailable — used on-device draft",(e&&e.message)||"");});}
+function aiEduGoal(){var p=eduPatient("glPt");if(!p){toast("Select a patient first");return;}
+  var ta=document.getElementById("glTxt");
+  if(!aiReady()){ta.value=localGoal(p);if(!document.getElementById("glDate").value)document.getElementById("glDate").value=new Date(Date.now()+90*86400000).toISOString().slice(0,10);toast("SMART goal added (on-device)","Connect AI in Settings for live AI");return;}
+  var prev=ta.value;ta.value="✦ Drafting…";
+  var prompt="Write ONE SMART goal (specific, measurable, achievable, relevant, time-bound) as a single sentence, category '"+document.getElementById("glCat").value+"', for a de-identified patient: "+p.type+" diabetes, HbA1c "+p.a1c+"%, BMI "+p.bmi+". Return only the goal sentence, no preamble or quotes.";
+  aiComplete(prompt,300).then(function(t){ta.value=(t||localGoal(p)).replace(/^["']|["']$/g,"");if(!document.getElementById("glDate").value)document.getElementById("glDate").value=new Date(Date.now()+90*86400000).toISOString().slice(0,10);toast("AI goal drafted","Review & click Set goal");})
+    .catch(function(e){ta.value=localGoal(p);toast("AI unavailable — used on-device draft",(e&&e.message)||"");});}
 /* ---------- education & goals (DSME) ---------- */
 var DSME_KEYS=["disease","meds","nutrition","activity","glucose","foot","hypo"];
 function seedEdu(p){if(p.dsme)return;p.dsme={};DSME_KEYS.forEach(function(k,idx){p.dsme[k]=((p.id+idx)%4===0);});p.eduSessions=p.eduSessions||[];p.goals=p.goals||[];}
