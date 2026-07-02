@@ -196,12 +196,10 @@ button{font-family:inherit;}
     <div class="sb-sec">Clinical</div>
     <div class="nav on" data-v="dash"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg></span>Dashboard<span class="bdg bg-r" id="bDash">0</span></div>
     <div class="nav" data-v="clinicday"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg></span>Today's Clinic<span class="bdg bg-b" id="bCD">0</span></div>
-    <div class="nav" data-v="worklist"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 5h16M4 12h16M4 19h10"/></svg></span>Morning Worklist<span class="bdg bg-a" id="bWork">0</span></div>
     <div class="nav" data-v="registry"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/></svg></span>Patient Registry<span class="bdg bg-b" id="bReg">0</span></div>
     <div class="nav" data-v="orders"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 11l3 3L22 4M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg></span>Orders &amp; Results<span class="bdg bg-r" id="bOrd">0</span></div>
     <div class="sb-sec">Care Management</div>
-    <div class="nav" data-v="recall"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 12a9 9 0 1 0 3-6.7L3 8M3 3v5h5"/></svg></span>Recall Engine<span class="bdg bg-a" id="bRec">0</span></div>
-    <div class="nav" data-v="coverage"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg></span>Care Gaps &amp; Coverage<span class="bdg bg-r" id="bCov">0</span></div>
+    <div class="nav" data-v="recall"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 12a9 9 0 1 0 3-6.7L3 8M3 3v5h5"/></svg></span>Care Gaps &amp; Recall<span class="bdg bg-a" id="bRec">0</span></div>
     <div class="nav" data-v="pathway"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 3v12a3 3 0 0 0 3 3h6M6 3a2 2 0 1 0 0 .01M15 18a2 2 0 1 0 4 0 2 2 0 0 0-4 0"/></svg></span>Standard Work</div>
     <div class="sb-sec">Coordination</div>
     <div class="nav" data-v="enrol"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 5v14M5 12h14"/></svg></span>Enrol Patient</div>
@@ -247,7 +245,7 @@ button{font-family:inherit;}
       <div class="kpi" style="--c:var(--rd)" onclick="openReg('all','High')"><div class="kv" id="kHigh">0</div><div class="kl">High Risk</div><div class="ks link">Action required today</div></div>
       <div class="kpi" style="--c:var(--am)" onclick="openReg('all','Moderate')"><div class="kv" id="kFu">0</div><div class="kl">Follow-up Needed</div><div class="ks">Within 7 days</div></div>
       <div class="kpi" style="--c:var(--gr)" onclick="openReg('all','Low')"><div class="kv" id="kStable">0</div><div class="kl">Stable</div><div class="ks">On target</div></div>
-      <div class="kpi" style="--c:var(--te)" onclick="show('coverage')"><div class="kv" id="kScr">0%</div><div class="kl">Screening Coverage</div><div class="ks">Annual protocol</div></div>
+      <div class="kpi" style="--c:var(--te)" onclick="show('recall')"><div class="kv" id="kScr">0%</div><div class="kl">Screening Coverage</div><div class="ks">Annual protocol</div></div>
     </div>
     <div class="card cp" style="margin-bottom:14px">
       <div class="ch"><div><div class="ct">Order-to-completion — flow &amp; waste at a glance</div><div class="cs">where work is waiting between the clinical order and the outcome · click to recover</div></div><button class="btn btn-o btn-sm" onclick="show('orders')">Open order tracker</button></div>
@@ -271,11 +269,7 @@ button{font-family:inherit;}
       <div class="card cp"><div class="ch"><div><div class="ct">Panel HbA1c — 4-Quarter Trend</div><div class="cs">All enrolled patients</div></div></div><div style="height:200px"><canvas id="chTrend"></canvas></div></div>
       <div class="card cp"><div class="ch"><div><div class="ct">Risk Stratification</div><div class="cs">By DM type · rule-based scoring</div></div></div><div style="height:200px"><canvas id="chRisk"></canvas></div></div>
     </div>
-  </div>
-
-  <!-- WORKLIST -->
-  <div class="view" id="v-worklist">
-    <div class="card cp" style="margin-bottom:14px"><div class="ch"><div><div class="ct">Morning worklist</div><div class="cs">Uncontrolled, overdue screening and high dropout risk — highest clinical need first</div></div><button class="btn btn-g btn-sm" onclick="recallAllDue()">Recall all due</button></div></div>
+    <div class="card cp" style="margin:14px 0"><div class="ch"><div><div class="ct">Morning worklist — highest clinical need first</div><div class="cs">Uncontrolled, overdue screening and high dropout risk</div></div><button class="btn btn-g btn-sm" onclick="recallAllDue()">Recall all due</button></div></div>
     <div id="workList"></div>
   </div>
 
@@ -307,11 +301,7 @@ button{font-family:inherit;}
       <div class="kpi" style="--c:var(--am)"><div class="kv" id="recHb" style="color:var(--am)">0</div><div class="kl">HbA1c due / overdue</div><div class="ks">≥ 3 months since last</div></div>
       <div class="kpi" style="--c:var(--rd)"><div class="kv" id="recScr" style="color:var(--rd)">0</div><div class="kl">Screening due / overdue</div><div class="ks">annual cadence</div></div>
     </div>
-    <div class="card cp"><div class="ct" style="margin-bottom:11px">Due this cycle</div><div id="recList"></div></div>
-  </div>
-
-  <!-- COVERAGE -->
-  <div class="view" id="v-coverage">
+    <div class="card cp" style="margin-bottom:14px"><div class="ct" style="margin-bottom:11px">Due this cycle</div><div id="recList"></div></div>
     <div class="card cp" style="margin-bottom:14px"><div class="ct" style="margin-bottom:11px">Complication-screening coverage</div><div class="cs" style="margin-bottom:13px">The same "who is overdue" engine, applied to the three places diabetes coverage quietly leaks. Drive each toward target.</div><div id="covBars"></div></div>
     <div class="card cp"><div class="ch"><div><div class="ct">Open care gaps — worklist</div><div class="cs">order-to-completion · each gap is something to recover</div></div><button class="btn btn-g btn-sm" onclick="recallAllDue()">Recall all due</button></div><div id="gapList"></div></div>
   </div>
@@ -376,7 +366,8 @@ button{font-family:inherit;}
             <div class="fg"><label>Sex</label><select id="enSex"><option>Male</option><option>Female</option></select></div>
             <div class="fg"><label>Phone</label><input id="enPhone" placeholder="+9665XXXXXXX"></div>
           </div>
-          <div class="frow2"><div class="fg"><label>Nationality</label><input id="enNat" placeholder="Saudi"></div><div class="fg"><label>PHC centre</label><select id="enCtr"><option>Al-Olaya</option><option>Al-Malaz</option><option>Al-Wazarat</option><option>Al-Naseem</option><option>Al-Yarmouk</option></select></div></div>
+          <div class="frow2"><div class="fg"><label>Nationality</label><input id="enNat" list="natList" placeholder="Type or pick a country…"><datalist id="natList"><option>Saudi<option>Yemeni<option>Egyptian<option>Sudanese<option>Syrian<option>Jordanian<option>Palestinian<option>Lebanese<option>Iraqi<option>Kuwaiti<option>Bahraini<option>Qatari<option>Emirati<option>Omani<option>Pakistani<option>Indian<option>Bangladeshi<option>Sri Lankan<option>Nepali<option>Filipino<option>Indonesian<option>Malaysian<option>Afghan<option>Iranian<option>Turkish<option>Moroccan<option>Algerian<option>Tunisian<option>Libyan<option>Somali<option>Eritrean<option>Ethiopian<option>Nigerian<option>Ghanaian<option>Kenyan<option>British<option>American<option>Canadian<option>French<option>German<option>Italian<option>Spanish<option>Chinese<option>Japanese<option>Korean<option>Other</datalist></div><div class="fg"><label>PHC centre</label><select id="enCtr"><option>Al-Olaya</option><option>Al-Malaz</option><option>Al-Wazarat</option><option>Al-Naseem</option><option>Al-Yarmouk</option></select></div></div>
+          <div class="fg"><label>Reason for enrolment</label><input id="enReason" list="reasonList" placeholder="Start typing… e.g. Newly diagnosed T2DM"><datalist id="reasonList"><option>Newly diagnosed T2DM, poorly controlled<option>Newly diagnosed type 1 DM<option>Newly diagnosed gestational DM<option>Uncontrolled HbA1c — treatment intensification<option>Insulin initiation required<option>Diabetic kidney disease (CKD)<option>Poor medication adherence<option>Referred from emergency department<option>Pre-diabetes — prevention programme<option>Annual diabetes review<option>Recurrent hypoglycaemia<option>Diabetic foot risk</datalist></div>
           <div class="note">Entered once, this record flows to the registry, worklists, recall engine and messages — no double entry. Where the Raqeem / hospital feed is available it pre-fills; manual entry always works.</div>
         </div>
 
@@ -813,7 +804,7 @@ function show(v){var el=document.getElementById("v-"+v);if(!el)return;
   document.querySelectorAll(".nav").forEach(function(n){n.classList.toggle("on",n.getAttribute("data-v")===v);});
   document.getElementById("topT").innerHTML=TITLES[v][0];document.getElementById("topS").innerHTML=TITLES[v][1];
   document.querySelector(".content").scrollTop=0;
-  if(v==="clinicday")renderClinicDay();if(v==="registry")renderReg();if(v==="worklist")renderWork();if(v==="orders")renderOrders();if(v==="recall")renderRecall();if(v==="coverage")renderCoverage();if(v==="pathway")renderPathway();if(v==="tasks")renderTasks();if(v==="physician")renderPhys();if(v==="analytics")renderAnalytics();if(v==="messages")renderMsg();if(v==="edu")renderEdu();}
+  if(v==="clinicday"){renderClinicDay();renderWork();}if(v==="registry")renderReg();if(v==="orders")renderOrders();if(v==="recall"){renderRecall();renderCoverage();}if(v==="pathway")renderPathway();if(v==="tasks")renderTasks();if(v==="physician")renderPhys();if(v==="analytics")renderAnalytics();if(v==="messages")renderMsg();if(v==="edu")renderEdu();}
 document.querySelectorAll(".nav").forEach(function(n){n.onclick=function(){show(n.getAttribute("data-v"));};});
 
 /* ---------- registry ---------- */
@@ -993,13 +984,13 @@ function refreshMetrics(){
   var rec=patients.filter(dueForRecall).length;
   document.getElementById("lnLab").textContent=lab;document.getElementById("lnMed").textContent=med;document.getElementById("lnRes").textContent=res;document.getElementById("lnRec").textContent=rec;
   document.getElementById("bDash").textContent=tiers.filter(function(t){return t==="High";}).length;
-  document.getElementById("bWork").textContent=priQueue().length;
+  var _bw=document.getElementById("bWork");if(_bw)_bw.textContent=priQueue().length;var _bcd=document.getElementById("bCD");
   document.getElementById("bReg").textContent=patients.length;
   var _be=document.getElementById("bEdu");if(_be){var _ep=patients.filter(function(p){seedEdu(p);return dsmePct(p)<100;}).length;_be.textContent=_ep;}
   var bcd=document.getElementById("bCD");if(bcd)bcd.textContent=todayList().length;
   document.getElementById("bOrd").textContent=lab+med+res;
   document.getElementById("bRec").textContent=rec;
-  document.getElementById("bCov").textContent=patients.filter(function(p){return gaps(p).length;}).length;
+  var _bcov=document.getElementById("bCov");if(_bcov)_bcov.textContent=patients.filter(function(p){return gaps(p).length;}).length;
   drawCharts();
 }
 function drawCharts(){
@@ -1092,16 +1083,16 @@ function setGoal(){var id=+document.getElementById("glPt").value,p=patients[id];
   p.goals.push({cat:document.getElementById("glCat").value,txt:t,date:document.getElementById("glDate").value||''});
   document.getElementById("glTxt").value="";renderEdu();if(typeof saveState==="function")saveState();toast("Goal set",p.name);}
 
-function refreshAll(){refreshMetrics();if(document.getElementById("v-registry").classList.contains("on"))renderReg();if(document.getElementById("v-worklist").classList.contains("on"))renderWork();if(document.getElementById("v-orders").classList.contains("on"))renderOrders();if(document.getElementById("v-recall").classList.contains("on"))renderRecall();if(document.getElementById("v-coverage").classList.contains("on"))renderCoverage();if(document.getElementById("v-pathway").classList.contains("on"))renderPathway();renderTasks();saveState();}
+function refreshAll(){refreshMetrics();if(document.getElementById("v-registry").classList.contains("on"))renderReg();if(document.getElementById("v-clinicday").classList.contains("on"))renderWork();if(document.getElementById("v-orders").classList.contains("on"))renderOrders();if(document.getElementById("v-recall").classList.contains("on")){renderRecall();renderCoverage();}if(document.getElementById("v-pathway").classList.contains("on"))renderPathway();renderTasks();saveState();}
 
 /* ---------- reactivity / roles / upload ---------- */
 function openReg(tf,rf){regFilter=tf||"all";var sel=document.getElementById("regRisk");if(sel)sel.value=rf||"";var pills=document.querySelectorAll("#v-registry .fp");pills.forEach(function(b,i){b.classList.toggle("on",(regFilter==="all"&&i===0)||(regFilter==="T2"&&i===1)||(regFilter==="T1"&&i===2)||(regFilter==="GDM"&&i===3));});show("registry");}
 function openOrders(f){ordF=f;show("orders");}
 var ROLES={
- "Diabetes Nurse":{pw:"nurse",name:"Nurse Mona Al-Zahrani",title:"Diabetes Nurse",av:"MZ",nav:["dash","clinicday","worklist","registry","orders","recall","coverage","tasks","messages","enrol","edu","settings"],land:"clinicday"},
- "Physician":{pw:"physician",name:"Dr. Khalid Al-Otaibi",title:"Endocrinologist",av:"KA",nav:["dash","clinicday","registry","orders","physician","pathway","coverage","recall","edu","settings"],land:"clinicday"},
+ "Diabetes Nurse":{pw:"nurse",name:"Nurse Mona Al-Zahrani",title:"Diabetes Nurse",av:"MZ",nav:["dash","clinicday","registry","orders","recall","tasks","messages","enrol","edu","settings"],land:"clinicday"},
+ "Physician":{pw:"physician",name:"Dr. Khalid Al-Otaibi",title:"Endocrinologist",av:"KA",nav:["dash","clinicday","registry","orders","physician","pathway","recall","edu","settings"],land:"clinicday"},
  "Diabetes Educator":{pw:"educator",name:"Reem Al-Dosari",title:"Diabetes Educator",av:"RD",nav:["dash","registry","edu","messages","coverage","recall","enrol","settings"],land:"edu"},
- "Care Coordinator":{pw:"coordinator",name:"Sarah Al-Ghamdi",title:"Care Coordinator",av:"SG",nav:["dash","clinicday","worklist","registry","orders","recall","coverage","tasks","messages","enrol","edu","naphies","analytics","settings"],land:"worklist"}
+ "Care Coordinator":{pw:"coordinator",name:"Sarah Al-Ghamdi",title:"Care Coordinator",av:"SG",nav:["dash","clinicday","registry","orders","recall","tasks","messages","enrol","edu","naphies","analytics","settings"],land:"clinicday"}
 };
 function lgHint(){var r=document.getElementById("lgRole").value,c=ROLES[r];document.getElementById("lgPass").value=c.pw;document.getElementById("lgHint").textContent="Pilot credentials — "+r+" / "+c.pw+" · processing on-device, Riyadh";}
 function doLogin(){var r=document.getElementById("lgRole").value,pw=document.getElementById("lgPass").value;if(pw!==ROLES[r].pw){toast("Incorrect password","Use the pilot password shown for the role");return;}applyRole(r,document.getElementById("lgName").value);}
@@ -1325,6 +1316,7 @@ if(!loadState())seedTasks();renderMsg();refreshMetrics();renderTasks();lgHint();
     L.push('AI risk: '+r.score+'% ('+r.tier+')'+((r.drivers&&r.drivers.length)?' — '+r.drivers.join('; '):''));
     L.push('');
     L.push('DEMOGRAPHICS: '+p.age+'y '+(p.sex==='M'?'Male':'Female')+(p.nationality?' · '+p.nationality:'')+' · '+p.district+(p.dxYear?' · Dx '+(p.dxMonth?p.dxMonth+' ':'')+p.dxYear:''));
+    if(p.reason)L.push('REASON FOR ENROLMENT: '+p.reason);
     L.push('GLYCAEMIC: HbA1c '+p.a1c+'%'+(e.fbs?' · FBS '+e.fbs:'')+(e.ppg?' · PPG '+e.ppg:''));
     L.push('VITALS: BP '+p.sbp+'/'+p.dbp+' · BMI '+p.bmi+((p.weight&&p.height)?' ('+p.weight+'kg / '+p.height+'cm)':''));
     L.push('LIPIDS: '+[e.tc?'TC '+e.tc:'',e.hdl?'HDL '+e.hdl:'',p.ldl?'LDL '+p.ldl:'',e.tg?'TG '+e.tg:''].filter(Boolean).join(' · '));
@@ -1358,7 +1350,7 @@ if(!loadState())seedTasks();renderMsg();refreshMetrics();renderTasks();lgHint();
     var gv=function(id){return ($(id)&&$(id).value)||'';};
     p.tc=+gv('enTc')||null; p.hdl=+gv('enHdl')||null; p.tg=+gv('enTg')||null;
     p.cr=+gv('enCr')||null; p.acr=+gv('enAcr')||null; p.ppg=+gv('enPpg')||null;
-    p.height=+gv('enHt')||null; p.weight=+gv('enWt')||null; p.nationality=gv('enNat'); p.dxYear=gv('enDx');
+    p.height=+gv('enHt')||null; p.weight=+gv('enWt')||null; p.nationality=gv('enNat'); p.reason=gv('enReason'); p.dxYear=gv('enDx');
     p.smoking=gv('enSmoke'); p.vax=gv('enVax'); p.dxMonth=gv('enDxMo');
     p.labs=(wz.labs||[]).slice();
     p.dsme={}; DSME_KEYS.forEach(function(k){p.dsme[k]=false;});
@@ -1397,7 +1389,7 @@ if(!loadState())seedTasks();renderMsg();refreshMetrics();renderTasks();lgHint();
     toast('Imported from Raqeem (NPHIES)','Abdullah Al-Qahtani · read once, no re-keying');
   };
   function wzReset(){
-    ['enName','enMrn','enPhone','enNat','enFbs','enDx','enDxMo','enPpg','enRbs','enSbp','enDbp','enWt','enHt','enBmi','enTc','enLdl','enHdl','enTg','enCr','enAcr'].forEach(function(id){if($(id))$(id).value='';});
+    ['enName','enMrn','enPhone','enNat','enReason','enFbs','enDx','enDxMo','enPpg','enRbs','enSbp','enDbp','enWt','enHt','enBmi','enTc','enLdl','enHdl','enTg','enCr','enAcr'].forEach(function(id){if($(id))$(id).value='';});
     ['enScrEye','enScrFoot','enScrKid','enScrNeuro','enSmoke','enVax','enType'].forEach(function(id){if($(id))$(id).selectedIndex=0;});
     ['enScrEyeD','enScrFootD','enScrKidD','enScrNeuroD','enDxMo'].forEach(function(id){if($(id))$(id).value='';});
     Object.keys(MM).forEach(function(id){if($(id))$(id).checked=false;});
