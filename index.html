@@ -191,8 +191,7 @@ button{font-family:inherit;}
 </div>
 
 <aside class="sb">
-  <div class="sb-brand"><img id="sbLogo" alt="logo" style="display:none;max-height:42px;max-width:170px;object-fit:contain"><div class="sb-name" id="sbName">Jusoor</div><div class="sb-ar" id="sbAr">جسور · DIABETES</div></div>
-  <div class="sb-role"><span class="dot"></span><span id="sbRole">PHC Coordinator · Riyadh</span></div>
+  <div class="sb-brand"><img id="sbLogo" alt="logo" style="display:none;max-height:42px;max-width:170px;object-fit:contain"><div class="sb-name" id="sbName">Jusoor</div><div class="sb-ar" id="sbAr">Diabetes</div></div>
   <div class="sb-scroll">
     <div class="sb-sec">Clinical</div>
     <div class="nav on" data-v="dash"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg></span>Dashboard<span class="bdg bg-r" id="bDash">0</span></div>
@@ -390,7 +389,7 @@ button{font-family:inherit;}
             <div class="fg"><label>Diagnosis (month / year)</label><div style="display:flex;gap:6px"><input id="enDxMo" list="dxMonths" placeholder="Month" style="flex:1"><input id="enDx" list="dxYears" placeholder="Year" inputmode="numeric" style="flex:1"></div><datalist id="dxMonths"><option>Jan</option><option>Feb</option><option>Mar</option><option>Apr</option><option>May</option><option>Jun</option><option>Jul</option><option>Aug</option><option>Sep</option><option>Oct</option><option>Nov</option><option>Dec</option></datalist><datalist id="dxYears"></datalist></div>
           </div>
           <div class="frow2"><div class="fg"><label>PPG (mmol/L)</label><input id="enPpg" type="number" step="0.1" placeholder="post-prandial"></div><div class="fg"><label>Random glucose (mmol/L)</label><input id="enRbs" type="number" step="0.1" placeholder="optional"></div></div>
-          <div class="fsec" style="margin-top:16px">Additional labs — pick from the list or add a custom one</div>
+          <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;margin-top:16px;border-bottom:2px solid var(--bll);padding-bottom:7px;margin-bottom:11px"><div style="font-size:9.5px;font-weight:700;color:var(--nv);text-transform:uppercase;letter-spacing:.07em">Additional labs — pick from the list or add a custom one</div><button type="button" class="btn btn-b btn-sm" onclick="wzAddDiabeticPanel()">✓ Add standard diabetes panel (one tick)</button></div>
           <div style="display:grid;grid-template-columns:1.4fr 1fr .8fr .9fr auto;gap:8px;align-items:end">
             <div class="fg" style="margin:0"><label>Lab</label><input id="labName" list="labList" placeholder="e.g. TSH" onchange="labUnitHint()"><datalist id="labList"><option>HbA1c<option>Fasting glucose<option>Total cholesterol<option>LDL cholesterol<option>HDL cholesterol<option>Triglycerides<option>Urine ACR<option>Serum creatinine<option>eGFR<option>TSH<option>Free T4<option>Vitamin B12<option>Vitamin D (25-OH)<option>ALT<option>AST<option>Potassium<option>Sodium<option>Haemoglobin<option>HbF<option>Ferritin<option>C-peptide<option>Urine microalbumin<option>CRP</datalist></div>
             <div class="fg" style="margin:0"><label>Value</label><input id="labVal" placeholder="value" inputmode="decimal"></div>
@@ -620,6 +619,17 @@ button{font-family:inherit;}
     </div>
     <div class="card cp" style="margin-bottom:14px"><div class="ch"><div><div class="ct">DSME progress — the 7 self-care behaviours</div><div class="cs">click a cell to mark a topic covered · progress updates live</div></div></div>
       <div class="tw"><table class="tbl dsme"><thead><tr><th>Patient</th><th>Type</th><th>Disease</th><th>Meds</th><th>Nutrition</th><th>Activity</th><th>Glucose</th><th>Foot care</th><th>Hypo</th><th>Progress</th></tr></thead><tbody id="edBody"></tbody></table></div>
+    </div>
+    <div class="card cp" style="margin-bottom:14px">
+      <div class="ch"><div><div class="ct">Care-team coordination — nurse ↔ educator ↔ physician</div><div class="cs">message the team about a patient, and push a follow-up onto the worklist / care tasks</div></div></div>
+      <div class="frow3" style="align-items:end">
+        <div class="fg" style="margin:0"><label>Patient</label><select id="tmPt"></select></div>
+        <div class="fg" style="margin:0"><label>From</label><select id="tmFrom"><option>Diabetes Nurse</option><option>Diabetes Educator</option><option>Physician</option><option>Care Coordinator</option></select></div>
+        <div class="fg" style="margin:0"><label>Assign follow-up to</label><select id="tmTo"><option>Diabetes Educator</option><option>Diabetes Nurse</option><option>Physician</option><option>Care Coordinator</option></select></div>
+      </div>
+      <div class="fg" style="margin-top:10px"><label>Message / action</label><textarea id="tmMsg" rows="2" placeholder="e.g. Patient needs an insulin-technique session before the next visit…"></textarea></div>
+      <div style="display:flex;gap:8px"><button class="btn btn-b btn-sm" onclick="postTeamMsg()">Post to care team</button><button class="btn btn-g btn-sm" onclick="addTeamTask()">＋ Add to worklist</button></div>
+      <div id="tmThread" style="margin-top:12px"></div>
     </div>
     <div class="card cp"><div class="ct" style="margin-bottom:9px">Recent sessions &amp; active goals</div><div id="edLog"></div></div>
   </div>
@@ -1053,7 +1063,24 @@ function renderEdu(){
     return "<div style='padding:8px 0;border-bottom:1px solid var(--bdr);font-size:12px'><span class='chip c-b'>Goal</span> <b>"+it.p.name+"</b> · "+it.x.cat+": "+it.x.txt+(it.x.date?" (by "+it.x.date+")":"")+"</div>";
   }).join(""):"<div class='note'>No sessions or goals logged yet.</div>";
   var be=document.getElementById("bEdu");if(be)be.textContent=pend;
+  renderTeam();
 }
+function renderTeam(){
+  var tp=document.getElementById("tmPt");if(!tp)return;
+  var opts=patients.map(function(p){return "<option value='"+p.id+"'>"+p.name+" · "+p.mrn+"</option>";}).join("");
+  var v=tp.value;tp.innerHTML=opts;if(v)tp.value=v;
+  var msgs=[];patients.forEach(function(p){(p.teamMsgs||[]).forEach(function(m){msgs.push({p:p,m:m});});});
+  var box=document.getElementById("tmThread");if(!box)return;
+  box.innerHTML=msgs.length?msgs.slice(-14).reverse().map(function(it){return "<div style='padding:7px 10px;border:1px solid var(--bdr);border-radius:7px;margin-bottom:6px;font-size:11.5px;background:var(--sur)'><div style='font-size:10px;font-weight:700;color:var(--bl);margin-bottom:2px'>"+it.m.from+" · "+it.p.name+(it.m.to?" → "+it.m.to:"")+" · "+it.m.date+"</div>"+it.m.text+"</div>";}).join(""):"<div class='note'>No care-team messages yet.</div>";
+}
+function postTeamMsg(){var id=+document.getElementById("tmPt").value,p=patients[id];if(!p)return;var t=(document.getElementById("tmMsg").value||'').trim();if(!t){toast("Write a message first");return;}
+  p.teamMsgs=p.teamMsgs||[];p.teamMsgs.push({from:document.getElementById("tmFrom").value,to:'',text:t,date:daysAgo(0)});
+  document.getElementById("tmMsg").value='';renderTeam();if(typeof saveState==="function")saveState();toast("Posted to care team",p.name);}
+function addTeamTask(){var id=+document.getElementById("tmPt").value,p=patients[id];if(!p)return;var t=(document.getElementById("tmMsg").value||'').trim(),to=document.getElementById("tmTo").value,from=document.getElementById("tmFrom").value;
+  var roleMap={"Diabetes Nurse":"Nurse","Diabetes Educator":"Educator","Physician":"Physician","Care Coordinator":"Coordinator"};
+  addTask(p.id, t||("Care-team follow-up ("+to+")"), roleMap[to]||to);
+  p.teamMsgs=p.teamMsgs||[];p.teamMsgs.push({from:from,to:to,text:(t||"Follow-up")+" — added to worklist",date:daysAgo(0)});
+  document.getElementById("tmMsg").value='';renderTeam();renderTasks();refreshMetrics();if(typeof saveState==="function")saveState();toast("Added to worklist","Assigned to "+to);}
 function toggleDsme(id,k){var p=patients[id];seedEdu(p);p.dsme[k]=!p.dsme[k];renderEdu();if(typeof saveState==="function")saveState();}
 function logEdu(){var id=+document.getElementById("edPt").value,p=patients[id];if(!p)return;seedEdu(p);var typ=document.getElementById("edType").value,dur=document.getElementById("edDur").value,notes=(document.getElementById("edNotes").value||'').trim();
   p.eduSessions.push({type:typ,dur:dur,notes:notes,date:daysAgo(0)});
@@ -1078,7 +1105,7 @@ var ROLES={
 };
 function lgHint(){var r=document.getElementById("lgRole").value,c=ROLES[r];document.getElementById("lgPass").value=c.pw;document.getElementById("lgHint").textContent="Pilot credentials — "+r+" / "+c.pw+" · processing on-device, Riyadh";}
 function doLogin(){var r=document.getElementById("lgRole").value,pw=document.getElementById("lgPass").value;if(pw!==ROLES[r].pw){toast("Incorrect password","Use the pilot password shown for the role");return;}applyRole(r,document.getElementById("lgName").value);}
-function applyRole(r,nm){var c=ROLES[r];var named=nm&&nm.trim();document.getElementById("sbUn").textContent=named?nm:c.name;document.getElementById("sbUc").textContent=c.title;document.getElementById("sbAv").textContent=named?nm.trim().split(" ").map(function(x){return x[0];}).join("").slice(0,2).toUpperCase():c.av;document.getElementById("sbRole").textContent=c.title+" · Riyadh";
+function applyRole(r,nm){var c=ROLES[r];var named=nm&&nm.trim();document.getElementById("sbUn").textContent=named?nm:c.name;document.getElementById("sbUc").textContent=c.title;document.getElementById("sbAv").textContent=named?nm.trim().split(" ").map(function(x){return x[0];}).join("").slice(0,2).toUpperCase():c.av;var _sbR=document.getElementById("sbRole");if(_sbR)_sbR.textContent=c.title+" · Riyadh";
  document.querySelectorAll(".nav").forEach(function(n){n.style.display=c.nav.indexOf(n.getAttribute("data-v"))>-1?"":"none";});
  document.getElementById("login").style.display="none";show(c.land);toast("Signed in — "+r,c.name);}
 function logout(){document.getElementById("login").style.display="flex";}
@@ -1276,6 +1303,10 @@ if(!loadState())seedTasks();renderMsg();refreshMetrics();renderTasks();lgHint();
     ['labName','labVal','labUnit','labDate'].forEach(function(k){if($(k))$(k).value='';});
     wzRenderLabs();if($('labName'))$('labName').focus();toast('Lab added',n);};
   window.wzDelLab=function(i){(wz.labs||[]).splice(i,1);wzRenderLabs();};
+  window.wzAddDiabeticPanel=function(){wz.labs=wz.labs||[];var today=new Date().toISOString().slice(0,10);
+    var panel=[['HbA1c','%'],['Fasting glucose','mmol/L'],['LDL cholesterol','mmol/L'],['HDL cholesterol','mmol/L'],['Triglycerides','mmol/L'],['Urine ACR','mg/g'],['Serum creatinine','µmol/L'],['eGFR','mL/min'],['ALT','U/L'],['TSH','mIU/L'],['Vitamin B12','pmol/L'],['Vitamin D (25-OH)','nmol/L']];
+    var added=0;panel.forEach(function(x){if(!wz.labs.some(function(l){return l.name===x[0];})){wz.labs.push({name:x[0],val:'',unit:x[1],date:today});added++;}});
+    wzRenderLabs();toast('Standard diabetes panel added',added+' labs — fill in the values');};
   function wzRenderLabs(){var box=$('labsList');if(!box)return;wz.labs=wz.labs||[];
     box.innerHTML=wz.labs.length?('<div class="tw" style="border-radius:8px"><table class="tbl"><thead><tr><th>Lab</th><th>Value</th><th>Unit</th><th>Date</th><th></th></tr></thead><tbody>'+wz.labs.map(function(l,i){return '<tr><td style="font-weight:600">'+l.name+'</td><td class="mono">'+(l.val||'—')+'</td><td>'+(l.unit||'')+'</td><td style="color:var(--mu)">'+(l.date||'—')+'</td><td><button type="button" class="btn btn-o btn-xs" onclick="wzDelLab('+i+')">Remove</button></td></tr>';}).join('')+'</tbody></table></div>'):'';}
   function buildMeds(){
@@ -1387,7 +1418,7 @@ if(!loadState())seedTasks();renderMsg();refreshMetrics();renderTasks();lgHint();
 })();
 </script>
 <script>
-window.applyLogo=function(){try{var d=localStorage.getItem("jd_logo")||"";var img=document.getElementById("sbLogo"),n=document.getElementById("sbName"),a=document.getElementById("sbAr"),pv=document.getElementById("logoPreview");if(d){if(img){img.src=d;img.style.display="block";}if(n)n.style.display="none";if(a)a.style.display="none";if(pv){pv.src=d;pv.style.display="block";}}else{if(img){img.style.display="none";img.removeAttribute("src");}if(n)n.style.display="";if(a)a.style.display="";if(pv){pv.style.display="none";pv.removeAttribute("src");}}}catch(e){}};
+window.applyLogo=function(){try{var d=localStorage.getItem("jd_logo")||"";var img=document.getElementById("sbLogo"),n=document.getElementById("sbName"),a=document.getElementById("sbAr"),pv=document.getElementById("logoPreview");if(d){if(img){img.src=d;img.style.display="block";}if(n)n.style.display="none";if(a)a.style.display="";if(pv){pv.src=d;pv.style.display="block";}}else{if(img){img.style.display="none";img.removeAttribute("src");}if(n)n.style.display="";if(a)a.style.display="";if(pv){pv.style.display="none";pv.removeAttribute("src");}}}catch(e){}};
 window.uploadLogo=function(inp){var f=inp&&inp.files&&inp.files[0];if(!f)return;if(f.size>1500000){if(typeof toast==="function")toast("Logo too large","Use an image under 1.5 MB");return;}var r=new FileReader();r.onload=function(){try{localStorage.setItem("jd_logo",r.result);window.applyLogo();if(typeof toast==="function")toast("Logo updated","Saved on this device");}catch(e){if(typeof toast==="function")toast("Could not save logo",""+((e&&e.message)||e));}};r.readAsDataURL(f);};
 window.clearLogo=function(){localStorage.removeItem("jd_logo");var inp=document.getElementById("logoFile");if(inp)inp.value="";window.applyLogo();if(typeof toast==="function")toast("Logo removed","Using default wordmark");};
 try{window.applyLogo();}catch(e){}
