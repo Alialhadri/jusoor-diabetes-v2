@@ -208,6 +208,7 @@ button{font-family:inherit;}
     <div class="nav" data-v="enrol"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 5v14M5 12h14"/></svg></span>Enrol Patient</div>
     <div class="nav" data-v="messages"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 11.5a8.4 8.4 0 0 1-9 8.4L3 21l1.1-3.3A8.4 8.4 0 1 1 21 11.5z"/></svg></span>Patient Messages<span class="bdg bg-b" id="bMsg">0</span></div>
     <div class="nav" data-v="tasks"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 6h16M4 12h16M4 18h10"/><circle cx="20" cy="18" r="1.6"/></svg></span>Care Tasks<span class="bdg bg-r" id="bTask">0</span></div>
+    <div class="nav" data-v="edu"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 5l9 3 9-3-9-3-9 3z"/><path d="M12 8v9M5 9.5V15c0 1.5 3.1 3 7 3s7-1.5 7-3V9.5"/></svg></span>Education &amp; Goals<span class="bdg bg-a" id="bEdu">0</span></div>
     <div class="sb-sec">System</div>
     <div class="nav" data-v="physician"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="8" r="4"/><path d="M5 21c0-4 3-6 7-6s7 2 7 6"/></svg></span>Physician<span class="bdg bg-r" id="bPhys">0</span></div>
     <div class="nav" data-v="analytics"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 19V5M4 19h16M8 16v-5M12 16V8M16 16v-3M20 16v-7"/></svg></span>Analytics &amp; RWE</div>
@@ -352,10 +353,16 @@ button{font-family:inherit;}
     .mn-g{color:var(--grd)}.mn-a{color:#b45309}.mn-r{color:var(--rd)}
     .meddet-h{font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--mu);margin:16px 0 7px}
     .meddet{display:flex;gap:6px;align-items:center;padding:6px 9px;border:1px solid var(--bdr);border-radius:7px;margin-bottom:5px;background:var(--bll)}
-    .meddet .mn{flex:1;font-size:11.5px;font-weight:700}
-    .meddet input{padding:5px 8px;font-size:11px;border:1px solid var(--bdr);border-radius:6px;font-family:inherit;background:var(--sur);color:var(--tx)}
-    .meddet .dz{width:120px}.meddet .fq{width:150px}
-    @media(max-width:640px){.meddet{flex-wrap:wrap}.meddet .dz,.meddet .fq{width:auto;flex:1}}
+    .meddet .mn{flex:1 1 130px;font-size:11.5px;font-weight:700;min-width:110px}
+    .meddet input,.meddet select{padding:5px 7px;font-size:11px;border:1px solid var(--bdr);border-radius:6px;font-family:inherit;background:var(--sur);color:var(--tx)}
+    .meddet .mfield{display:flex;gap:4px;align-items:center}
+    .meddet .dz{width:78px}.meddet .fq{width:118px}
+    .meddet .dzsel,.meddet .fqsel{max-width:74px;color:var(--mu)}
+    @media(max-width:760px){.meddet{flex-wrap:wrap}.meddet .mfield{flex:1}}
+    .dsme td .dot2{display:inline-block;width:16px;height:16px;border-radius:50%;border:1.5px solid var(--bdr);cursor:pointer;vertical-align:middle}
+    .dsme td .dot2.on{background:var(--gr);border-color:var(--gr);position:relative}
+    .dsme td .dot2.on::after{content:"✓";position:absolute;inset:0;color:#fff;font-size:10px;line-height:13px;text-align:center}
+    .dsme td{text-align:center}.dsme td:first-child,.dsme th:first-child{text-align:left}
     </style>
     <div style="display:grid;grid-template-columns:1fr 286px;gap:14px;align-items:start" id="wzGrid">
       <div class="card cp">
@@ -383,6 +390,16 @@ button{font-family:inherit;}
             <div class="fg"><label>Diagnosis (month / year)</label><div style="display:flex;gap:6px"><input id="enDxMo" list="dxMonths" placeholder="Month" style="flex:1"><input id="enDx" list="dxYears" placeholder="Year" inputmode="numeric" style="flex:1"></div><datalist id="dxMonths"><option>Jan</option><option>Feb</option><option>Mar</option><option>Apr</option><option>May</option><option>Jun</option><option>Jul</option><option>Aug</option><option>Sep</option><option>Oct</option><option>Nov</option><option>Dec</option></datalist><datalist id="dxYears"></datalist></div>
           </div>
           <div class="frow2"><div class="fg"><label>PPG (mmol/L)</label><input id="enPpg" type="number" step="0.1" placeholder="post-prandial"></div><div class="fg"><label>Random glucose (mmol/L)</label><input id="enRbs" type="number" step="0.1" placeholder="optional"></div></div>
+          <div class="fsec" style="margin-top:16px">Additional labs — pick from the list or add a custom one</div>
+          <div style="display:grid;grid-template-columns:1.4fr 1fr .8fr .9fr auto;gap:8px;align-items:end">
+            <div class="fg" style="margin:0"><label>Lab</label><input id="labName" list="labList" placeholder="e.g. TSH" onchange="labUnitHint()"><datalist id="labList"><option>HbA1c<option>Fasting glucose<option>Total cholesterol<option>LDL cholesterol<option>HDL cholesterol<option>Triglycerides<option>Urine ACR<option>Serum creatinine<option>eGFR<option>TSH<option>Free T4<option>Vitamin B12<option>Vitamin D (25-OH)<option>ALT<option>AST<option>Potassium<option>Sodium<option>Haemoglobin<option>HbF<option>Ferritin<option>C-peptide<option>Urine microalbumin<option>CRP</datalist></div>
+            <div class="fg" style="margin:0"><label>Value</label><input id="labVal" placeholder="value" inputmode="decimal"></div>
+            <div class="fg" style="margin:0"><label>Unit</label><input id="labUnit" list="labUnitList" placeholder="unit"><datalist id="labUnitList"><option>%<option>mmol/L<option>mg/g<option>µmol/L<option>mL/min<option>mIU/L<option>pmol/L<option>pg/mL<option>ng/mL<option>U/L<option>g/L<option>µg/L<option>mg/L</datalist></div>
+            <div class="fg" style="margin:0"><label>Date</label><input type="date" id="labDate"></div>
+            <button type="button" class="btn btn-b btn-sm" onclick="wzAddLab()" style="height:34px">+ Add</button>
+          </div>
+          <div id="labsList" style="margin-top:8px"></div>
+          <div class="note" style="margin-top:8px">Any lab not in the metabolic panel above can be captured here — including a fully custom test. Saved with the patient record.</div>
         </div>
 
         <div class="wzPanel" data-s="2" hidden>
@@ -471,6 +488,18 @@ button{font-family:inherit;}
             <div class="fg"><label>Influenza / pneumococcal</label><select id="enVax"><option value="">— select —</option><option>Up to date</option><option>Due</option><option>Unknown</option></select></div>
           </div>
           <div class="note">Screening status drives the recall engine and care-gap counts. "Overdue" / "Never done" items become tasks the moment the patient is enrolled.</div>
+          <div class="fsec" style="margin-top:16px">Initial diabetes education &amp; first goal (optional)</div>
+          <div class="fg"><label>DSME topics covered at enrolment</label><div id="enEduTopics">
+            <span class="wzchip tog" data-k="disease" onclick="this.classList.toggle('on')">Understanding diabetes</span>
+            <span class="wzchip tog" data-k="meds" onclick="this.classList.toggle('on')">Medications</span>
+            <span class="wzchip tog" data-k="nutrition" onclick="this.classList.toggle('on')">Nutrition</span>
+            <span class="wzchip tog" data-k="activity" onclick="this.classList.toggle('on')">Physical activity</span>
+            <span class="wzchip tog" data-k="glucose" onclick="this.classList.toggle('on')">Glucose monitoring</span>
+            <span class="wzchip tog" data-k="foot" onclick="this.classList.toggle('on')">Foot care</span>
+            <span class="wzchip tog" data-k="hypo" onclick="this.classList.toggle('on')">Hypo management</span>
+          </div></div>
+          <div class="fg"><label>First SMART goal</label><input id="enGoal" placeholder="e.g. Walk 30 min, 5 days/week for 8 weeks"></div>
+          <div class="note">Topics ticked here seed the patient's DSME progress; the goal appears under Education &amp; Goals. Both are also editable there later.</div>
         </div>
 
         <div class="wzPanel" data-s="5" hidden><div id="enAiReview"></div></div>
@@ -563,6 +592,36 @@ button{font-family:inherit;}
         <div class="note" style="line-height:1.7">Every score and recommendation is computed locally and deterministically. No patient data leaves the Kingdom. External processing is off unless explicitly enabled in Settings, and only de-identified features are ever sent. PDPL-aligned consent and audit trail per patient.</div>
       </div>
     </div>
+  </div>
+
+  <!-- EDUCATION & GOALS -->
+  <div class="view" id="v-edu">
+    <div class="krow" style="grid-template-columns:repeat(4,1fr)">
+      <div class="kpi" style="--c:var(--bl)"><div class="kv" id="edCase">0</div><div class="kl">Active caseload</div><div class="ks">enrolled patients</div></div>
+      <div class="kpi" style="--c:var(--gr)"><div class="kv" id="edDone" style="color:var(--gr)">0</div><div class="kl">Sessions logged</div><div class="ks">DSME encounters</div></div>
+      <div class="kpi" style="--c:var(--am)"><div class="kv" id="edGoals" style="color:var(--am)">0</div><div class="kl">Active goals</div><div class="ks">SMART goals set</div></div>
+      <div class="kpi" style="--c:var(--rd)"><div class="kv" id="edPend" style="color:var(--rd)">0</div><div class="kl">Education pending</div><div class="ks">DSME &lt; 100%</div></div>
+    </div>
+    <div class="g2" style="margin-bottom:14px">
+      <div class="card cp">
+        <div class="fsec">Log education session</div>
+        <div class="fg"><label>Patient</label><select id="edPt"></select></div>
+        <div class="frow2"><div class="fg"><label>Session type</label><select id="edType"><option>Initial DSME</option><option>Follow-up DSME</option><option>Nutrition counselling</option><option>Insulin technique</option><option>Blood glucose monitoring</option><option>Foot care</option><option>Hypo management</option><option>Ramadan preparation</option></select></div><div class="fg"><label>Duration (min)</label><select id="edDur"><option>15</option><option>30</option><option selected>45</option><option>60</option><option>90</option></select></div></div>
+        <div class="fg"><label>Notes</label><textarea id="edNotes" rows="2" placeholder="Topics covered, patient understanding, barriers…"></textarea></div>
+        <button class="btn btn-g btn-sm" onclick="logEdu()">Save session</button>
+      </div>
+      <div class="card cp">
+        <div class="fsec">Set patient goal (SMART)</div>
+        <div class="fg"><label>Patient</label><select id="glPt"></select></div>
+        <div class="frow2"><div class="fg"><label>Goal category</label><select id="glCat"><option>HbA1c reduction</option><option>Weight / BMI</option><option>Physical activity</option><option>Diet / nutrition</option><option>Medication adherence</option><option>Smoking cessation</option><option>Blood pressure</option></select></div><div class="fg"><label>Target date</label><input type="date" id="glDate"></div></div>
+        <div class="fg"><label>Specific goal</label><textarea id="glTxt" rows="2" placeholder="e.g. Walk 30 min, 5 days/week for 8 weeks…"></textarea></div>
+        <button class="btn btn-b btn-sm" onclick="setGoal()">Set goal</button>
+      </div>
+    </div>
+    <div class="card cp" style="margin-bottom:14px"><div class="ch"><div><div class="ct">DSME progress — the 7 self-care behaviours</div><div class="cs">click a cell to mark a topic covered · progress updates live</div></div></div>
+      <div class="tw"><table class="tbl dsme"><thead><tr><th>Patient</th><th>Type</th><th>Disease</th><th>Meds</th><th>Nutrition</th><th>Activity</th><th>Glucose</th><th>Foot care</th><th>Hypo</th><th>Progress</th></tr></thead><tbody id="edBody"></tbody></table></div>
+    </div>
+    <div class="card cp"><div class="ct" style="margin-bottom:9px">Recent sessions &amp; active goals</div><div id="edLog"></div></div>
   </div>
 
   <!-- SETTINGS -->
@@ -738,13 +797,13 @@ function alerts(p){var a=[];
   return a;}
 
 /* ---------- nav ---------- */
-var TITLES={dash:["Population Overview","Riyadh PHC Cluster · Diabetes Care Programme · 50 patients"],clinicday:["Today's Clinic","Visit queue · throughput at a glance"],worklist:["Morning Worklist","Highest clinical need first · rule-prioritised"],registry:["Patient Registry","Diabetes cohort · risk scored locally"],orders:["Orders &amp; Results","Order-to-completion loop · close the gap after the order"],recall:["Recall Engine","Pull-based cadence · the clinical clock schedules the work"],coverage:["Care Gaps &amp; Coverage","Complication-screening coverage drive"],pathway:["Standard Work","Diabetes pathway adherence · deviations visible"],enrol:["Enrol Patient","Dual intake · manual or hospital feed"],messages:["Patient Messages","Arabic-first engagement"],tasks:["Care Tasks","Coordinator &amp; nurse queue"],physician:["Physician Review","Flagged for medical action"],analytics:["Analytics &amp; RWE","Outcomes · generated on-device"],naphies:["NAPHIES · Raqeem","Integrations &amp; data residency"],settings:["Settings","AI engine · safety · programme"]};
+var TITLES={dash:["Population Overview","Riyadh PHC Cluster · Diabetes Care Programme · 50 patients"],clinicday:["Today's Clinic","Visit queue · throughput at a glance"],worklist:["Morning Worklist","Highest clinical need first · rule-prioritised"],registry:["Patient Registry","Diabetes cohort · risk scored locally"],orders:["Orders &amp; Results","Order-to-completion loop · close the gap after the order"],recall:["Recall Engine","Pull-based cadence · the clinical clock schedules the work"],coverage:["Care Gaps &amp; Coverage","Complication-screening coverage drive"],pathway:["Standard Work","Diabetes pathway adherence · deviations visible"],enrol:["Enrol Patient","Dual intake · manual or hospital feed"],messages:["Patient Messages","Arabic-first engagement"],tasks:["Care Tasks","Coordinator &amp; nurse queue"],physician:["Physician Review","Flagged for medical action"],analytics:["Analytics &amp; RWE","Outcomes · generated on-device"],naphies:["NAPHIES · Raqeem","Integrations &amp; data residency"],edu:["Education &amp; Goals","DSME sessions · SMART goals · self-care progress"],settings:["Settings","AI engine · safety · programme"]};
 function show(v){var el=document.getElementById("v-"+v);if(!el)return;
   document.querySelectorAll(".view").forEach(function(x){x.classList.remove("on");});el.classList.add("on");
   document.querySelectorAll(".nav").forEach(function(n){n.classList.toggle("on",n.getAttribute("data-v")===v);});
   document.getElementById("topT").innerHTML=TITLES[v][0];document.getElementById("topS").innerHTML=TITLES[v][1];
   document.querySelector(".content").scrollTop=0;
-  if(v==="clinicday")renderClinicDay();if(v==="registry")renderReg();if(v==="worklist")renderWork();if(v==="orders")renderOrders();if(v==="recall")renderRecall();if(v==="coverage")renderCoverage();if(v==="pathway")renderPathway();if(v==="tasks")renderTasks();if(v==="physician")renderPhys();if(v==="analytics")renderAnalytics();if(v==="messages")renderMsg();}
+  if(v==="clinicday")renderClinicDay();if(v==="registry")renderReg();if(v==="worklist")renderWork();if(v==="orders")renderOrders();if(v==="recall")renderRecall();if(v==="coverage")renderCoverage();if(v==="pathway")renderPathway();if(v==="tasks")renderTasks();if(v==="physician")renderPhys();if(v==="analytics")renderAnalytics();if(v==="messages")renderMsg();if(v==="edu")renderEdu();}
 document.querySelectorAll(".nav").forEach(function(n){n.onclick=function(){show(n.getAttribute("data-v"));};});
 
 /* ---------- registry ---------- */
@@ -839,6 +898,7 @@ function openPat(id){var p=patients[id],c=control(p),rk=riskScore(p),dr=dropoutS
     "<div class='card cp' style='border:1px solid var(--rdl)'><div class='ct' style='margin-bottom:4px'>Clinical decision support — rule engine</div><div class='cs' style='margin-bottom:11px'>deterministic · explainable · on-device</div>"+al.map(function(x){return "<div class='alert "+(x.s==="r"?"al-r":x.s==="a"?"al-a":"al-g")+"'>"+x.t+"</div>";}).join("")+"</div>"+
     "<div class='card cp'><div class='ct' style='margin-bottom:9px'>Standard-work pathway</div>"+pw.map(function(it){return "<div class='path-row'><span class='path-ic' style='background:"+(it.ok?"var(--gr)":"var(--rd)")+"'>"+(it.ok?"✓":"!")+"</span><span style='font-size:12px'>"+it.l+"</span></div>";}).join("")+"</div>"+
   "</div>"+
+  ((p.labs&&p.labs.length)?("<div class='card cp' style='margin-bottom:14px'><div class='ct' style='margin-bottom:9px'>Additional labs ("+p.labs.length+")</div><div class='tw'><table class='tbl'><thead><tr><th>Lab</th><th>Value</th><th>Unit</th><th>Date</th></tr></thead><tbody>"+p.labs.map(function(l){return "<tr><td style='font-weight:600'>"+l.name+"</td><td class='mono'>"+(l.val||'—')+"</td><td>"+(l.unit||'')+"</td><td style='color:var(--mu)'>"+(l.date||'—')+"</td></tr>";}).join("")+"</tbody></table></div></div>"):"")+
   "<div class='card cp' style='margin-bottom:14px'><div class='ct' style='margin-bottom:9px'>Clinical documentation</div>"+((p.encounters&&p.encounters.length)?p.encounters.map(function(en){return "<div style='padding:9px 0;border-bottom:1px solid var(--bdr)'><div style='font-size:11px'><b>"+en.type+"</b> <span style='color:var(--mu)'>"+en.author+" · "+en.date+"</span></div><div style='font-size:12px;margin-top:3px;white-space:pre-wrap'>"+en.text+"</div></div>";}).join(""):"<div class='note'>No encounters documented.</div>")+"<div style='margin-top:11px'><select id='encType' style='padding:7px 9px;border:1px solid var(--bdr);border-radius:7px;font-size:12px;margin-bottom:7px;font-family:inherit'><option>Progress note</option><option>SOAP note</option><option>Phone encounter</option><option>Nurse review</option><option>Education session</option></select><textarea id='encText' style='width:100%;min-height:62px;padding:9px 11px;border:1px solid var(--bdr);border-radius:7px;font-size:12.5px;font-family:inherit;line-height:1.5' placeholder='Document the encounter…'></textarea><button class='btn btn-g btn-xs' style='margin-top:8px' onclick='saveNote("+p.id+")'>Save note</button></div></div>"+
   "<div class='card cp'><div class='ct' style='margin-bottom:9px'>Care-team communication</div>"+(p.comms.length?p.comms.map(function(c){return "<div style='padding:9px 0;border-bottom:1px solid var(--bdr)'><div style='font-size:11px'><b>"+c.who+"</b> <span style='color:var(--mu)'>"+c.role+" · "+c.date+"</span></div><div style='font-size:12px;margin-top:3px'>"+c.txt+"</div></div>";}).join(""):"<div class='note'>No recent care-team notes.</div>")+(p.notes.map(function(n){return "<div class='note' style='margin-top:8px'>"+n+"</div>";}).join(""))+"</div>"+
   "<div class='card cp' style='margin-top:14px'><div class='ct' style='margin-bottom:9px'>Documents &amp; images</div><div class='cs' style='margin-bottom:10px'>Lab reports, referral letters, retinal photos and HIS exports — attached to this record (on-device).</div>"+((p.attachments&&p.attachments.length)?p.attachments.map(function(at){return "<div style='display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid var(--bdr);font-size:12px'><span>"+at.name+"</span><a href='"+at.url+"' target='_blank' class='btn btn-o btn-xs'>Open</a></div>";}).join(""):"<div class='note'>No documents attached.</div>")+"<input type='file' accept='image/*,.pdf' style='margin-top:10px;font-size:11px' onchange='addAttach("+p.id+",this)'></div>"+
@@ -925,6 +985,7 @@ function refreshMetrics(){
   document.getElementById("bDash").textContent=tiers.filter(function(t){return t==="High";}).length;
   document.getElementById("bWork").textContent=priQueue().length;
   document.getElementById("bReg").textContent=patients.length;
+  var _be=document.getElementById("bEdu");if(_be){var _ep=patients.filter(function(p){seedEdu(p);return dsmePct(p)<100;}).length;_be.textContent=_ep;}
   var bcd=document.getElementById("bCD");if(bcd)bcd.textContent=todayList().length;
   document.getElementById("bOrd").textContent=lab+med+res;
   document.getElementById("bRec").textContent=rec;
@@ -965,16 +1026,55 @@ function toggleExt(on){var f=document.getElementById("airFields");f.style.opacit
   toast(on?"External adapter enabled":"External adapter off",on?"Only de-identified features sent":"All processing on-device");}
 function saveApi(){var ep=(document.getElementById("airEp")||{}).value||"",k=(document.getElementById("airKey")||{}).value||"";try{localStorage.setItem("jusoorApiEp",ep);localStorage.setItem("jusoorApiKey",k);}catch(e){}var st=document.getElementById("apiStat");if(st){st.className="chip "+(ep?"c-g":"c-n");st.textContent=ep?"Saved":"Not set";}toast(ep?"API link saved":"API link cleared",ep?"Stored locally on this device":"");}
 (function(){try{var ep=localStorage.getItem("jusoorApiEp")||"",k=localStorage.getItem("jusoorApiKey")||"";var e1=document.getElementById("airEp");if(e1)e1.value=ep;var e2=document.getElementById("airKey");if(e2)e2.value=k;var st=document.getElementById("apiStat");if(st&&ep){st.className="chip c-g";st.textContent="Saved";}}catch(e){}})();
+/* ---------- education & goals (DSME) ---------- */
+var DSME_KEYS=["disease","meds","nutrition","activity","glucose","foot","hypo"];
+function seedEdu(p){if(p.dsme)return;p.dsme={};DSME_KEYS.forEach(function(k,idx){p.dsme[k]=((p.id+idx)%4===0);});p.eduSessions=p.eduSessions||[];p.goals=p.goals||[];}
+function dsmePct(p){if(!p.dsme)return 0;return Math.round(DSME_KEYS.filter(function(k){return p.dsme[k];}).length/DSME_KEYS.length*100);}
+function renderEdu(){
+  patients.forEach(seedEdu);
+  var sessions=patients.reduce(function(s,p){return s+((p.eduSessions&&p.eduSessions.length)||0);},0);
+  var goals=patients.reduce(function(s,p){return s+((p.goals&&p.goals.length)||0);},0);
+  var pend=patients.filter(function(p){return dsmePct(p)<100;}).length;
+  document.getElementById("edCase").textContent=patients.length;
+  document.getElementById("edDone").textContent=sessions;
+  document.getElementById("edGoals").textContent=goals;
+  document.getElementById("edPend").textContent=pend;
+  var opts=patients.map(function(p){return "<option value='"+p.id+"'>"+p.name+" · "+p.mrn+"</option>";}).join("");
+  var ep=document.getElementById("edPt"),gp=document.getElementById("glPt");
+  if(ep){var epv=ep.value;ep.innerHTML=opts;if(epv)ep.value=epv;}
+  if(gp){var gpv=gp.value;gp.innerHTML=opts;if(gpv)gp.value=gpv;}
+  document.getElementById("edBody").innerHTML=patients.map(function(p){var pct=dsmePct(p);
+    return "<tr><td style='font-weight:600' class='clk' onclick='openPat("+p.id+")'>"+p.name+"</td><td><span class='tag t"+p.type+"'>"+p.type+"</span></td>"+DSME_KEYS.map(function(k){return "<td><span class='dot2"+(p.dsme[k]?" on":"")+"' onclick='toggleDsme("+p.id+",\""+k+"\")'></span></td>";}).join("")+"<td><span style='display:inline-flex;align-items:center;gap:7px'><span class='abar' style='width:60px'><span style='width:"+pct+"%;background:var(--gr)'></span></span>"+pct+"%</span></td></tr>";
+  }).join("");
+  var log=[];
+  patients.forEach(function(p){(p.eduSessions||[]).forEach(function(s){log.push({t:'session',p:p,x:s});});(p.goals||[]).forEach(function(gl){log.push({t:'goal',p:p,x:gl});});});
+  document.getElementById("edLog").innerHTML=log.length?log.slice(-14).reverse().map(function(it){
+    if(it.t==='session')return "<div style='padding:8px 0;border-bottom:1px solid var(--bdr);font-size:12px'><span class='chip c-g'>Session</span> <b>"+it.p.name+"</b> · "+it.x.type+" · "+it.x.dur+" min"+(it.x.notes?" — "+it.x.notes:"")+"</div>";
+    return "<div style='padding:8px 0;border-bottom:1px solid var(--bdr);font-size:12px'><span class='chip c-b'>Goal</span> <b>"+it.p.name+"</b> · "+it.x.cat+": "+it.x.txt+(it.x.date?" (by "+it.x.date+")":"")+"</div>";
+  }).join(""):"<div class='note'>No sessions or goals logged yet.</div>";
+  var be=document.getElementById("bEdu");if(be)be.textContent=pend;
+}
+function toggleDsme(id,k){var p=patients[id];seedEdu(p);p.dsme[k]=!p.dsme[k];renderEdu();if(typeof saveState==="function")saveState();}
+function logEdu(){var id=+document.getElementById("edPt").value,p=patients[id];if(!p)return;seedEdu(p);var typ=document.getElementById("edType").value,dur=document.getElementById("edDur").value,notes=(document.getElementById("edNotes").value||'').trim();
+  p.eduSessions.push({type:typ,dur:dur,notes:notes,date:daysAgo(0)});
+  var map={"Nutrition counselling":"nutrition","Insulin technique":"meds","Blood glucose monitoring":"glucose","Foot care":"foot","Hypo management":"hypo","Initial DSME":"disease","Follow-up DSME":"glucose"};
+  if(map[typ])p.dsme[map[typ]]=true;
+  if(p.encounters)p.encounters.unshift({type:"Education session",author:(document.getElementById('sbUn')&&document.getElementById('sbUn').textContent)||'Diabetes Educator',date:daysAgo(0),text:typ+" ("+dur+" min)"+(notes?" — "+notes:"")});
+  document.getElementById("edNotes").value="";renderEdu();if(typeof saveState==="function")saveState();toast("Education session logged",p.name);}
+function setGoal(){var id=+document.getElementById("glPt").value,p=patients[id];if(!p)return;seedEdu(p);var t=(document.getElementById("glTxt").value||'').trim();if(!t){toast("Enter a goal");return;}
+  p.goals.push({cat:document.getElementById("glCat").value,txt:t,date:document.getElementById("glDate").value||''});
+  document.getElementById("glTxt").value="";renderEdu();if(typeof saveState==="function")saveState();toast("Goal set",p.name);}
+
 function refreshAll(){refreshMetrics();if(document.getElementById("v-registry").classList.contains("on"))renderReg();if(document.getElementById("v-worklist").classList.contains("on"))renderWork();if(document.getElementById("v-orders").classList.contains("on"))renderOrders();if(document.getElementById("v-recall").classList.contains("on"))renderRecall();if(document.getElementById("v-coverage").classList.contains("on"))renderCoverage();if(document.getElementById("v-pathway").classList.contains("on"))renderPathway();renderTasks();saveState();}
 
 /* ---------- reactivity / roles / upload ---------- */
 function openReg(tf,rf){regFilter=tf||"all";var sel=document.getElementById("regRisk");if(sel)sel.value=rf||"";var pills=document.querySelectorAll("#v-registry .fp");pills.forEach(function(b,i){b.classList.toggle("on",(regFilter==="all"&&i===0)||(regFilter==="T2"&&i===1)||(regFilter==="T1"&&i===2)||(regFilter==="GDM"&&i===3));});show("registry");}
 function openOrders(f){ordF=f;show("orders");}
 var ROLES={
- "Diabetes Nurse":{pw:"nurse",name:"Nurse Mona Al-Zahrani",title:"Diabetes Nurse",av:"MZ",nav:["dash","clinicday","worklist","registry","orders","recall","coverage","tasks","messages","enrol","settings"],land:"clinicday"},
- "Physician":{pw:"physician",name:"Dr. Khalid Al-Otaibi",title:"Endocrinologist",av:"KA",nav:["dash","clinicday","registry","orders","physician","pathway","coverage","recall","settings"],land:"clinicday"},
- "Diabetes Educator":{pw:"educator",name:"Reem Al-Dosari",title:"Diabetes Educator",av:"RD",nav:["dash","registry","messages","coverage","recall","enrol","settings"],land:"messages"},
- "Care Coordinator":{pw:"coordinator",name:"Sarah Al-Ghamdi",title:"Care Coordinator",av:"SG",nav:["dash","clinicday","worklist","registry","orders","recall","coverage","tasks","messages","enrol","naphies","analytics","settings"],land:"worklist"}
+ "Diabetes Nurse":{pw:"nurse",name:"Nurse Mona Al-Zahrani",title:"Diabetes Nurse",av:"MZ",nav:["dash","clinicday","worklist","registry","orders","recall","coverage","tasks","messages","enrol","edu","settings"],land:"clinicday"},
+ "Physician":{pw:"physician",name:"Dr. Khalid Al-Otaibi",title:"Endocrinologist",av:"KA",nav:["dash","clinicday","registry","orders","physician","pathway","coverage","recall","edu","settings"],land:"clinicday"},
+ "Diabetes Educator":{pw:"educator",name:"Reem Al-Dosari",title:"Diabetes Educator",av:"RD",nav:["dash","registry","edu","messages","coverage","recall","enrol","settings"],land:"edu"},
+ "Care Coordinator":{pw:"coordinator",name:"Sarah Al-Ghamdi",title:"Care Coordinator",av:"SG",nav:["dash","clinicday","worklist","registry","orders","recall","coverage","tasks","messages","enrol","edu","naphies","analytics","settings"],land:"worklist"}
 };
 function lgHint(){var r=document.getElementById("lgRole").value,c=ROLES[r];document.getElementById("lgPass").value=c.pw;document.getElementById("lgHint").textContent="Pilot credentials — "+r+" / "+c.pw+" · processing on-device, Riyadh";}
 function doLogin(){var r=document.getElementById("lgRole").value,pw=document.getElementById("lgPass").value;if(pw!==ROLES[r].pw){toast("Incorrect password","Use the pilot password shown for the role");return;}applyRole(r,document.getElementById("lgName").value);}
@@ -1018,7 +1118,7 @@ if(!loadState())seedTasks();renderMsg();refreshMetrics();renderTasks();lgHint();
 /* ===== AI enrolment wizard — reuses riskScore, gaps, patients, mkMed, mkOrders, refreshAll, show, toast ===== */
 (function(){
   var WS=["Demographics","DM Type & Labs","Metabolic","Medications","Screening","AI Review"];
-  var wz={s:0, adh:"Good", meds:[]};
+  var wz={s:0, adh:"Good", meds:[], labs:[]};
   var $=function(id){return document.getElementById(id);};
 
   window.wzPick=function(el,key){
@@ -1153,16 +1253,31 @@ if(!loadState())seedTasks();renderMsg();refreshMetrics();renderTasks();lgHint();
     var prev={}; [].forEach.call(box.querySelectorAll('.meddet'),function(r){prev[r.getAttribute('data-id')]={dose:r.querySelector('.dz').value,freq:r.querySelector('.fq').value};});
     var checked=Object.keys(MM).filter(chk);
     if(!checked.length){box.innerHTML='';return;}
-    var html='<div class="meddet-h">Dose &amp; frequency — adjust per patient (type or pick)</div>';
+    var FREQS=["Once daily","Twice daily","Three times daily","Four times daily","Every morning","At night","At bedtime","Before breakfast","Before meals","With meals","After meals","Alternate days","Once weekly","Twice weekly","Every 2 weeks","Once monthly","As needed (PRN)","As directed"];
+    var html='<div class="meddet-h">Dose &amp; frequency — adjust per patient (type <b>or</b> pick from the list)</div>';
     checked.forEach(function(id){var m=MM[id],pv=prev[id]||{};
-      var dop=DOSES[id]||[], dlid='dz-'+id;
-      var dl=dop.length?('<datalist id="'+dlid+'">'+dop.map(function(x){return '<option>'+x+'</option>';}).join('')+'</datalist>'):'';
+      var dop=DOSES[id]||[];
+      var curDose=(pv.dose!=null&&pv.dose!=='')?pv.dose:m[1];
+      var curFreq=pv.freq||'Once daily';
+      var dsel='<select class="dzsel" title="Pick a dose" onchange="if(this.value){this.parentNode.querySelector(\'.dz\').value=this.value;wzRecalc();}"><option value="">▾ pick</option>'+dop.map(function(x){return '<option'+(x===curDose?' selected':'')+'>'+x+'</option>';}).join('')+'</select>';
+      var fsel='<select class="fqsel" title="Pick a frequency" onchange="if(this.value){this.parentNode.querySelector(\'.fq\').value=this.value;wzRecalc();}"><option value="">▾ pick</option>'+FREQS.map(function(x){return '<option'+(x===curFreq?' selected':'')+'>'+x+'</option>';}).join('')+'</select>';
       html+='<div class="meddet" data-id="'+id+'"><span class="mn">'+m[0]+'</span>'+
-        '<input class="dz" list="'+dlid+'" placeholder="dose" value="'+((pv.dose!=null&&pv.dose!=='')?pv.dose:m[1])+'" oninput="wzRecalc()">'+dl+
-        '<input class="fq" list="freqList" placeholder="frequency" value="'+(pv.freq||'Once daily')+'" oninput="wzRecalc()"></div>';
+        '<span class="mfield"><input class="dz" placeholder="dose" value="'+curDose+'" oninput="wzRecalc()">'+dsel+'</span>'+
+        '<span class="mfield"><input class="fq" placeholder="frequency" value="'+curFreq+'" oninput="wzRecalc()">'+fsel+'</span></div>';
     });
     box.innerHTML=html;
   }
+
+  /* ----- additional labs (list + custom) ----- */
+  var LAB_UNITS={'HbA1c':'%','Fasting glucose':'mmol/L','Total cholesterol':'mmol/L','LDL cholesterol':'mmol/L','HDL cholesterol':'mmol/L','Triglycerides':'mmol/L','Urine ACR':'mg/g','Serum creatinine':'µmol/L','eGFR':'mL/min','TSH':'mIU/L','Free T4':'pmol/L','Vitamin B12':'pmol/L','Vitamin D (25-OH)':'nmol/L','ALT':'U/L','AST':'U/L','Potassium':'mmol/L','Sodium':'mmol/L','Haemoglobin':'g/L','Ferritin':'µg/L','C-peptide':'ng/mL','Urine microalbumin':'mg/L','CRP':'mg/L'};
+  window.labUnitHint=function(){var n=$('labName').value,u=$('labUnit');if(u&&!u.value&&LAB_UNITS[n])u.value=LAB_UNITS[n];};
+  window.wzAddLab=function(){wz.labs=wz.labs||[];var n=($('labName').value||'').trim();if(!n){toast('Enter a lab name');return;}
+    wz.labs.push({name:n,val:($('labVal').value||'').trim(),unit:($('labUnit').value||'').trim(),date:$('labDate').value||''});
+    ['labName','labVal','labUnit','labDate'].forEach(function(k){if($(k))$(k).value='';});
+    wzRenderLabs();if($('labName'))$('labName').focus();toast('Lab added',n);};
+  window.wzDelLab=function(i){(wz.labs||[]).splice(i,1);wzRenderLabs();};
+  function wzRenderLabs(){var box=$('labsList');if(!box)return;wz.labs=wz.labs||[];
+    box.innerHTML=wz.labs.length?('<div class="tw" style="border-radius:8px"><table class="tbl"><thead><tr><th>Lab</th><th>Value</th><th>Unit</th><th>Date</th><th></th></tr></thead><tbody>'+wz.labs.map(function(l,i){return '<tr><td style="font-weight:600">'+l.name+'</td><td class="mono">'+(l.val||'—')+'</td><td>'+(l.unit||'')+'</td><td style="color:var(--mu)">'+(l.date||'—')+'</td><td><button type="button" class="btn btn-o btn-xs" onclick="wzDelLab('+i+')">Remove</button></td></tr>';}).join('')+'</tbody></table></div>'):'';}
   function buildMeds(){
     var out=[], box=$('enMedDetail');
     Object.keys(MM).forEach(function(id){ if(chk(id)){var m=MM[id];
@@ -1185,6 +1300,7 @@ if(!loadState())seedTasks();renderMsg();refreshMetrics();renderTasks();lgHint();
     L.push('RENAL: eGFR '+p.egfr+' (CKD-EPI 2021)'+(e.cr?' · Creatinine '+e.cr+' µmol/L':'')+(e.acr?' · ACR '+e.acr+' mg/g':''));
     if(e.cpep||e.gad65==='true'||e.ia2==='true') L.push('AUTOIMMUNE: C-peptide '+(e.cpep||'—')+' · GAD-65 '+(e.gad65==='true'?'+':'−')+' · IA-2 '+(e.ia2==='true'?'+':'−'));
     if(e.ga||e.ogtt) L.push('GESTATIONAL: GA '+(e.ga||'—')+'wk'+(e.ogtt?' · OGTT '+e.ogtt:''));
+    if(p.labs&&p.labs.length){L.push('ADDITIONAL LABS:');p.labs.forEach(function(l){L.push('  - '+l.name+': '+(l.val||'-')+(l.unit?' '+l.unit:'')+(l.date?' ('+l.date+')':''));});}
     L.push('MEDICATIONS ('+p.meds.length+'):');
     if(p.meds.length) p.meds.forEach(function(m){L.push('  • '+m.drug+(m.dose?' '+m.dose:'')+(m.freq?' · '+m.freq:''));}); else L.push('  • none recorded');
     L.push('SCREENING: Retinal '+(e.retinal||'—')+(e.retinalD?' ('+e.retinalD+')':'')+' · Foot '+(e.foot||'—')+(e.footD?' ('+e.footD+')':'')+' · Nephropathy '+(e.kidney||'—')+(e.kidneyD?' ('+e.kidneyD+')':'')+' · Neuropathy '+(e.neuro||'—')+(e.neuroD?' ('+e.neuroD+')':''));
@@ -1213,6 +1329,13 @@ if(!loadState())seedTasks();renderMsg();refreshMetrics();renderTasks();lgHint();
     p.cr=+gv('enCr')||null; p.acr=+gv('enAcr')||null; p.ppg=+gv('enPpg')||null;
     p.height=+gv('enHt')||null; p.weight=+gv('enWt')||null; p.nationality=gv('enNat'); p.dxYear=gv('enDx');
     p.smoking=gv('enSmoke'); p.vax=gv('enVax'); p.dxMonth=gv('enDxMo');
+    p.labs=(wz.labs||[]).slice();
+    p.dsme={}; DSME_KEYS.forEach(function(k){p.dsme[k]=false;});
+    p.eduSessions=[]; p.goals=[];
+    var _topics=document.querySelectorAll('#enEduTopics .wzchip.on');
+    [].forEach.call(_topics,function(c){var k=c.getAttribute('data-k'); if(k)p.dsme[k]=true;});
+    if(_topics.length)p.eduSessions.push({type:'Initial DSME',dur:'30',notes:'Enrolment education: '+[].map.call(_topics,function(c){return c.textContent;}).join(', '),date:daysAgo(0)});
+    var _g=($('enGoal')&&$('enGoal').value||'').trim(); if(_g)p.goals.push({cat:'General',txt:_g,date:''});
     p.enrol={ fbs:gv('enFbs'),ppg:gv('enPpg'),tc:gv('enTc'),hdl:gv('enHdl'),tg:gv('enTg'),cr:gv('enCr'),acr:gv('enAcr'),
       cpep:gv('e-cp'),gad65:gv('e-gad65'),ia2:gv('e-ia2'),ga:gv('e-ga'),ogtt:[gv('e-ogtt0'),gv('e-ogtt1'),gv('e-ogtt2')].filter(Boolean).join('/'),
       retinal:gv('enScrEye'),foot:gv('enScrFoot'),kidney:gv('enScrKid'),neuro:gv('enScrNeuro'),smoke:gv('enSmoke'),vax:gv('enVax'),
@@ -1250,7 +1373,11 @@ if(!loadState())seedTasks();renderMsg();refreshMetrics();renderTasks();lgHint();
     if($('e-other-meds'))$('e-other-meds').value='';
     if($('enMedDetail'))$('enMedDetail').innerHTML='';
     if($('dm-type-specific'))$('dm-type-specific').innerHTML='';
-    wz={s:0,adh:'Good',meds:[]};
+    ['labName','labVal','labUnit','labDate'].forEach(function(id){if($(id))$(id).value='';});
+    wz={s:0,adh:'Good',meds:[],labs:[]};
+    if($('labsList'))$('labsList').innerHTML='';
+    if($('enGoal'))$('enGoal').value='';
+    [].forEach.call(document.querySelectorAll('#enEduTopics .wzchip'),function(c){c.classList.remove('on');});
     [].forEach.call($('enAdh').querySelectorAll('.wzchip'),function(c){c.classList.toggle('on',c.getAttribute('data-v')==='Good');});
     $('enEgfrNote').textContent='';
     paint();
