@@ -191,7 +191,7 @@ button{font-family:inherit;}
 </div>
 
 <aside class="sb">
-  <div class="sb-brand"><div class="sb-name">Jusoor</div><div class="sb-ar">جسور · DIABETES</div></div>
+  <div class="sb-brand"><img id="sbLogo" alt="logo" style="display:none;max-height:42px;max-width:170px;object-fit:contain"><div class="sb-name" id="sbName">Jusoor</div><div class="sb-ar" id="sbAr">جسور · DIABETES</div></div>
   <div class="sb-role"><span class="dot"></span><span id="sbRole">PHC Coordinator · Riyadh</span></div>
   <div class="sb-scroll">
     <div class="sb-sec">Clinical</div>
@@ -387,20 +387,20 @@ button{font-family:inherit;}
 
         <div class="wzPanel" data-s="2" hidden>
           <div class="frow3">
-            <div class="fg"><label>SBP (mmHg)</label><input id="enSbp" type="number" placeholder="systolic" oninput="wzRecalc()"></div>
-            <div class="fg"><label>DBP (mmHg)</label><input id="enDbp" type="number" placeholder="diastolic"></div>
-            <div class="fg"><label>Weight (kg)</label><input id="enWt" type="number" step="0.1" oninput="wzBmi()"></div>
-            <div class="fg"><label>Height (cm)</label><input id="enHt" type="number" oninput="wzBmi()"></div>
+            <div class="fg"><label>SBP (mmHg)</label><input id="enSbp" list="dlSbp" type="number" placeholder="systolic" oninput="wzRecalc()"></div>
+            <div class="fg"><label>DBP (mmHg)</label><input id="enDbp" list="dlDbp" type="number" placeholder="diastolic"></div>
+            <div class="fg"><label>Weight (kg)</label><input id="enWt" list="dlWt" type="number" step="0.1" oninput="wzBmi()"></div>
+            <div class="fg"><label>Height (cm)</label><input id="enHt" list="dlHt" type="number" oninput="wzBmi()"></div>
             <div class="fg"><label>BMI (kg/m²)</label><input id="enBmi" readonly placeholder="auto"></div>
-            <div class="fg"><label>Total chol (mmol/L)</label><input id="enTc" type="number" step="0.1"></div>
-            <div class="fg"><label>LDL (mmol/L)</label><input id="enLdl" type="number" step="0.1" oninput="wzRecalc()"></div>
-            <div class="fg"><label>HDL (mmol/L)</label><input id="enHdl" type="number" step="0.1"></div>
-            <div class="fg"><label>Triglycerides (mmol/L)</label><input id="enTg" type="number" step="0.1"></div>
-            <div class="fg"><label>Creatinine (µmol/L)</label><input id="enCr" type="number" oninput="wzRecalc()"></div>
+            <div class="fg"><label>Total chol (mmol/L)</label><input id="enTc" list="dlTc" type="number" step="0.1"></div>
+            <div class="fg"><label>LDL (mmol/L)</label><input id="enLdl" list="dlLdl" type="number" step="0.1" oninput="wzRecalc()"></div>
+            <div class="fg"><label>HDL (mmol/L)</label><input id="enHdl" list="dlHdl" type="number" step="0.1"></div>
+            <div class="fg"><label>Triglycerides (mmol/L)</label><input id="enTg" list="dlTg" type="number" step="0.1"></div>
+            <div class="fg"><label>Creatinine (µmol/L)</label><input id="enCr" list="dlCr" type="number" oninput="wzRecalc()"></div>
             <div class="fg"><label>eGFR (mL/min)</label><div style="display:flex;gap:6px"><select id="enEgfr" onchange="wzRecalc()" style="flex:1"></select><button type="button" class="btn btn-b btn-sm" onclick="wzEgfr()">Calc</button></div></div>
-            <div class="fg"><label>ACR (mg/g)</label><input id="enAcr" type="number" oninput="wzRecalc()"></div>
+            <div class="fg"><label>ACR (mg/g)</label><input id="enAcr" list="dlAcr" type="number" oninput="wzRecalc()"></div>
           </div>
-          <div id="enEgfrNote" style="font-size:10.5px;color:var(--grd);min-height:13px;margin:-2px 0 8px"></div>
+          <datalist id="dlSbp"><option>110<option>120<option>130<option>140<option>150<option>160<option>170<option>180<option>190</datalist><datalist id="dlDbp"><option>60<option>70<option>80<option>90<option>100<option>110</datalist><datalist id="dlWt"><option>50<option>60<option>65<option>70<option>75<option>80<option>85<option>90<option>100<option>110</datalist><datalist id="dlHt"><option>150<option>155<option>160<option>165<option>170<option>175<option>180<option>185</datalist><datalist id="dlTc"><option>3.5<option>4<option>4.5<option>5<option>5.5<option>6<option>6.5<option>7</datalist><datalist id="dlLdl"><option>1.4<option>1.8<option>2<option>2.5<option>3<option>3.5<option>4</datalist><datalist id="dlHdl"><option>0.8<option>0.9<option>1<option>1.1<option>1.2<option>1.3<option>1.5</datalist><datalist id="dlTg"><option>0.8<option>1<option>1.5<option>2<option>2.5<option>3<option>4</datalist><datalist id="dlCr"><option>50<option>60<option>70<option>80<option>90<option>100<option>120<option>150<option>200</datalist><datalist id="dlAcr"><option>3<option>10<option>20<option>30<option>50<option>100<option>200<option>300</datalist><div id="enEgfrNote" style="font-size:10.5px;color:var(--grd);min-height:13px;margin:-2px 0 8px"></div>
           <div class="fg"><label>Medication adherence</label><div id="enAdh"><span class="wzchip on" data-v="Good" onclick="wzPick(this,'adh')">Good (&gt;80%)</span><span class="wzchip" data-v="Fair" onclick="wzPick(this,'adh')">Fair (50–80%)</span><span class="wzchip" data-v="Poor" onclick="wzPick(this,'adh')">Poor (&lt;50%)</span></div></div>
           <div class="note">eGFR auto-calculates with the race-free <b>CKD-EPI 2021</b> equation from creatinine + age + sex (µmol/L → mg/dL ÷ 88.4).</div>
         </div>
@@ -458,7 +458,7 @@ button{font-family:inherit;}
             <div class="fg" style="margin-top:14px"><label>Other medications</label><textarea id="e-other-meds" rows="2" placeholder="e.g. Omeprazole 20mg, Vitamin D3 1000IU…"></textarea></div>
           </div>
           <div id="enMedDetail"></div>
-          <datalist id="freqList"><option>Once daily</option><option>Twice daily</option><option>Three times daily</option><option>Four times daily</option><option>At bedtime</option><option>Before breakfast</option><option>With meals</option><option>Once weekly</option><option>Every 2 weeks</option><option>As directed</option></datalist>
+          <datalist id="freqList"><option>Once daily</option><option>Twice daily</option><option>Three times daily</option><option>Four times daily</option><option>Every morning</option><option>At night</option><option>At bedtime</option><option>Before breakfast</option><option>Before meals</option><option>With meals</option><option>After meals</option><option>Alternate days</option><option>Once weekly</option><option>Twice weekly</option><option>Every 2 weeks</option><option>Once monthly</option><option>As needed (PRN)</option><option>As directed</option></datalist>
         </div>
 
         <div class="wzPanel" data-s="4" hidden>
@@ -583,6 +583,7 @@ button{font-family:inherit;}
         <div style="display:flex;gap:9px;align-items:center;margin-top:11px"><button class="btn btn-p btn-sm" onclick="saveApi()">Save API link</button><span id="apiStat" class="chip c-n">Not set</span></div>
       </div>
     </div>
+    <div class="airpanel" style="margin-bottom:14px;max-width:790px"><div class="ct">Branding — clinic logo</div><div class="note" style="margin-bottom:10px">Upload your Jusoor / clinic logo (PNG, JPG or SVG, under 1.5 MB). It replaces the sidebar wordmark and is stored on this device only.</div><div style="display:flex;align-items:center;gap:14px;flex-wrap:wrap"><img id="logoPreview" alt="logo preview" style="display:none;height:48px;max-width:190px;object-fit:contain;border:1px solid var(--bdr);border-radius:8px;padding:6px;background:#fff"><input type="file" id="logoFile" accept="image/png,image/jpeg,image/svg+xml" onchange="uploadLogo(this)" style="font-size:12px"><button class="btn btn-o btn-sm" type="button" onclick="clearLogo()">Remove logo</button></div></div>
     <div class="airpanel" style="margin-bottom:14px;max-width:790px">
       <div class="ct">In-Kingdom server connection</div>
       <div class="frow2" style="margin-top:13px">
@@ -1138,6 +1139,7 @@ if(!loadState())seedTasks();renderMsg();refreshMetrics();renderTasks();lgHint();
   };
 
   var MM={'m-met':['Metformin','1000 mg','Biguanide'],'m-empa':['Empagliflozin','10 mg','SGLT2i'],'m-dapa':['Dapagliflozin','10 mg','SGLT2i'],'m-cana':['Canagliflozin','100 mg','SGLT2i'],'m-sema':['Semaglutide','0.5 mg/wk','GLP-1 RA'],'m-sema-oral':['Semaglutide PO','7 mg','GLP-1 RA'],'m-lira':['Liraglutide','1.2 mg','GLP-1 RA'],'m-dula':['Dulaglutide','0.75 mg/wk','GLP-1 RA'],'m-sita':['Sitagliptin','100 mg','DPP-4i'],'m-saxa':['Saxagliptin','5 mg','DPP-4i'],'m-glicla':['Gliclazide MR','60 mg','Sulfonylurea'],'m-glib':['Glibenclamide','5 mg','Sulfonylurea'],'m-glar':['Insulin Glargine','basal','Insulin'],'m-detem':['Insulin Detemir','basal','Insulin'],'m-piog':['Pioglitazone','15 mg','TZD'],'m-rami':['Ramipril','5 mg','ACEi'],'m-lisi':['Lisinopril','10 mg','ACEi'],'m-vals':['Valsartan','160 mg','ARB'],'m-losa':['Losartan','50 mg','ARB'],'m-irbe':['Irbesartan','150 mg','ARB'],'m-finer':['Finerenone','10 mg','MRA'],'m-amlo':['Amlodipine','5 mg','CCB'],'m-biso':['Bisoprolol','5 mg','Beta-blocker'],'m-carve':['Carvedilol','12.5 mg','Beta-blocker'],'m-hctz':['HCTZ','25 mg','Thiazide'],'m-indap':['Indapamide','1.5 mg','Thiazide-like'],'m-cloni':['Clonidine','75 mcg','Central'],'m-ator':['Atorvastatin','40 mg','Statin'],'m-rosu':['Rosuvastatin','20 mg','Statin'],'m-ezet':['Ezetimibe','10 mg','Ezetimibe'],'m-asp':['Aspirin','81 mg','Antiplatelet'],'m-bemp':['Bempedoic acid','180 mg','ACL inhibitor'],'m-pcsk9':['Evolocumab','140 mg q2wk','PCSK9i'],'m-feno':['Fenofibrate','145 mg','Fibrate'],'m-ico':['Icosapent ethyl','2 g BD','Omega-3']};
+  var DOSES={'m-met':['500 mg','850 mg','1000 mg','1500 mg','2000 mg'],'m-empa':['10 mg','25 mg'],'m-dapa':['5 mg','10 mg'],'m-cana':['100 mg','300 mg'],'m-sema':['0.25 mg','0.5 mg','1 mg','2 mg'],'m-sema-oral':['3 mg','7 mg','14 mg'],'m-lira':['0.6 mg','1.2 mg','1.8 mg'],'m-dula':['0.75 mg','1.5 mg','3 mg','4.5 mg'],'m-sita':['25 mg','50 mg','100 mg'],'m-saxa':['2.5 mg','5 mg'],'m-glicla':['30 mg','60 mg','90 mg','120 mg'],'m-glib':['2.5 mg','5 mg','10 mg','15 mg','20 mg'],'m-glar':['10 units','20 units','30 units','40 units','50 units'],'m-detem':['10 units','20 units','30 units','40 units'],'m-piog':['15 mg','30 mg','45 mg'],'m-rami':['2.5 mg','5 mg','10 mg'],'m-lisi':['5 mg','10 mg','20 mg','40 mg'],'m-vals':['80 mg','160 mg','320 mg'],'m-losa':['50 mg','100 mg'],'m-irbe':['150 mg','300 mg'],'m-finer':['10 mg','20 mg'],'m-amlo':['5 mg','10 mg'],'m-biso':['2.5 mg','5 mg','10 mg'],'m-carve':['6.25 mg','12.5 mg','25 mg'],'m-hctz':['12.5 mg','25 mg'],'m-indap':['1.5 mg','2.5 mg'],'m-cloni':['75 mcg','150 mcg'],'m-ator':['10 mg','20 mg','40 mg','80 mg'],'m-rosu':['5 mg','10 mg','20 mg','40 mg'],'m-ezet':['10 mg'],'m-asp':['81 mg','100 mg'],'m-bemp':['180 mg'],'m-pcsk9':['140 mg q2wk','420 mg monthly'],'m-feno':['145 mg','160 mg'],'m-ico':['2 g BD','4 g/day']};
   function chk(id){var e=$(id);return !!(e&&e.checked);}
   function medFlags(){
     return { sglt2:chk('m-empa')||chk('m-dapa')||chk('m-cana'),
@@ -1153,8 +1155,10 @@ if(!loadState())seedTasks();renderMsg();refreshMetrics();renderTasks();lgHint();
     if(!checked.length){box.innerHTML='';return;}
     var html='<div class="meddet-h">Dose &amp; frequency — adjust per patient (type or pick)</div>';
     checked.forEach(function(id){var m=MM[id],pv=prev[id]||{};
+      var dop=DOSES[id]||[], dlid='dz-'+id;
+      var dl=dop.length?('<datalist id="'+dlid+'">'+dop.map(function(x){return '<option>'+x+'</option>';}).join('')+'</datalist>'):'';
       html+='<div class="meddet" data-id="'+id+'"><span class="mn">'+m[0]+'</span>'+
-        '<input class="dz" placeholder="dose" value="'+((pv.dose!=null&&pv.dose!=='')?pv.dose:m[1])+'" oninput="wzRecalc()">'+
+        '<input class="dz" list="'+dlid+'" placeholder="dose" value="'+((pv.dose!=null&&pv.dose!=='')?pv.dose:m[1])+'" oninput="wzRecalc()">'+dl+
         '<input class="fq" list="freqList" placeholder="frequency" value="'+(pv.freq||'Once daily')+'" oninput="wzRecalc()"></div>';
     });
     box.innerHTML=html;
@@ -1254,6 +1258,12 @@ if(!loadState())seedTasks();renderMsg();refreshMetrics();renderTasks();lgHint();
   (function(){var dl=$('dxYears');if(dl){var y=new Date().getFullYear(),o='';for(var i=y;i>=1980;i--)o+='<option>'+i+'</option>';dl.innerHTML=o;}})();
   if($('wzSteps')) paint();
 })();
+</script>
+<script>
+window.applyLogo=function(){try{var d=localStorage.getItem("jd_logo")||"";var img=document.getElementById("sbLogo"),n=document.getElementById("sbName"),a=document.getElementById("sbAr"),pv=document.getElementById("logoPreview");if(d){if(img){img.src=d;img.style.display="block";}if(n)n.style.display="none";if(a)a.style.display="none";if(pv){pv.src=d;pv.style.display="block";}}else{if(img){img.style.display="none";img.removeAttribute("src");}if(n)n.style.display="";if(a)a.style.display="";if(pv){pv.style.display="none";pv.removeAttribute("src");}}}catch(e){}};
+window.uploadLogo=function(inp){var f=inp&&inp.files&&inp.files[0];if(!f)return;if(f.size>1500000){if(typeof toast==="function")toast("Logo too large","Use an image under 1.5 MB");return;}var r=new FileReader();r.onload=function(){try{localStorage.setItem("jd_logo",r.result);window.applyLogo();if(typeof toast==="function")toast("Logo updated","Saved on this device");}catch(e){if(typeof toast==="function")toast("Could not save logo",""+((e&&e.message)||e));}};r.readAsDataURL(f);};
+window.clearLogo=function(){localStorage.removeItem("jd_logo");var inp=document.getElementById("logoFile");if(inp)inp.value="";window.applyLogo();if(typeof toast==="function")toast("Logo removed","Using default wordmark");};
+try{window.applyLogo();}catch(e){}
 </script>
 </body>
 </html>
