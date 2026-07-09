@@ -637,12 +637,12 @@ button{font-family:inherit;}
       <div class="cs" style="line-height:1.6;color:var(--mu)">Connect an AI model to power the enrolment AI Review and care-plan generation. Leave blank to keep the built-in rule-based engine.</div>
       <div id="airFields">
         <div class="frow2" style="margin-top:13px">
-          <div class="fg"><label>API link (endpoint)</label><input id="airEp" autocomplete="off" placeholder="https://api.anthropic.com/v1/messages"></div>
+          <div class="fg"><label>API link (endpoint)</label><input id="airEp" autocomplete="off" placeholder="https://ai-gateway.jusoor.sa/v1/messages"></div>
           <div class="fg"><label>API key</label><input id="airKey" type="password" autocomplete="off" placeholder="paste API key"></div>
         </div>
-        <div class="fg" style="margin-top:11px"><label>AI model</label><input id="airModel" autocomplete="off" placeholder="claude-sonnet-4-5"></div>
+        <div class="fg" style="margin-top:11px"><label>AI model</label><input id="airModel" autocomplete="off" placeholder="model name"></div>
         <div style="display:flex;gap:9px;align-items:center;margin-top:11px"><button class="btn btn-p btn-sm" onclick="saveApi()">Save API link</button><span id="apiStat" class="chip c-n">Not set</span></div>
-        <div class="cs" style="margin-top:9px;line-height:1.6;color:var(--mu)">For a direct Anthropic key, leave the endpoint as <code>https://api.anthropic.com/v1/messages</code>. For production, point the endpoint at your in-Kingdom proxy / Cloudflare Worker so no key is held in the browser. If AI is not connected, the buttons fall back to an on-device draft.</div>
+        <div class="cs" style="margin-top:9px;line-height:1.6;color:var(--mu)">To connect an external model, leave the endpoint as <code>https://ai-gateway.jusoor.sa/v1/messages</code>. For production, point the endpoint at your in-Kingdom proxy / Cloudflare Worker so no key is held in the browser. If AI is not connected, the buttons fall back to an on-device draft.</div>
       </div>
     </div>
     <div class="airpanel" style="margin-bottom:14px;max-width:790px"><div class="ct">Branding — clinic logo</div><div class="note" style="margin-bottom:10px">Upload your Jusoor / clinic logo (PNG, JPG or SVG, under 1.5 MB). It replaces the sidebar wordmark and is stored on this device only.</div><div style="display:flex;align-items:center;gap:14px;flex-wrap:wrap"><img id="logoPreview" alt="logo preview" style="display:none;height:48px;max-width:190px;object-fit:contain;border:1px solid var(--bdr);border-radius:8px;padding:6px;background:#fff"><input type="file" id="logoFile" accept="image/png,image/jpeg,image/svg+xml" onchange="uploadLogo(this)" style="font-size:12px"><button class="btn btn-o btn-sm" type="button" onclick="clearLogo()">Remove logo</button></div></div>
@@ -888,7 +888,7 @@ function openPat(id){var p=patients[id],c=control(p),rk=riskScore(p),dr=dropoutS
   "<div class='allergybar "+(hasAllergy?"has":"no")+"'>"+(hasAllergy?"Allergy: "+p.allergy+" — verify before prescribing":"No known drug allergies")+"</div>"+
   "<div class='sbd'><div class='sbd-h'><div class='sbd-av'>"+ini(p.name)+"</div>"+
     "<div style='flex:1'><div class='sbd-n'>"+p.name+"</div><div class='sbd-m'>"+p.age+"y · "+(p.sex==="M"?"Male":"Female")+" · "+p.mrn+" · "+ICD[p.type]+" · "+p.district+" · "+p.doc+" · "+p.phone+"</div></div>"+
-    "<div style='display:flex;gap:7px'><button class='btn btn-b btn-sm' onclick='messagePat("+p.id+")'>Message</button><button class='btn btn-g btn-sm' onclick='recallPat("+p.id+")'>Recall</button></div></div>"+
+    "<div style='display:flex;gap:7px'><button class='btn btn-b btn-sm' onclick='messagePat("+p.id+")'>Message</button><button class='btn btn-p btn-sm' onclick='avsOpen("+p.id+")'>After-visit summary</button><button class='btn btn-g btn-sm' onclick='recallPat("+p.id+")'>Recall</button></div></div>"+
     "<div class='vstrip'>"+vit(p.a1c+"% "+trend,"HbA1c",a1col)+vit(p.sbp+"/"+p.dbp,"BP")+vit(p.ldl,"LDL",p.ldl>2.6?"var(--am)":"var(--tx)")+vit(p.egfr,"eGFR",p.egfr<45?"var(--rd)":"var(--tx)")+vit(p.bmi,"BMI")+vit(p.adh,"Adherence",p.adh==="Poor"?"var(--rd)":p.adh==="Fair"?"var(--am)":"var(--gr)")+vit(p.fbs,"FBS")+"</div></div>"+
   "<div class='mbody'>"+
   "<div class='g2' style='margin-bottom:14px'>"+
@@ -1465,6 +1465,190 @@ window.applyLogo=function(){try{var d=localStorage.getItem("jd_logo")||"";var im
 window.uploadLogo=function(inp){var f=inp&&inp.files&&inp.files[0];if(!f)return;if(f.size>1500000){if(typeof toast==="function")toast("Logo too large","Use an image under 1.5 MB");return;}var r=new FileReader();r.onload=function(){try{localStorage.setItem("jd_logo",r.result);window.applyLogo();if(typeof toast==="function")toast("Logo updated","Saved on this device");}catch(e){if(typeof toast==="function")toast("Could not save logo",""+((e&&e.message)||e));}};r.readAsDataURL(f);};
 window.clearLogo=function(){localStorage.removeItem("jd_logo");var inp=document.getElementById("logoFile");if(inp)inp.value="";window.applyLogo();if(typeof toast==="function")toast("Logo removed","Using default wordmark");};
 try{window.applyLogo();}catch(e){}
+</script>
+
+<script>
+/* ===== Jusoor add-on: After-Visit Summary + personalised Education/Goals ===== */
+(function(){
+  function addMonths(n){var d=new Date();d.setMonth(d.getMonth()+n);return d.toISOString().slice(0,10);}
+  var TOPIC_EN={disease:"Understanding diabetes",meds:"Medications",nutrition:"Nutrition",activity:"Physical activity",glucose:"Glucose monitoring",foot:"Foot care",hypo:"Hypo management"};
+
+  function jPriorities(p){
+    var out=[];
+    if(p.a1c>=9) out.push({k:"a1c",sev:"r",txt:"HbA1c "+p.a1c+"% \u2014 very high"});
+    else if(p.a1c>=7.5) out.push({k:"a1c",sev:"a",txt:"HbA1c "+p.a1c+"% \u2014 above target"});
+    if(p.sbp>=140||p.dbp>=90) out.push({k:"bp",sev:"a",txt:"BP "+p.sbp+"/"+p.dbp+" \u2014 above target"});
+    var onStatin=p.meds.some(function(m){return m.cls==="Statin";});
+    if(p.ldl>2.6) out.push({k:"ldl",sev:onStatin?"a":"r",txt:"LDL "+p.ldl+(onStatin?" \u2014 above 2.6":" \u2014 no statin")});
+    if(p.egfr<60) out.push({k:"egfr",sev:"r",txt:"eGFR "+p.egfr+" \u2014 reduced kidney fn"});
+    if(p.adh==="Poor") out.push({k:"adh",sev:"r",txt:"Adherence poor"});
+    else if(p.adh==="Fair") out.push({k:"adh",sev:"a",txt:"Adherence fair"});
+    if(p.bmi>=30) out.push({k:"wt",sev:"a",txt:"BMI "+p.bmi});
+    (typeof gaps==="function"?gaps(p):[]).forEach(function(x){out.push({k:"scr",sev:"a",txt:x});});
+    var onSU=p.meds.some(function(m){return m.high;}), onIns=p.meds.some(function(m){return /Insulin/i.test(m.drug);});
+    if(onSU||onIns) out.push({k:"hypo",sev:"a",txt:"Hypo risk ("+(onIns?"insulin":"sulfonylurea")+")"});
+    return out;
+  }
+  function jGoalRec(p){
+    if(p.a1c>=7.5){var tgt=(p.a1c>=9?8:7);return {cat:"HbA1c reduction",txt:"Reduce HbA1c from "+p.a1c+"% to below "+tgt+"% within 3 months through daily medication adherence and cutting sugary drinks."};}
+    if(p.sbp>=140||p.dbp>=90) return {cat:"Blood pressure",txt:"Reach BP below 130/80 (now "+p.sbp+"/"+p.dbp+") within 12 weeks via daily medication and a low-salt diet."};
+    if(p.ldl>2.6) return {cat:"Medication adherence",txt:"Take the prescribed statin every night with <2 missed doses per month to bring LDL below 2.6."};
+    if(p.adh==="Poor"||p.adh==="Fair") return {cat:"Medication adherence",txt:"Take all "+p.meds.length+" prescribed medications daily with <2 missed doses per month over 8 weeks."};
+    if(p.bmi>=30) return {cat:"Weight / BMI",txt:"Reduce BMI from "+p.bmi+" by losing 3 kg over 8 weeks via 30-min daily walking and portion control."};
+    return {cat:"Physical activity",txt:"Walk 30 minutes on at least 5 days each week for the next 8 weeks."};
+  }
+  function jDsmeFocus(p){
+    var pr=jPriorities(p),topics=[];
+    var map={a1c:["meds","glucose"],adh:["meds","glucose"],ldl:["meds","nutrition"],bp:["nutrition","meds"],egfr:["meds","nutrition"],wt:["nutrition","activity"],hypo:["hypo"],scr:["foot"]};
+    pr.forEach(function(x){(map[x.k]||[]).forEach(function(t){if(topics.indexOf(t)<0)topics.push(t);});});
+    (typeof DSME_KEYS!=="undefined"?DSME_KEYS:[]).forEach(function(k){if((!p.dsme||!p.dsme[k])&&topics.indexOf(k)<0)topics.push(k);});
+    return topics.slice(0,4);
+  }
+
+  /* ----- personalise Education & Goals ----- */
+  window.localGoal=function(p){
+    var cat=document.getElementById("glCat").value, rec=jGoalRec(p);
+    if(cat===rec.cat) return rec.txt;
+    switch(cat){
+      case "HbA1c reduction": return "Reduce HbA1c from "+p.a1c+"% to below "+(p.a1c>=9?8:7)+"% within 3 months through medication adherence and diet.";
+      case "Blood pressure": return "Reach BP below 130/80 (now "+p.sbp+"/"+p.dbp+") within 12 weeks via medication and a low-salt diet.";
+      case "Weight / BMI": return "Reduce BMI from "+p.bmi+" by losing 3 kg over 8 weeks via 30-min daily walking and portion control.";
+      case "Physical activity": return "Walk 30 minutes on 5 days a week for 8 weeks"+(p.bmi>=30?" to support weight loss.":".");
+      case "Diet / nutrition": return "Cut sugary drinks to zero and limit rice to one portion/day for 6 weeks"+(p.a1c>=8?" to help lower HbA1c "+p.a1c+"%.":".");
+      case "Medication adherence": return "Take all "+p.meds.length+" prescribed medications daily with <2 missed doses/month over 8 weeks.";
+      case "Smoking cessation": return "Reduce to zero cigarettes within 8 weeks with cessation support.";
+      default: return rec.txt;
+    }
+  };
+  function recoStrip(p,which){
+    var sel=document.getElementById(which==="gl"?"glPt":"edPt"); if(!sel)return;
+    var host=(sel.closest&&sel.closest(".fg"))||sel.parentElement;
+    var id="reco-"+which, box=document.getElementById(id);
+    if(!box){box=document.createElement("div");box.id=id;box.style.cssText="margin:10px 0 2px;padding:11px 13px;border:1px solid #e5e7eb;border-radius:10px;background:#f8fafc;font-size:12.5px;line-height:1.55";host.parentElement.insertBefore(box,host.nextSibling);}
+    var pr=jPriorities(p);
+    var chips=pr.slice(0,5).map(function(x){var c=x.sev==="r"?"#b91c1c":"#b45309",bg=x.sev==="r"?"#fee2e2":"#fef3c7";return "<span style='display:inline-block;margin:2px 4px 2px 0;padding:2px 8px;border-radius:999px;background:"+bg+";color:"+c+";font-weight:600'>"+x.txt+"</span>";}).join("");
+    var focus=jDsmeFocus(p).map(function(k){return TOPIC_EN[k]||k;}).join(" \u00b7 ");
+    box.innerHTML="<div style='font-weight:700;color:#1a2b4a;margin-bottom:5px'>\u2726 Personalised for "+p.name+" \u2014 "+p.type+" \u00b7 HbA1c "+p.a1c+"% \u00b7 BP "+p.sbp+"/"+p.dbp+"</div>"+
+      "<div style='margin-bottom:6px'>"+(chips||"<span style='color:#16a34a'>On target across the board \u2014 reinforce maintenance</span>")+"</div>"+
+      "<div style='color:#6b7280'><b>Suggested DSME focus:</b> "+focus+"</div>";
+  }
+  function goalSuggest(){
+    var p=(typeof eduPatient==="function")?eduPatient("glPt"):null; if(!p)return;
+    if(typeof seedEdu==="function")seedEdu(p);
+    var rec=jGoalRec(p), cs=document.getElementById("glCat");
+    if(cs){for(var i=0;i<cs.options.length;i++){if(cs.options[i].value===rec.cat){cs.selectedIndex=i;break;}}}
+    var d=document.getElementById("glDate"); if(d)d.value=addMonths(3);
+    var ta=document.getElementById("glTxt"); if(ta)ta.value=rec.txt;
+    recoStrip(p,"gl");
+  }
+  function eduSuggest(){
+    var p=(typeof eduPatient==="function")?eduPatient("edPt"):null; if(!p)return;
+    if(typeof seedEdu==="function")seedEdu(p);
+    var want = (typeof dsmePct==="function"&&dsmePct(p)===0)?"Initial DSME":(p.scr&&p.scr.foot>=12?"Foot care":(p.adh!=="Good"?"Follow-up DSME":"Follow-up DSME"));
+    var t=document.getElementById("edType");
+    if(t){for(var i=0;i<t.options.length;i++){if(t.options[i].value===want){t.selectedIndex=i;break;}}}
+    recoStrip(p,"ed");
+  }
+  function wireEdu(){
+    var e=document.getElementById("edPt"); if(e&&!e.__reco){e.__reco=1;e.addEventListener("change",eduSuggest);}
+    var g=document.getElementById("glPt"); if(g&&!g.__reco){g.__reco=1;g.addEventListener("change",goalSuggest);}
+  }
+
+  /* ----- After-Visit Patient Summary ----- */
+  function metricBox(label,val,sub,ok){
+    var bg=ok?"#eaf7e6":"#fdecec",bd=ok?"#cdeab9":"#f4c9c9",col=ok?"#3f8f16":"#c0392b",tag=ok?"\u0645\u0645\u062a\u0627\u0632 \u2713":"\u064a\u062d\u062a\u0627\u062c \u0639\u0646\u0627\u064a\u0629";
+    return "<div style='flex:1;min-width:150px;border:1px solid "+bd+";background:"+bg+";border-radius:12px;padding:12px 14px'>"+
+      "<div style='font-size:12px;color:#556'>"+label+"</div>"+
+      "<div style='font-size:26px;font-weight:800;color:"+col+";margin:3px 0'>"+val+"</div>"+
+      "<div style='font-size:11px;color:#667'>"+sub+"</div>"+
+      "<div style='font-size:12px;font-weight:700;color:"+col+"'>"+tag+"</div></div>";
+  }
+  function avsCard(p){
+    if(typeof seedEdu==="function")seedEdu(p);
+    var bpOk=(p.sbp<140&&p.dbp<90),a1cOk=(p.a1c<7.5),ldlOk=(p.ldl<=2.6),egfrOk=(p.egfr>=60);
+    var risk=(typeof riskScore==="function")?riskScore(p):{tier:"Moderate"};
+    var fu = risk.tier==="High"?{t:"\u0645\u062a\u0627\u0628\u0639\u0629 \u0645\u0643\u062b\u0641\u0629",c:"#c0392b",bg:"#fdecec",msg:"\u062d\u0627\u0644\u062a\u0643 \u062a\u062d\u062a\u0627\u062c \u0645\u062a\u0627\u0628\u0639\u0629 \u0642\u0631\u064a\u0628\u0629 \u0645\u0646 \u0641\u0631\u064a\u0642\u0646\u0627 \u062e\u0644\u0627\u0644 \u0627\u0644\u0641\u062a\u0631\u0629 \u0627\u0644\u0642\u0627\u062f\u0645\u0629 \u2014 \u0633\u0646\u0643\u0648\u0646 \u0645\u0639\u0643 \u062e\u0637\u0648\u0629 \u0628\u062e\u0637\u0648\u0629."}
+      : risk.tier==="Moderate"?{t:"\u0645\u062a\u0627\u0628\u0639\u0629 \u0645\u0646\u062a\u0638\u0645\u0629",c:"#b45309",bg:"#fef3c7",msg:"\u0646\u062a\u0627\u0628\u0639 \u0645\u0639\u0643 \u0628\u0634\u0643\u0644 \u0645\u0646\u062a\u0638\u0645 \u0644\u0644\u0648\u0635\u0648\u0644 \u0625\u0644\u0649 \u0623\u0647\u062f\u0627\u0641\u0643 \u2014 \u0627\u0633\u062a\u0645\u0631 \u0639\u0644\u0649 \u0627\u0644\u062e\u0637\u0629."}
+      : {t:"\u0645\u062a\u0627\u0628\u0639\u0629 \u0631\u0648\u062a\u064a\u0646\u064a\u0629",c:"#3f8f16",bg:"#eaf7e6",msg:"\u062d\u0627\u0644\u062a\u0643 \u0645\u0633\u062a\u0642\u0631\u0629 \u2014 \u0646\u0643\u062a\u0641\u064a \u0628\u0627\u0644\u0645\u062a\u0627\u0628\u0639\u0629 \u0627\u0644\u062f\u0648\u0631\u064a\u0629. \u0623\u062d\u0633\u0646\u062a!"};
+    var pl=[];
+    pl.push(a1cOk?"\u0645\u0633\u062a\u0648\u0649 \u0627\u0644\u0633\u0643\u0631 \u0627\u0644\u062a\u0631\u0627\u0643\u0645\u064a \u0636\u0645\u0646 \u0627\u0644\u0647\u062f\u0641 \u2014 \u0623\u062d\u0633\u0646\u062a\u060c \u0627\u0633\u062a\u0645\u0631 \u0639\u0644\u0649 \u0646\u0641\u0633 \u0627\u0644\u0646\u0647\u062c."
+      :"\u0645\u0633\u062a\u0648\u0649 \u0627\u0644\u0633\u0643\u0631 \u0627\u0644\u062a\u0631\u0627\u0643\u0645\u064a ("+p.a1c+"%) \u0623\u0639\u0644\u0649 \u0645\u0646 \u0627\u0644\u0647\u062f\u0641 \u2014 \u0628\u0627\u0644\u0627\u0646\u062a\u0638\u0627\u0645 \u0641\u064a \u0627\u0644\u062f\u0648\u0627\u0621 \u0648\u0627\u0644\u063a\u0630\u0627\u0621 \u064a\u062a\u062d\u0633\u0651\u0646 \u0628\u0625\u0630\u0646 \u0627\u0644\u0644\u0647.");
+    if(p.prev){pl.push(p.a1c<p.prev?"\u0646\u062a\u0627\u0626\u062c\u0643 \u0641\u064a \u062a\u062d\u0633\u0651\u0646 \u0645\u0642\u0627\u0631\u0646\u0629 \u0628\u0627\u0644\u0632\u064a\u0627\u0631\u0629 \u0627\u0644\u0633\u0627\u0628\u0642\u0629 \u2014 \u0627\u0633\u062a\u0645\u0631."
+      :(p.a1c>p.prev?"\u0627\u0631\u062a\u0641\u0639\u062a \u0642\u0644\u064a\u0644\u0627\u064b \u0639\u0646 \u0622\u062e\u0631 \u0632\u064a\u0627\u0631\u0629 \u2014 \u0646\u0631\u0643\u0651\u0632 \u0645\u0639\u0627\u064b \u0639\u0644\u0649 \u0627\u0644\u0627\u0646\u062a\u0638\u0627\u0645."
+      :"\u0646\u062a\u0627\u0626\u062c\u0643 \u062b\u0627\u0628\u062a\u0629 \u0645\u0642\u0627\u0631\u0646\u0629 \u0628\u0627\u0644\u0632\u064a\u0627\u0631\u0629 \u0627\u0644\u0633\u0627\u0628\u0642\u0629."));}
+    pl.push(ldlOk?"\u0627\u0644\u0643\u0648\u0644\u064a\u0633\u062a\u0631\u0648\u0644 \u0627\u0644\u0636\u0627\u0631 \u0636\u0645\u0646 \u0627\u0644\u0647\u062f\u0641 \u2014 \u0627\u0644\u0627\u0646\u062a\u0638\u0627\u0645 \u064a\u062d\u0645\u064a \u0642\u0644\u0628\u0643 \u0648\u0634\u0631\u0627\u064a\u064a\u0646\u0643."
+      :"\u0627\u0644\u0643\u0648\u0644\u064a\u0633\u062a\u0631\u0648\u0644 \u0627\u0644\u0636\u0627\u0631 \u0623\u0639\u0644\u0649 \u0645\u0646 \u0627\u0644\u0647\u062f\u0641 \u2014 \u0627\u0644\u0627\u0646\u062a\u0638\u0627\u0645 \u0641\u064a \u0639\u0644\u0627\u062c \u0627\u0644\u0643\u0648\u0644\u064a\u0633\u062a\u0631\u0648\u0644 \u064a\u062d\u0645\u064a \u0627\u0644\u0642\u0644\u0628 \u0648\u0627\u0644\u0634\u0631\u0627\u064a\u064a\u0646.");
+    var req=[];
+    var medNames=p.meds.map(function(m){return m.drug;}).join("\u060c ");
+    req.push("\u0627\u0646\u062a\u0638\u0645 \u0641\u064a \u0623\u062f\u0648\u064a\u062a\u0643 \u064a\u0648\u0645\u064a\u0627\u064b \u062f\u0648\u0646 \u0627\u0646\u0642\u0637\u0627\u0639: "+medNames+".");
+    if(p.adh!=="Good") req.push("\u0644\u0627\u062d\u0638\u0646\u0627 \u062a\u0641\u0648\u064a\u062a \u0628\u0639\u0636 \u0627\u0644\u062c\u0631\u0639\u0627\u062a \u2014 \u0627\u0636\u0628\u0637 \u0645\u0646\u0628\u0651\u0647\u0627\u064b \u064a\u0648\u0645\u064a\u0627\u064b \u0641\u064a \u062c\u0648\u0627\u0644\u0643 \u0644\u062a\u0630\u0643\u064a\u0631\u0643 \u0628\u0627\u0644\u062f\u0648\u0627\u0621.");
+    var scrAr={"Retinal screen overdue":"\u0641\u062d\u0635 \u0642\u0627\u0639 \u0627\u0644\u0639\u064a\u0646","Foot exam overdue":"\u0641\u062d\u0635 \u0627\u0644\u0642\u062f\u0645","Renal (uACR) overdue":"\u0641\u062d\u0635 \u0648\u0638\u0627\u0626\u0641 \u0627\u0644\u0643\u0644\u0649 (\u0627\u0644\u0628\u0648\u0644)","Cardiac review overdue":"\u062a\u0642\u064a\u064a\u0645 \u0627\u0644\u0642\u0644\u0628"};
+    var g=(typeof gaps==="function")?gaps(p):[]; var scrN=g.map(function(x){return scrAr[x]||x;});
+    if(scrN.length) req.push("\u0641\u062d\u0648\u0635\u0627\u062a \u0645\u0637\u0644\u0648\u0628\u0629: "+scrN.join("\u060c ")+" \u2014 \u0633\u064a\u062a\u0648\u0627\u0635\u0644 \u0645\u0639\u0643 \u0645\u0646\u0633\u0642 \u0627\u0644\u0631\u0639\u0627\u064a\u0629 \u0644\u062a\u062d\u062f\u064a\u062f \u0627\u0644\u0645\u0648\u0627\u0639\u064a\u062f.");
+    req.push("\u0627\u0645\u0634\u0650 30 \u062f\u0642\u064a\u0642\u0629 \u0645\u0639\u0638\u0645 \u0623\u064a\u0627\u0645 \u0627\u0644\u0623\u0633\u0628\u0648\u0639\u060c \u0648\u0642\u0644\u0651\u0644 \u0627\u0644\u0633\u0643\u0631\u064a\u0627\u062a \u0648\u0627\u0644\u0645\u0634\u0631\u0648\u0628\u0627\u062a \u0627\u0644\u0645\u062d\u0644\u0651\u0627\u0629"+(p.bmi>=30?" \u2014 \u064a\u0633\u0627\u0639\u062f\u0643 \u0639\u0644\u0649 \u0625\u0646\u0642\u0627\u0635 \u0627\u0644\u0648\u0632\u0646.":"."));
+    req.push("\u0645\u0648\u0639\u062f\u0643 \u0627\u0644\u0642\u0627\u062f\u0645: "+addMonths(3)+" \u2014 \u0627\u062d\u0636\u0631 \u0635\u0627\u0626\u0645\u0627\u064b 8 \u0633\u0627\u0639\u0627\u062a \u0644\u062a\u062d\u0644\u064a\u0644 \u0627\u0644\u062f\u0645.");
+    var onSU=p.meds.some(function(m){return m.high;}),onIns=p.meds.some(function(m){return /Insulin/i.test(m.drug);});
+    if(onSU||onIns) req.push("\u0625\u0630\u0627 \u0634\u0639\u0631\u062a \u0628\u0623\u0639\u0631\u0627\u0636 \u0647\u0628\u0648\u0637 \u0627\u0644\u0633\u0643\u0631 (\u0631\u062c\u0641\u0629\u060c \u062a\u0639\u0631\u0651\u0642\u060c \u062f\u0648\u062e\u0629) \u0641\u062a\u0646\u0627\u0648\u0644 \u0634\u064a\u0626\u0627\u064b \u0633\u0643\u0631\u064a\u0627\u064b \u0641\u0648\u0631\u0627\u064b \u0648\u0623\u062e\u0628\u0631 \u0641\u0631\u064a\u0642\u0643.");
+    var greet=(p.sex==="F")?"\u0639\u0632\u064a\u0632\u062a\u064a":"\u0639\u0632\u064a\u0632\u064a";
+    var today=new Date().toISOString().slice(0,10);
+    var h="";
+    h+="<div dir='rtl' style='font-family:inherit;text-align:right'>";
+    h+="<div style='background:linear-gradient(135deg,#1a2b4a,#243660);color:#fff;border-radius:14px 14px 0 0;padding:20px 22px'>"+
+        "<div style='font-size:20px;font-weight:800'>\u062c\u0633\u0648\u0631 \u00b7 \u0645\u0644\u062e\u0635 \u0632\u064a\u0627\u0631\u062a\u0643</div>"+
+        "<div style='font-size:12.5px;opacity:.8;margin-top:4px'>\u0645\u0631\u0643\u0632 "+p.district+" \u00b7 "+p.doc+" \u00b7 "+today+"</div></div>";
+    h+="<div style='border:1px solid #e8ebf0;border-top:none;border-radius:0 0 14px 14px;padding:20px 22px;background:#fff'>";
+    h+="<div style='font-size:16px;font-weight:800;color:#1a2b4a'>"+greet+" "+p.name+"\u060c</div>";
+    h+="<div style='color:#6b7280;font-size:13px;margin:6px 0 16px'>\u0634\u0643\u0631\u0627\u064b \u0644\u0632\u064a\u0627\u0631\u062a\u0643 \u0627\u0644\u064a\u0648\u0645. \u0647\u0630\u0627 \u0645\u0644\u062e\u0635 \u0628\u0633\u064a\u0637 \u0644\u062d\u0627\u0644\u062a\u0643 \u0648\u0646\u062a\u0627\u0626\u062c \u062a\u062d\u0627\u0644\u064a\u0644\u0643 \u0648\u0645\u0627 \u0646\u062d\u062a\u0627\u062c\u0647 \u0645\u0646\u0643 \u062d\u062a\u0649 \u0645\u0648\u0639\u062f\u0643 \u0627\u0644\u0642\u0627\u062f\u0645.</div>";
+    h+="<div style='font-weight:800;color:#1a2b4a;margin:6px 0 9px'>\ud83d\udccd \u0623\u064a\u0646 \u0623\u0646\u062a \u0627\u0644\u0622\u0646</div>";
+    h+="<div style='display:flex;flex-wrap:wrap;gap:10px'>"+
+        metricBox("\u0636\u063a\u0637 \u0627\u0644\u062f\u0645",p.sbp+"/"+p.dbp,"\u0627\u0644\u0647\u062f\u0641: \u0623\u0642\u0644 \u0645\u0646 140/90",bpOk)+
+        metricBox("\u0627\u0644\u0633\u0643\u0631 \u0627\u0644\u062a\u0631\u0627\u0643\u0645\u064a HbA1c",p.a1c+"%","\u0627\u0644\u0647\u062f\u0641: \u0623\u0642\u0644 \u0645\u0646 7.5%",a1cOk)+
+        metricBox("\u0627\u0644\u0643\u0648\u0644\u064a\u0633\u062a\u0631\u0648\u0644 \u0627\u0644\u0636\u0627\u0631 LDL",p.ldl,"\u0627\u0644\u0647\u062f\u0641: \u0623\u0642\u0644 \u0645\u0646 2.6",ldlOk)+
+        metricBox("\u0648\u0638\u0627\u0626\u0641 \u0627\u0644\u0643\u0644\u0649 eGFR",p.egfr,"\u0627\u0644\u0637\u0628\u064a\u0639\u064a: \u0623\u0639\u0644\u0649 \u0645\u0646 60",egfrOk)+"</div>";
+    h+="<div style='font-weight:800;color:#1a2b4a;margin:18px 0 8px'>\ud83d\udcac \u0646\u062a\u0627\u0626\u062c \u062a\u062d\u0627\u0644\u064a\u0644\u0643 \u0628\u0643\u0644\u0645\u0627\u062a \u0628\u0633\u064a\u0637\u0629</div>";
+    h+="<ul style='margin:0;padding-right:20px;color:#243660;font-size:13.5px;line-height:1.9'>"+pl.map(function(x){return "<li>"+x+"</li>";}).join("")+"</ul>";
+    h+="<div style='font-weight:800;color:#1a2b4a;margin:18px 0 8px'>\ud83e\udd1d \u0645\u0633\u062a\u0648\u0649 \u0627\u0644\u0645\u062a\u0627\u0628\u0639\u0629</div>";
+    h+="<div style='display:flex;align-items:center;gap:12px;background:"+fu.bg+";border:1px solid "+fu.c+"33;border-radius:12px;padding:12px 14px'>"+
+        "<span style='background:"+fu.c+";color:#fff;font-weight:700;font-size:12.5px;border-radius:999px;padding:5px 12px;white-space:nowrap'>"+fu.t+"</span>"+
+        "<span style='color:#334155;font-size:12.5px;line-height:1.7'>"+fu.msg+"</span></div>";
+    h+="<div style='font-weight:800;color:#1a2b4a;margin:18px 0 8px'>\u2705 \u0627\u0644\u0645\u0637\u0644\u0648\u0628 \u0645\u0646\u0643 \u062d\u062a\u0649 \u0627\u0644\u0645\u0648\u0639\u062f \u0627\u0644\u0642\u0627\u062f\u0645</div>";
+    h+="<ol style='margin:0;padding-right:20px;color:#243660;font-size:13.5px;line-height:1.95'>"+req.map(function(x){return "<li style='margin-bottom:4px'>"+x+"</li>";}).join("")+"</ol>";
+    h+="<div style='border-top:1px dashed #e2e6ec;margin-top:16px;padding-top:12px;color:#9aa3b0;font-size:11.5px;line-height:1.7'>\u0644\u0623\u064a \u0627\u0633\u062a\u0641\u0633\u0627\u0631 \u062a\u0648\u0627\u0635\u0644 \u0645\u0639 \u0645\u0646\u0633\u0642 \u0627\u0644\u0631\u0639\u0627\u064a\u0629 \u0639\u0644\u0649 \u0627\u0644\u0631\u0642\u0645 \u0627\u0644\u0645\u062c\u0627\u0646\u064a 8001234567 \u00b7 \u0647\u0630\u0627 \u0627\u0644\u0645\u0644\u062e\u0635 \u0644\u0644\u062a\u0648\u0639\u064a\u0629 \u0648\u0644\u0627 \u064a\u063a\u0646\u064a \u0639\u0646 \u0627\u0633\u062a\u0634\u0627\u0631\u0629 \u0637\u0628\u064a\u0628\u0643 \u0627\u0644\u0645\u0639\u0627\u0644\u062c.</div>";
+    h+="</div></div>";
+    return h;
+  }
+  window.avsOpen=function(id){
+    var p=patients[id]; if(!p)return;
+    var ov=document.getElementById("avsOverlay");
+    if(!ov){ov=document.createElement("div");ov.id="avsOverlay";document.body.appendChild(ov);}
+    ov.setAttribute("style","position:fixed;inset:0;background:rgba(15,23,42,.55);z-index:99999;display:flex;align-items:flex-start;justify-content:center;overflow:auto;padding:28px 14px");
+    ov.onclick=function(e){if(e.target===ov)window.avsClose();};
+    ov.innerHTML="<div style='background:#fff;border-radius:16px;max-width:640px;width:100%;box-shadow:0 24px 70px rgba(0,0,0,.35)'>"+
+      "<div style='display:flex;align-items:center;justify-content:space-between;padding:16px 22px;border-bottom:1px solid #eee'>"+
+        "<div style='font-weight:800;font-size:16px;color:#1a2b4a'>After-Visit Patient Summary \u00b7 <span dir='rtl'>\u0645\u0644\u062e\u0635 \u0645\u0627 \u0628\u0639\u062f \u0627\u0644\u0632\u064a\u0627\u0631\u0629</span></div>"+
+        "<div onclick='avsClose()' style='cursor:pointer;font-size:24px;color:#9098a5;line-height:1'>\u00d7</div></div>"+
+      "<div style='padding:14px 22px 2px'>"+
+        "<div style='color:#6b7280;font-size:12.5px;margin-bottom:10px'>Preview of the link the patient receives after the visit \u2014 generated from this patient's own results.</div>"+
+        "<div style='display:flex;gap:10px;margin-bottom:14px;flex-wrap:wrap'>"+
+          "<button class='btn btn-o btn-sm' onclick='avsPersonalise("+id+")'>\u2726 Personalise with AI</button>"+
+          "<button class='btn btn-p btn-sm' onclick='avsSend("+id+")'>Send via SMS / WhatsApp</button></div></div>"+
+      "<div style='padding:0 22px 22px' id='avsCardWrap'>"+avsCard(p)+"</div></div>";
+  };
+  window.avsClose=function(){var ov=document.getElementById("avsOverlay");if(ov)ov.remove();};
+  window.avsSend=function(id){var p=patients[id];p.comms=p.comms||[];p.comms.unshift({who:"After-visit summary",role:"System",date:new Date().toISOString().slice(0,10),txt:"\u0645\u0644\u062e\u0635 \u0645\u0627 \u0628\u0639\u062f \u0627\u0644\u0632\u064a\u0627\u0631\u0629 \u0623\u064f\u0631\u0633\u0644 \u0644\u0644\u0645\u0631\u064a\u0636 \u0639\u0628\u0631 \u0648\u0627\u062a\u0633\u0627\u0628."});if(typeof saveState==="function")saveState();if(typeof toast==="function")toast("After-visit summary sent","via WhatsApp \u2192 "+p.name);window.avsClose();};
+  window.avsPersonalise=function(id){
+    var p=patients[id],wrap=document.getElementById("avsCardWrap");
+    if(typeof aiReady!=="function"||!aiReady()){if(typeof toast==="function")toast("Personalised on-device","Connect AI in Settings for a live rewrite");return;}
+    var base=wrap.innerText;
+    var prompt="\u0623\u0639\u062f \u0635\u064a\u0627\u063a\u0629 \u0631\u0633\u0627\u0644\u0629 \u0645\u0644\u062e\u0635 \u0645\u0627 \u0628\u0639\u062f \u0627\u0644\u0632\u064a\u0627\u0631\u0629 \u0627\u0644\u062a\u0627\u0644\u064a\u0629 \u0628\u0644\u063a\u0629 \u0639\u0631\u0628\u064a\u0629 \u062f\u0627\u0641\u0626\u0629 \u0648\u0645\u0628\u0633\u0651\u0637\u0629 \u0648\u0645\u0634\u062c\u0651\u0639\u0629\u060c \u0645\u0639 \u0627\u0644\u062d\u0641\u0627\u0638 \u0639\u0644\u0649 \u0643\u0644 \u0627\u0644\u0623\u0631\u0642\u0627\u0645 \u0648\u0627\u0644\u062a\u0639\u0644\u064a\u0645\u0627\u062a \u0643\u0645\u0627 \u0647\u064a. \u0623\u0639\u062f \u0627\u0644\u0646\u0635 \u0641\u0642\u0637:\n\n"+base;
+    if(typeof toast==="function")toast("\u2726 Personalising with AI\u2026");
+    aiComplete(prompt,900).then(function(t){if(t){var pre=document.createElement("div");pre.setAttribute("dir","rtl");pre.style.cssText="white-space:pre-wrap;border:1px solid #e5e7eb;border-radius:12px;padding:16px;font-size:14px;line-height:1.95;text-align:right;color:#243660";pre.textContent=t;wrap.innerHTML="";wrap.appendChild(pre);if(typeof toast==="function")toast("AI-personalised","Review before sending");}}).catch(function(e){if(typeof toast==="function")toast("AI unavailable","Kept on-device version");});
+  };
+
+  function boot(){ try{wireEdu();}catch(e){} }
+  if(document.readyState!=="loading"){setTimeout(boot,300);} else {document.addEventListener("DOMContentLoaded",function(){setTimeout(boot,300);});}
+  window.addEventListener("load",function(){setTimeout(boot,400);});
+})();
 </script>
 </body>
 </html>
